@@ -1,0 +1,921 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "neverla",
+        "version": "1.0.0",
+        "summary": "Disposable email addresses with a REST API. No account, no key, no payment.",
+        "description": "neverla hands out throwaway email addresses and lets you read what arrives at them over HTTP.\n\nThere is nothing to create: an address exists the moment mail reaches it. Pick any local part on one of the public domains (mail.neverla.web.id, mixozia.com, linqmail.com), use it, then poll GET /api/v1/mailbox.\n\nNo account, no API key and no payment are required for the public domains. Bring your own domain by pointing its MX at smtp.neverla.web.id — the first message connects it, with no registration and no key.\n\nMessages are deleted 5 days after they arrive, and attachments are capped at 5 MB. Anyone who guesses a public address can read it, so never send anything confidential to one.\n\nPREMIUM POOL. The public domains are on public disposable-mail blocklists, so many signup forms reject them. A paid plan gives API access to 97 private .com domains, kept off those lists. Same endpoints, same shapes — the only difference is that a premium address requires the `Authorization: Bearer gm_live_...` key of an account on a paid plan. Without a current plan it answers 404, exactly as an unhosted domain does, so the pool cannot be enumerated by guessing names. The public domains and your own domains stay free and keyless on every plan. Premium USD 12.99/month (2,000 premium messages/month, 1 API key, 2 req/s per address, no per-minute or daily API cap); Pro USD 49.99/month (15,000 premium messages/month, 5 API keys, 3 req/s per address, no per-minute or daily API cap); Scale USD 99.99/month (36,000 premium messages/month, 20 API keys, 5 req/s per address, no per-minute or daily API cap). See https://mail.neverla.web.id/pricing\n\nWITH A KEY: GET /api/v1/me verifies it and shows the plan, the period, the allowance left and the rate limit (401 if the key is unknown or revoked — a bad key is refused on every endpoint, whatever the domain). GET /api/v1/domains lists the public domains for everyone and the pool's names for a paid key only. The first authenticated read of a fresh premium address holds it for the account and counts one unit of the allowance (a unit is a message received on the pool OR an address opened, whichever comes first); reading a held address again is free, and it is released from the dashboard or when the plan lapses. Pool errors: 402 quota_reached / overage_cap / overage_funds, 403 address_taken, 409 address_limit (no plan caps addresses today). `alias` is returned for premium mailboxes too.",
+        "contact": {
+            "url": "https://mail.neverla.web.id/docs/api"
+        },
+        "license": {
+            "name": "Free to use",
+            "url": "https://mail.neverla.web.id/legal/terms"
+        }
+    },
+    "servers": [
+        {
+            "url": "https://mail.neverla.web.id",
+            "description": "Production"
+        }
+    ],
+    "externalDocs": {
+        "url": "https://mail.neverla.web.id/docs/api",
+        "description": "Reference with examples"
+    },
+    "tags": [
+        {
+            "name": "Mailbox",
+            "description": "Read and empty a disposable inbox."
+        },
+        {
+            "name": "Account",
+            "description": "What an API key opens. A key follows its account's plan on every call: on the free plan it counts the free allowance per account instead of per IP address; on a paid plan it removes the caps and opens the premium pool."
+        }
+    ],
+    "security": [
+        [],
+        {
+            "bearerAuth": []
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "description": "An API key (gm_live_…), created at /account/keys — one on a free account, more on paid plans. A key has no tier of its own: each call is judged on its account's current plan, and the same key moves with it. On the free plan it counts the free allowance per account instead of per IP address; on a paid plan it removes the per-minute and daily caps and opens the premium pool and the pool names in /api/v1/domains. The public domains and your own domains need no credential at all. A key that is unknown or revoked answers 401 wherever it is sent."
+            }
+        },
+        "schemas": {
+            "MessageSummary": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "7ZK3QW1M8T5VDR0YXC2NHB4JPE",
+                        "description": "Opaque message id. Use it with /message and /attachment."
+                    },
+                    "from": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "Envelope sender."
+                    },
+                    "from_name": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Display name, when the sender set one."
+                    },
+                    "subject": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "When it arrived, UTC."
+                    },
+                    "seen": {
+                        "type": "boolean",
+                        "description": "True once the message has been read through the API."
+                    },
+                    "attachments": {
+                        "type": "integer",
+                        "description": "How many attachments it carries."
+                    },
+                    "expires_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "When it will be deleted: 5 days after it arrived."
+                    }
+                },
+                "required": [
+                    "id",
+                    "from",
+                    "date",
+                    "seen",
+                    "attachments",
+                    "expires_at"
+                ]
+            },
+            "Message": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "7ZK3QW1M8T5VDR0YXC2NHB4JPE",
+                        "description": "Opaque message id. Use it with /message and /attachment."
+                    },
+                    "from": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "Envelope sender."
+                    },
+                    "from_name": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Display name, when the sender set one."
+                    },
+                    "subject": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "When it arrived, UTC."
+                    },
+                    "seen": {
+                        "type": "boolean",
+                        "description": "True once the message has been read through the API."
+                    },
+                    "attachments": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "filename": {
+                                    "type": "string"
+                                },
+                                "mime": {
+                                    "type": "string",
+                                    "description": "What the sender claimed. Do not trust it."
+                                },
+                                "size": {
+                                    "type": "integer"
+                                },
+                                "url": {
+                                    "type": "string",
+                                    "description": "Always served as a download, never inline."
+                                }
+                            }
+                        }
+                    },
+                    "expires_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "When it will be deleted: 5 days after it arrived."
+                    },
+                    "to": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "text": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Plain text of the message. When the sender included a text/plain part this is that part, unchanged. When the sender shipped HTML only - which most transactional mail does - this is a plain-text rendering of it, and text_derived says so. Link targets are kept in angle brackets and image alt text is kept, so a code or a confirmation link is still here."
+                    },
+                    "text_derived": {
+                        "type": "boolean",
+                        "description": "false when text is the sender's own text/plain part, true when it was rendered from the HTML."
+                    },
+                    "html": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "HTML part. Never render it unsandboxed."
+                    }
+                }
+            },
+            "Error": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "string",
+                        "example": "rate_limited",
+                        "description": "Stable slug. Branch on this, never on `message`.",
+                        "enum": [
+                            "invalid_address",
+                            "bad_cursor",
+                            "unknown_domain",
+                            "not_found",
+                            "rate_limited",
+                            "daily_limit_reached",
+                            "unauthorized",
+                            "address_taken",
+                            "address_limit",
+                            "quota_reached",
+                            "overage_cap",
+                            "overage_funds",
+                            "server_error"
+                        ]
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Prose for a human. May be reworded at any time."
+                    },
+                    "upgrade": {
+                        "type": "object",
+                        "description": "On a free-limit 429: what a paid plan removes (no per-minute or daily cap), its price, and how to subscribe."
+                    },
+                    "hint": {
+                        "type": "string",
+                        "description": "Sometimes present: what to do about it, for a human or an agent."
+                    },
+                    "docs": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "Sometimes present: where this is explained."
+                    },
+                    "premium_pool": {
+                        "type": "object",
+                        "description": "Sometimes present on 404 unknown_domain and 429: the premium pool, its price and how to unlock it, with `tell_the_user` — guidance for an assistant to pass the offer on to the person it works for rather than act on it."
+                    }
+                },
+                "required": [
+                    "error",
+                    "message"
+                ]
+            },
+            "Me": {
+                "type": "object",
+                "description": "The key that was sent, and what its plan allows right now.",
+                "properties": {
+                    "key": {
+                        "type": "object",
+                        "properties": {
+                            "prefix": {
+                                "type": "string",
+                                "example": "gm_live_3f9a…"
+                            }
+                        }
+                    },
+                    "plan": {
+                        "type": "string",
+                        "enum": [
+                            "free",
+                            "premium",
+                            "pro",
+                            "scale"
+                        ],
+                        "description": "The effective plan right now. A plan past its end date is free at once: there is no grace period."
+                    },
+                    "plan_label": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "active",
+                            "lapsed",
+                            "free"
+                        ],
+                        "description": "active: a paid plan before its end date. lapsed: a paid plan that reached its end date and returned to free. free: never paid."
+                    },
+                    "premium": {
+                        "type": "boolean",
+                        "description": "Whether this key opens the premium pool right now."
+                    },
+                    "plan_until": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time",
+                        "description": "The end date. Nothing of the pool opens after it."
+                    },
+                    "period": {
+                        "type": "object",
+                        "properties": {
+                            "start": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "end": {
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        },
+                        "description": "The allowance period, anchored on the subscription date."
+                    },
+                    "usage": {
+                        "type": "object",
+                        "properties": {
+                            "messages": {
+                                "type": "integer",
+                                "description": "Messages received on premium addresses this period."
+                            },
+                            "addresses": {
+                                "type": "integer",
+                                "description": "Premium addresses opened this period."
+                            },
+                            "consumed": {
+                                "type": "integer",
+                                "description": "max(messages, addresses): a unit is either, whichever comes first."
+                            },
+                            "quota": {
+                                "type": "integer",
+                                "description": "Units in the plan. 0 means no quota (free plan)."
+                            },
+                            "left": {
+                                "type": "integer"
+                            },
+                            "over": {
+                                "type": "boolean"
+                            },
+                            "overage_on": {
+                                "type": "boolean",
+                                "description": "Whether the account chose to pay per extra address past the quota."
+                            },
+                            "overage_cap_usd": {
+                                "type": "number"
+                            },
+                            "overage_left_usd": {
+                                "type": "number"
+                            }
+                        }
+                    },
+                    "addresses_held": {
+                        "type": "integer",
+                        "description": "Premium addresses this account holds, all periods."
+                    },
+                    "limits": {
+                        "type": "object",
+                        "properties": {
+                            "requests_per_second": {
+                                "type": "integer",
+                                "description": "Per address, with this key."
+                            },
+                            "requests_per_minute_per_ip": {
+                                "type": "integer"
+                            },
+                            "api_keys": {
+                                "type": "integer"
+                            },
+                            "address_cap": {
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ],
+                                "description": "null: no cap."
+                            }
+                        }
+                    },
+                    "pool": {
+                        "type": "object",
+                        "properties": {
+                            "count": {
+                                "type": "integer"
+                            },
+                            "access": {
+                                "type": "boolean"
+                            },
+                            "domains": {
+                                "type": "string",
+                                "description": "Where to list the names."
+                            }
+                        }
+                    },
+                    "docs": {
+                        "type": "string",
+                        "format": "uri"
+                    }
+                },
+                "required": [
+                    "plan",
+                    "status",
+                    "premium",
+                    "usage",
+                    "limits"
+                ]
+            },
+            "Domains": {
+                "type": "object",
+                "properties": {
+                    "public": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Free, no key. On the disposable-mail blocklists."
+                    },
+                    "retention_days": {
+                        "type": "integer"
+                    },
+                    "max_attachment": {
+                        "type": "string"
+                    },
+                    "blocklisted": {
+                        "type": "boolean"
+                    },
+                    "blocklist_note": {
+                        "type": "string"
+                    },
+                    "own_domain": {
+                        "type": "string"
+                    },
+                    "premium": {
+                        "type": "object",
+                        "description": "Absent when no pool exists.",
+                        "properties": {
+                            "count": {
+                                "type": "integer"
+                            },
+                            "tld": {
+                                "type": "string"
+                            },
+                            "what": {
+                                "type": "string"
+                            },
+                            "why": {
+                                "type": "string"
+                            },
+                            "unlocked": {
+                                "type": "boolean",
+                                "description": "true only when the key's account is on a paid plan; then `domains` is present."
+                            },
+                            "domains": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "description": "The pool. Present ONLY when the key's account is on a paid plan — never shown otherwise."
+                            },
+                            "how": {
+                                "type": "string"
+                            },
+                            "reason": {
+                                "type": "string",
+                                "enum": [
+                                    "key_required",
+                                    "plan_required"
+                                ],
+                                "description": "When locked: why."
+                            },
+                            "from": {
+                                "type": "string",
+                                "example": "$12.99/month"
+                            },
+                            "pricing": {
+                                "type": "string"
+                            },
+                            "url": {
+                                "type": "string",
+                                "format": "uri"
+                            },
+                            "how_to_unlock": {
+                                "type": "string"
+                            },
+                            "tell_the_user": {
+                                "type": "string",
+                                "description": "Guidance for an assistant: pass the offer on, let the person decide."
+                            }
+                        }
+                    }
+                },
+                "required": [
+                    "public",
+                    "retention_days"
+                ]
+            }
+        },
+        "parameters": {
+            "Mailbox": {
+                "name": "mailbox",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "format": "email"
+                },
+                "example": "a7f3k2@neverla.web.id",
+                "description": "The address the message was delivered to. Scopes the id, so an id alone is not enough."
+            }
+        },
+        "responses": {
+            "RateLimited": {
+                "description": "Too many requests. Without a key: 60 requests a minute and 1000 a day per IP address (rate_limited, or daily_limit_reached for the day), and one read per second per address. A paid key has no per-minute or daily cap: 2, 3 or 5 reads per second per address. Retry-After says how long to wait; a free-limit body carries an upgrade block.",
+                "headers": {
+                    "Retry-After": {
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "Seconds."
+                    },
+                    "X-RateLimit-Limit": {
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "Free requests a minute for this IP address (calls without a key)."
+                    },
+                    "X-RateLimit-Remaining": {
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "Free requests left this minute."
+                    },
+                    "X-RateLimit-Daily-Limit": {
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "Free requests a day for this IP address (UTC day)."
+                    },
+                    "X-RateLimit-Daily-Remaining": {
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "Free requests left today."
+                    }
+                },
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                }
+            },
+            "BadAddress": {
+                "description": "The address is missing or malformed.",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                }
+            },
+            "NotHosted": {
+                "description": "That domain is not hosted here, and its MX does not point at this service either. Check the MX record, or use a public domain. A premium-pool domain read without a current paid plan answers exactly this, deliberately: telling the two apart would let the pool be enumerated by guessing names.",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                }
+            },
+            "PoolRefused": {
+                "description": "Premium pool, and something about the plan says no: `quota_reached` (this period's message quota is spent and overage is off), `overage_cap` (spent, overage on, but the ceiling you set is reached) or `overage_funds` (spent, overage on, balance too low). Addresses already held keep working in all three cases.",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                }
+            },
+            "PoolTaken": {
+                "description": "Premium pool: another subscriber holds that address (`address_taken`).",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                }
+            },
+            "Unauthorized": {
+                "description": "An API key was sent and it is unknown or revoked (`unauthorized`). Answered on every endpoint whatever the domain — it says something about the key, never about a domain. The public domains need no key: send none.",
+                "headers": {
+                    "WWW-Authenticate": {
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "paths": {
+        "/api/v1/me": {
+            "get": {
+                "operationId": "whoAmI",
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Check an API key: plan, allowance left, limits",
+                "description": "The only call that judges a key on its own. Send it as `Authorization: Bearer gm_live_…`: a valid key gets its plan, the current period, the allowance consumed and left, the addresses held and the rate limit; an unknown or revoked key gets 401. Use it first when integrating the premium pool — a pool domain read with a bad key answers 404 on purpose, so this is where a key problem shows.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The key is valid.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Me"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/RateLimited"
+                    }
+                }
+            }
+        },
+        "/api/v1/domains": {
+            "get": {
+                "operationId": "listDomains",
+                "tags": [
+                    "Account"
+                ],
+                "summary": "The public domains, and the premium pool for a paid key",
+                "description": "Without a key: the public domains, and the fact that a premium pool exists — how many domains, why, and what it costs — but never a name. With the key of an account on a paid plan: the pool's domain names as well. The names are shown to nobody else, deliberately: keeping them off the disposable-mail blocklists is what the plan buys.",
+                "security": [
+                    [],
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The domains.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Domains"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/RateLimited"
+                    }
+                }
+            }
+        },
+        "/api/v1/mailbox": {
+            "get": {
+                "operationId": "listMessages",
+                "tags": [
+                    "Mailbox"
+                ],
+                "summary": "List the messages waiting at an address",
+                "description": "Newest first. An empty mailbox is a 200 with count 0, never a 404, so a polling loop needs no special case.\n\nOne call returns at most 200 messages; `next` carries a cursor for the page after that, and is null once there is nothing older.",
+                "parameters": [
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "email"
+                        },
+                        "example": "a7f3k2@neverla.web.id",
+                        "description": "Any local part on a hosted domain. It does not need to exist first."
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 200,
+                            "default": 50
+                        },
+                        "description": "How many to return in this call. Caps the response, not the mailbox."
+                    },
+                    {
+                        "name": "before",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Cursor: pass back the `next` value from the previous page."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The mailbox was read.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "address": {
+                                            "type": "string",
+                                            "format": "email"
+                                        },
+                                        "alias": {
+                                            "type": "string",
+                                            "format": "email",
+                                            "nullable": true,
+                                            "description": "A second address that delivers to this mailbox and reveals nothing about it. Give it to a signup form instead of `address`: mail sent to it arrives here, and whoever holds it cannot use it to read anything — reading the alias returns an empty mailbox, always. Stable for a given address. Null when the mailbox is itself on an alias domain."
+                                        },
+                                        "count": {
+                                            "type": "integer",
+                                            "description": "How many are in THIS response."
+                                        },
+                                        "next": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ],
+                                            "description": "Cursor for the next page, or null."
+                                        },
+                                        "messages": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/MessageSummary"
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "address",
+                                        "count",
+                                        "messages"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadAddress"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "402": {
+                        "$ref": "#/components/responses/PoolRefused"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/PoolTaken"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotHosted"
+                    },
+                    "409": {
+                        "description": "Premium pool: you hold as many addresses as your plan allows (`address_limit`).",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/RateLimited"
+                    }
+                }
+            }
+        },
+        "/api/v1/message/{id}": {
+            "get": {
+                "operationId": "readMessage",
+                "tags": [
+                    "Mailbox"
+                ],
+                "summary": "Read one message in full",
+                "description": "Body, headers and attachment list. This is where a confirmation code will be.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/Mailbox"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The message.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Message"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadAddress"
+                    },
+                    "404": {
+                        "description": "No such message in that mailbox, or it has expired."
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/RateLimited"
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "deleteMessage",
+                "tags": [
+                    "Mailbox"
+                ],
+                "summary": "Delete a message now",
+                "description": "Idempotent: deleting twice still answers 200.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/Mailbox"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deleted, or already gone."
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadAddress"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/RateLimited"
+                    }
+                }
+            }
+        },
+        "/api/v1/attachment/{id}": {
+            "get": {
+                "operationId": "downloadAttachment",
+                "tags": [
+                    "Mailbox"
+                ],
+                "summary": "Download an attachment",
+                "description": "Always served as application/octet-stream with Content-Disposition: attachment, whatever the sender declared. Never rendered inline.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/Mailbox"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The file.",
+                        "content": {
+                            "application/octet-stream": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No such attachment in that mailbox."
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/RateLimited"
+                    }
+                }
+            }
+        }
+    },
+    "x-mcp": {
+        "endpoint": "https://mail.neverla.web.id/mcp",
+        "transport": "streamable-http",
+        "description": "The same service as MCP tools, for AI agents: create_inbox, wait_for_message, list_messages, read_message, delete_message, list_domains. A paid key sent as Authorization: Bearer on /mcp opens the premium pool there too."
+    },
+    "x-public-domains": [
+        "neverla.web.id",
+        "gmail.com",
+        "googlemail.com",
+        "grabmail.io",
+        "linqmail.com",
+        "mixozia.com"
+    ],
+    "x-retention-days": 5,
+    "x-requires-auth": false
+}

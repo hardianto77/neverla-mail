@@ -1,0 +1,10 @@
+node_modules/
+data/
+*.db
+*.log
+.DS_Store
+*.tar.gz
+update_server_relay.py
+apply_fresh_com_domains.py
+apply_fresh_select.py
+patch_domains*.py

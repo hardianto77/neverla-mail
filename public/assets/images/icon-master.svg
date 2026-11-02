@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="dongker-body" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0E2749"/>
+      <stop offset="50%" stop-color="#0C203C"/>
+      <stop offset="100%" stop-color="#061222"/>
+    </linearGradient>
+    <linearGradient id="dongker-stroke" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="ribbon-glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="50%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#050E1A" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <!-- Squircle Base with Deep Navy Blue Fill -->
+  <rect x="24" y="24" width="464" height="464" rx="112" fill="url(#dongker-body)" stroke="url(#dongker-stroke)" stroke-width="12" filter="url(#shadow)"/>
+  
+  <!-- Subtle inner border highlight -->
+  <rect x="36" y="36" width="440" height="440" rx="100" fill="none" stroke="#60A5FA" stroke-width="2" stroke-opacity="0.35"/>
+
+  <!-- Geometric "N" Monogram -->
+  <!-- Left Pillar (White) -->
+  <rect x="120" y="128" width="60" height="256" rx="6" fill="#FFFFFF"/>
+  
+  <!-- Right Pillar (White) -->
+  <rect x="332" y="128" width="60" height="256" rx="6" fill="#FFFFFF"/>
+  
+  <!-- Dynamic Diagonal Ribbon (Electric Royal/Cobalt Blue) -->
+  <polygon points="120,128 180,128 392,384 332,384" fill="url(#ribbon-glow)"/>
+</svg>
