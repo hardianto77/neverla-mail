@@ -1,24 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-  <defs>
-    <linearGradient id="dongker-bg" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#0C2340"/>
-      <stop offset="100%" stop-color="#071529"/>
-    </linearGradient>
-    <linearGradient id="dongker-diag" x1="11" y1="11" x2="37" y2="37" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#2563EB"/>
-      <stop offset="100%" stop-color="#1D4ED8"/>
-    </linearGradient>
-  </defs>
-  <!-- Squircle Base with Navy Stroke -->
-  <rect width="48" height="48" rx="11" fill="url(#dongker-bg)"/>
-  <rect x="0.75" y="0.75" width="46.5" height="46.5" rx="10.25" stroke="#1E3A8A" stroke-width="1.5" stroke-opacity="0.8"/>
-  
-  <!-- Left Pillar -->
-  <path d="M 11 37 V 11 H 17 V 37 Z" fill="#FFFFFF"/>
-  
-  <!-- Right Pillar -->
-  <path d="M 31 37 V 11 H 37 V 37 Z" fill="#FFFFFF"/>
-  
-  <!-- Diagonal Dynamic Ribbon -->
-  <path d="M 11 11 H 17 L 37 37 H 31 Z" fill="url(#dongker-diag)"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="GrabMail">
+  <!--
+    The favicon, drawn for the two places it is actually judged: a browser tab,
+    and a Google result on a phone.
+
+    SQUARE, EDGE TO EDGE, NO ROUNDED CORNERS. Google masks favicons into a
+    circle in mobile search results, so rounding the corners only puts white
+    slivers in the four places about to be discarded — while leaving them
+    visible in a tab, where nothing is cropped. Full bleed gives a clean disc
+    there and a clean square here.
+
+    THE FLAP RUNS CORNER TO CORNER. That is the whole difference between a
+    shape that reads as an envelope and a shape that reads as a tick next to a
+    box. An earlier version had the chevron floating in the middle with a
+    tear-off slot beside it; at sixteen pixels it read as "V |" and not as mail
+    at all. The slot went with it — at this size the job is to be recognised in
+    a fifth of a second, not to explain what disposable means.
+
+    SAFE INSIDE THE CIRCLE: the envelope's furthest corner is 24 units from the
+    centre against a radius of 32, so the mask never touches it.
+  -->
+  <rect width="64" height="64" fill="#1d4ed8"/>
+  <rect x="12" y="19" width="40" height="26" rx="3" fill="#fff"/>
+  <path d="M14.8 21.8 32 34.2 49.2 21.8" fill="none" stroke="#1d4ed8" stroke-width="4.6"
+        stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
