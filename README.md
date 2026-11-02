@@ -175,6 +175,60 @@ Neverla Mail exposes a standards-compliant **JSON-RPC 2.0 MCP server** at `/mcp`
 
 ---
 
+
+---
+
+## 🏛️ Comprehensive Multi-Language System Architecture (Go + TypeScript + SQLite)
+
+Neverla Mail is engineered with a modular, polyglot architecture built for maximum throughput, low-latency concurrent ingestion, and strict type safety:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                           Client Ecosystem & Web UI                             │
+│       Modern Responsive Navy UI  /  TypeScript SDK (@neverla/mail-client)       │
+└────────────────────────────────────────┬────────────────────────────────────────┘
+                                         │ HTTPS / REST / JSON-RPC
+                                         ▼
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                  Edge Ingress & Reverse Proxy (Cloudflare / TLS)                 │
+└───────────────────────┬─────────────────────────────────┬───────────────────────┘
+                        │ Port 3417                       │ Port 3418
+                        ▼                                 ▼
+┌──────────────────────────────────────────────┐ ┌────────────────────────────────┐
+│      Node.js Gateway & MCP Subsystem         │ │       Go High-Speed Engine     │
+│  - MCP JSON-RPC 2.0 AI Interface (/mcp)      │ │  - Pure Compiled Binary        │
+│  - Multi-Provider Inbound Routing            │ │  - REST API Engine (RFC 3339)  │
+│  - Express Ingestion & Body Sanitizer        │ │  - Native Multi-core Threading │
+└───────────────────────┬──────────────────────┘ └────────────────┬───────────────┘
+                        │                                         │
+                        │        Shared SQLite WAL Storage        │
+                        └────────────────────┬────────────────────┘
+                                             ▼
+                               ┌───────────────────────────┐
+                               │     data/mail.db (WAL)    │
+                               │  - Atomic ACID Mailboxes  │
+                               │  - 5-Day TTL Pruning      │
+                               └───────────────────────────┘
+```
+
+### 1. Go High-Performance Backend (`backend/`)
+- **Compiled Core**: Written in Go 1.27 (`backend/cmd/server/main.go`), providing sub-millisecond API response latency and minimal memory overhead.
+- **SQLite Engine**: Utilizes `go-sqlite3` with Write-Ahead Logging (`_journal_mode=WAL`) and automated busy timeout handling (`_busy_timeout=5000`) for high concurrency without database lock contention.
+- **REST Endpoints**:
+  - `GET /v1/domains` - Active domain pool metadata.
+  - `GET /v1/mailbox?address=...` - High-throughput indexed message polling.
+  - `GET /v1/message/:id?mailbox=...` - Full body, HTML, and attachment extraction.
+
+### 2. TypeScript Full-Stack SDK & Types (`frontend/`)
+- **Strict Typing (`frontend/src/types/mail.ts`)**: Exhaustive TypeScript interfaces for `MailboxMessageSummary`, `FullMessageDetail`, `AttachmentDescriptor`, and `DomainListResponse`.
+- **Zero-Dependency SDK (`frontend/src/client/neverlaClient.ts`)**: Fully typed, isomorphic API client compatible with Node.js, modern browsers, Bun, and Deno.
+- **Compiler Configuration**: Standardized with `tsconfig.json` compiling directly to ESNext and `.d.ts` declaration bundles.
+
+### 3. SQLite Storage Engine (`data/mail.db`)
+- **Schema Optimization**: Indexed on `(address)`, `(alias)`, and `(created_at DESC)` ensuring $O(\log N)$ polling operations regardless of mailbox volume.
+- **Zero-Friction Alias Engine**: SHA-256 salted address masking generating permanent, secure `@uvorion.com` stealth aliases.
+
+
 ## 🛠️ Architecture & Deployment
 
 ```
