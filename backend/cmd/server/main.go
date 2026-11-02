@@ -23,7 +23,7 @@ var (
 	dbMutex  sync.RWMutex
 	baseDir  = "/data/home/neverla-mail"
 	dbPath   = filepath.Join(baseDir, "data", "mail.db")
-	webDir   = filepath.Join(baseDir, "web", "dist")
+	pubDir   = filepath.Join(baseDir, "public")
 	port     = os.Getenv("PORT")
 	domains  = []string{
 		"neverla.web.id", "fldubai.com", "mynes.com", "hunnur.com", "binich.com",
@@ -144,6 +144,7 @@ func handleMailbox(w http.ResponseWriter, r *http.Request) {
 func handleMessageDetail(w http.ResponseWriter, r *http.Request) {
 	id := strings.TrimPrefix(r.URL.Path, "/v1/message/")
 	id = strings.TrimPrefix(id, "/api/v1/message/")
+	id = strings.TrimPrefix(id, "/gm-api/v1/message/")
 
 	if id == "" {
 		http.Error(w, `{"error":"Missing message id"}`, http.StatusBadRequest)
@@ -186,7 +187,6 @@ func handleMessageDetail(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// Inbound Simulation / Webhook
 func handleSimulate(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Error(w, `{"error":"Method not allowed"}`, http.StatusMethodNotAllowed)
@@ -228,17 +228,23 @@ func handleSimulate(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func servePage(filename string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, filepath.Join(pubDir, filename))
+	}
+}
+
 func main() {
 	if port == "" {
 		port = "3417"
 	}
 
 	initDB()
-	log.Printf("Neverla Mail Go Core Backend starting on port %s...", port)
+	log.Printf("Neverla Mail High-Performance Go Core starting on port %s...", port)
 
 	mux := http.NewServeMux()
 
-	// REST API Routes
+	// REST APIs
 	mux.HandleFunc("/v1/domains", handleDomains)
 	mux.HandleFunc("/api/v1/domains", handleDomains)
 	mux.HandleFunc("/gm-api/v1/domains", handleDomains)
@@ -249,19 +255,50 @@ func main() {
 
 	mux.HandleFunc("/v1/message/", handleMessageDetail)
 	mux.HandleFunc("/api/v1/message/", handleMessageDetail)
+	mux.HandleFunc("/gm-api/v1/message/", handleMessageDetail)
 
 	mux.HandleFunc("/v1/simulate", handleSimulate)
 
-	// SPA Static React Frontend
-	fileServer := http.FileServer(http.Dir(webDir))
+	// GrabMail Cloned Pages
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		path := filepath.Join(webDir, r.URL.Path)
-		if fi, err := os.Stat(path); err == nil && !fi.IsDir() {
-			fileServer.ServeHTTP(w, r)
+		if r.URL.Path == "/" {
+			http.ServeFile(w, r, filepath.Join(pubDir, "index.html"))
 			return
 		}
-		http.ServeFile(w, r, filepath.Join(webDir, "index.html"))
+		// Static assets
+		filePath := filepath.Join(pubDir, r.URL.Path)
+		if fi, err := os.Stat(filePath); err == nil && !fi.IsDir() {
+			http.ServeFile(w, r, filePath)
+			return
+		}
+		// If unknown route, fallback to index
+		http.ServeFile(w, r, filepath.Join(pubDir, "index.html"))
 	})
+
+	mux.HandleFunc("/inbox", servePage("inbox.html"))
+	mux.HandleFunc("/domains", servePage("domains.html"))
+	mux.HandleFunc("/pricing", servePage("pricing.html"))
+	mux.HandleFunc("/about", servePage("about.html"))
+	mux.HandleFunc("/docs", servePage("docs.html"))
+	mux.HandleFunc("/docs/api", servePage("docs-api.html"))
+	mux.HandleFunc("/docs/quickstart", servePage("docs-quickstart.html"))
+
+	// Guides
+	mux.HandleFunc("/guides/own-domain-catch-all-inbox", servePage("guides-own-domain.html"))
+	mux.HandleFunc("/guides/temp-mail-for-ai-agents", servePage("guides-ai-agents.html"))
+	mux.HandleFunc("/guides/nodejs-temp-mail-api", servePage("guides-nodejs.html"))
+	mux.HandleFunc("/guides/python-disposable-email-api", servePage("guides-python.html"))
+
+	// Comparisons
+	mux.HandleFunc("/vs/10minutemail", servePage("vs-10minutemail.html"))
+	mux.HandleFunc("/vs/guerrilla-mail", servePage("vs-guerrilla-mail.html"))
+	mux.HandleFunc("/vs/mailtrap", servePage("vs-mailtrap.html"))
+	mux.HandleFunc("/vs/testmail-app", servePage("vs-testmail-app.html"))
+	mux.HandleFunc("/vs/yopmail", servePage("vs-yopmail.html"))
+
+	// Meta
+	mux.HandleFunc("/openapi.json", servePage("openapi.json"))
+	mux.HandleFunc("/llms.txt", servePage("llms.txt"))
 
 	server := &http.Server{
 		Addr:    ":" + port,
