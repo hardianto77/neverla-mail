@@ -314,13 +314,28 @@ app.get('/inbox/:address', (req, res) => {
   res.redirect(`/inbox?u=${encodeURIComponent(u)}&d=${encodeURIComponent(d)}`);
 });
 
-// Docs, Domains, Pricing, OpenAPI, llms.txt
+// Docs, Domains, Pricing, Guides, Comparisons, OpenAPI, llms.txt
 app.get('/docs', (req, res) => res.sendFile(path.join(__dirname, 'public', 'docs.html')));
-app.get('/docs/api', (req, res) => res.sendFile(path.join(__dirname, 'public', 'docs.html')));
+app.get('/docs/api', (req, res) => res.sendFile(path.join(__dirname, 'public', 'docs-api.html')));
+app.get('/docs/quickstart', (req, res) => res.sendFile(path.join(__dirname, 'public', 'docs-quickstart.html')));
+app.get('/about', (req, res) => res.sendFile(path.join(__dirname, 'public', 'about.html')));
 app.get('/domains', (req, res) => res.sendFile(path.join(__dirname, 'public', 'domains.html')));
 app.get('/pricing', (req, res) => res.sendFile(path.join(__dirname, 'public', 'pricing.html')));
 app.get('/openapi.json', (req, res) => res.sendFile(path.join(__dirname, 'public', 'openapi.json')));
 app.get('/llms.txt', (req, res) => res.sendFile(path.join(__dirname, 'public', 'llms.txt')));
+
+// Guides
+app.get('/guides/own-domain-catch-all-inbox', (req, res) => res.sendFile(path.join(__dirname, 'public', 'guides-own-domain.html')));
+app.get('/guides/temp-mail-for-ai-agents', (req, res) => res.sendFile(path.join(__dirname, 'public', 'guides-ai-agents.html')));
+app.get('/guides/nodejs-temp-mail-api', (req, res) => res.sendFile(path.join(__dirname, 'public', 'guides-nodejs.html')));
+app.get('/guides/python-disposable-email-api', (req, res) => res.sendFile(path.join(__dirname, 'public', 'guides-python.html')));
+
+// Comparisons
+app.get('/vs/10minutemail', (req, res) => res.sendFile(path.join(__dirname, 'public', 'vs-10minutemail.html')));
+app.get('/vs/guerrilla-mail', (req, res) => res.sendFile(path.join(__dirname, 'public', 'vs-guerrilla-mail.html')));
+app.get('/vs/mailtrap', (req, res) => res.sendFile(path.join(__dirname, 'public', 'vs-mailtrap.html')));
+app.get('/vs/testmail-app', (req, res) => res.sendFile(path.join(__dirname, 'public', 'vs-testmail-app.html')));
+app.get('/vs/yopmail', (req, res) => res.sendFile(path.join(__dirname, 'public', 'vs-yopmail.html')));
 
 // ── REST API v1 Endpoints (OpenAPI 3.1 Compliant) ───────────────────────────
 const apiRouter = express.Router();

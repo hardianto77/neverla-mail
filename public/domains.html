@@ -4,34 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Use Your Own Domain for Disposable Email | Neverla Mail</title>
-<script>
-(function() {
-  var orig = Object.getOwnPropertyDescriptor(Document.prototype, "title");
-  Object.defineProperty(document, "title", {
-    configurable: true,
-    enumerable: true,
-    set: function(v) {
-      if (typeof v === "string") {
-        while (v && (v.charCodeAt(0) === 0xd83d || v.indexOf("🐴") === 0)) {
-          v = v.replace(/^[\ud83d\udc34🐴\s]+/, "").trim();
-        }
-      }
-      orig.set.call(document, v);
-    },
-    get: function() {
-      var v = orig.get.call(document);
-      if (typeof v === "string" && (v.charCodeAt(0) === 0xd83d || v.indexOf("🐴") === 0)) {
-        v = v.replace(/^[\ud83d\udc34🐴\s]+/, "").trim();
-      }
-      return v;
-    }
-  });
-  if (document.title && document.title.charCodeAt(0) === 0xd83d) {
-    document.title = document.title.replace(/^[\ud83d\udc34🐴\s]+/, "").trim();
-  }
-})();
-</script>
-<meta name="description" content="Point your domain&#039;s MX at smtp.neverla.web.id and every address on it becomes a mailbox. No account, no setup: the first message connects it.">
+<meta name="description" content="Point your domain&#039;s MX at smtp.mail.neverla.web.id and every address on it becomes a mailbox. No account, no setup: the first message connects it.">
 <link rel="canonical" href="https://mail.neverla.web.id/domains">
 <meta name="robots" content="max-image-preview:large">
 <link rel="alternate" type="application/rss+xml" title="Neverla Mail — Guides" href="https://mail.neverla.web.id/guides/feed.xml">
@@ -47,13 +20,13 @@
 <link rel="alternate" hreflang="ar" href="https://mail.neverla.web.id/ar/domains">
 <link rel="alternate" hreflang="ja" href="https://mail.neverla.web.id/ja/domains">
 <link rel="alternate" hreflang="x-default" href="https://mail.neverla.web.id/domains">
-<meta name="theme-color" content="#0c2340">
+<meta name="theme-color" content="#ffffff">
 <meta name="color-scheme" content="light">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Neverla Mail">
 <meta property="og:title" content="Use Your Own Domain for Disposable Email | Neverla Mail">
-<meta property="og:description" content="Point your domain&#039;s MX at smtp.neverla.web.id and every address on it becomes a mailbox. No account, no setup: the first message connects it.">
+<meta property="og:description" content="Point your domain&#039;s MX at smtp.mail.neverla.web.id and every address on it becomes a mailbox. No account, no setup: the first message connects it.">
 <meta property="og:url" content="https://mail.neverla.web.id/domains">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="es_ES">
@@ -73,11 +46,11 @@
 <meta property="og:image:alt" content="Neverla Mail — Temporary email addresses, and an API to read them.">
 <meta name="twitter:image" content="https://mail.neverla.web.id/assets/img/og-card.png">
 
-<link rel="icon" href="/favicon.svg?v=neverla_dongker4" type="image/svg+xml">
-<link rel="icon" href="/favicon.ico?v=neverla_dongker4" sizes="16x16 32x32 48x48">
-<link rel="icon" type="image/png" sizes="96x96" href="/assets/img/icon-96.png?v=neverla_dongker4">
-<link rel="icon" type="image/png" sizes="192x192" href="/assets/img/icon-192.png?v=neverla_dongker4">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=neverla_dongker4">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" sizes="96x96" href="/assets/img/icon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/img/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -86,13 +59,33 @@
 
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/ibm-plex-sans-600.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/main.css?v=neverla_dongker_v99">
-<link rel="stylesheet" href="/assets/css/mobile.css?v=neverla_dongker_v99" media="(max-width: 959.98px)">
-<script src="/assets/js/app.js?v=neverla_dongker4" defer></script>
-<script src="/assets/js/mobile.js?v=neverla_dongker4" defer></script>
+<link rel="stylesheet" href="/assets/css/main.css?v=3af85b61f5">
+<link rel="stylesheet" href="/assets/css/mobile.css?v=3af85b61f5" media="(max-width: 959.98px)">
+<script src="/assets/js/app.js?v=3af85b61f5" defer></script>
+<script src="/assets/js/mobile.js?v=3af85b61f5" defer></script>
 
 <script type="application/ld+json">
-{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://mail.neverla.web.id/#org","name":"Neverla Mail","url":"https://mail.neverla.web.id/","description":"Free disposable email addresses with a REST API and an MCP server for AI agents.","logo":{"@type":"ImageObject","url":"https://mail.neverla.web.id/assets/img/logo.png","width":671,"height":160},"image":"https://mail.neverla.web.id/assets/img/og-card.png","sameAs":["https://dev.to/neverla"]},{"@type":"WebSite","@id":"https://mail.neverla.web.id/#site","name":"Neverla Mail","url":"https://mail.neverla.web.id/","publisher":{"@id":"https://mail.neverla.web.id/#org"},"inLanguage":["en","es","pt","fr","de","ru","tr","id","vi","ar","ja"]},{"@type":["WebAPI","SoftwareApplication"],"@id":"https://mail.neverla.web.id/#api","name":"Neverla Mail disposable email API","url":"https://mail.neverla.web.id/docs/api","documentation":"https://mail.neverla.web.id/docs/api","provider":{"@id":"https://mail.neverla.web.id/#org"},"applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"Create a disposable email address and read what arrives at it over HTTP. No account, no API key and no payment for the public domains. Messages are deleted 5 days after they arrive.","offers":[{"@type":"Offer","name":"Free","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://mail.neverla.web.id/pricing","description":"Public domains, your own domains, the REST API and the MCP server. No account, no key; the free API allows 60 requests a minute and 1,000 a day per IP address."},{"@type":"Offer","name":"Premium","price":"12.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://mail.neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"12.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Pro","price":"49.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://mail.neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"49.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Scale","price":"99.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://mail.neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"99.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}}],"featureList":["Connect your own domain — every address on it becomes a catch-all inbox","Disposable email addresses with no signup","REST API over HTTPS, no API key required","MCP server for AI agents (create_inbox, wait_for_message)","Every mailbox has an alias you can hand out instead of the address","Attachments up to 5 MB","Automatic deletion after 5 days"],"additionalProperty":[{"@type":"PropertyValue","name":"Sending mail","value":"No. There is no endpoint that sends, and no outbound mail of any kind."},{"@type":"PropertyValue","name":"IMAP or POP3","value":"No. HTTPS only — a REST API and an MCP server."},{"@type":"PropertyValue","name":"Webhooks or push notifications","value":"No. You poll, or you let the MCP server hold the call open until the message lands."},{"@type":"PropertyValue","name":"Keeping mail longer than 5 days","value":"No. Not a tier, not a setting, not a parameter."},{"@type":"PropertyValue","name":"Attachments over 5 MB","value":"No. The message is refused at SMTP time."},{"@type":"PropertyValue","name":"Privacy on a shared domain","value":"No. Anyone who knows the address can read the mailbox."},{"@type":"PropertyValue","name":"Paying by card","value":"No. Crypto only, credited to a balance the subscription draws on."},{"@type":"PropertyValue","name":"An uptime guarantee","value":"No. There is no SLA, on any plan."},{"@type":"PropertyValue","name":"Tracking, analytics or advertising","value":"No. No third-party script, and no cookie banner because there are no cookies to consent to."}],"potentialAction":{"@type":"ConsumeAction","target":{"@type":"EntryPoint","urlTemplate":"https://mail.neverla.web.id/api/v1/mailbox?address={address}","httpMethod":"GET","contentType":"application/json"}}},{"@type":"WebPage","@id":"https://mail.neverla.web.id/domains#page","url":"https://mail.neverla.web.id/domains","name":"Use Your Own Domain for Disposable Email | Neverla Mail","description":"Point your domain's MX at smtp.neverla.web.id and every address on it becomes a mailbox. No account, no setup: the first message connects it.","isPartOf":{"@id":"https://mail.neverla.web.id/#site"},"inLanguage":"en"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Neverla Mail","item":"https://mail.neverla.web.id/"},{"@type":"ListItem","position":2,"name":"Connect your domain","item":"https://mail.neverla.web.id/domains"}]}]}</script>
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://mail.neverla.web.id/#org","name":"Neverla Mail","url":"https://mail.neverla.web.id/","description":"Free disposable email addresses with a REST API and an MCP server for AI agents.","logo":{"@type":"ImageObject","url":"https://mail.neverla.web.id/assets/img/logo.png","width":671,"height":160},"image":"https://mail.neverla.web.id/assets/img/og-card.png","sameAs":["https://dev.to/grabmail"]},{"@type":"WebSite","@id":"https://mail.neverla.web.id/#site","name":"Neverla Mail","url":"https://mail.neverla.web.id/","publisher":{"@id":"https://mail.neverla.web.id/#org"},"inLanguage":["en","es","pt","fr","de","ru","tr","id","vi","ar","ja"]},{"@type":["WebAPI","SoftwareApplication"],"@id":"https://mail.neverla.web.id/#api","name":"Neverla Mail disposable email API","url":"https://mail.neverla.web.id/docs/api","documentation":"https://mail.neverla.web.id/docs/api","provider":{"@id":"https://mail.neverla.web.id/#org"},"applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"Create a disposable email address and read what arrives at it over HTTP. No account, no API key and no payment for the public domains. Messages are deleted 5 days after they arrive.","offers":[{"@type":"Offer","name":"Free","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://mail.neverla.web.id/pricing","description":"Public domains, your own domains, the REST API and the MCP server. No account, no key; the free API allows 60 requests a minute and 1,000 a day per IP address."},{"@type":"Offer","name":"Premium","price":"12.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://mail.neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"12.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Pro","price":"49.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://mail.neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"49.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Scale","price":"99.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://mail.neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"99.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}}],"featureList":["Connect your own domain — every address on it becomes a catch-all inbox","Disposable email addresses with no signup","REST API over HTTPS, no API key required","MCP server for AI agents (create_inbox, wait_for_message)","Every mailbox has an alias you can hand out instead of the address","Attachments up to 5 MB","Automatic deletion after 5 days"],"additionalProperty":[{"@type":"PropertyValue","name":"Sending mail","value":"No. There is no endpoint that sends, and no outbound mail of any kind."},{"@type":"PropertyValue","name":"IMAP or POP3","value":"No. HTTPS only — a REST API and an MCP server."},{"@type":"PropertyValue","name":"Webhooks or push notifications","value":"No. You poll, or you let the MCP server hold the call open until the message lands."},{"@type":"PropertyValue","name":"Keeping mail longer than 5 days","value":"No. Not a tier, not a setting, not a parameter."},{"@type":"PropertyValue","name":"Attachments over 5 MB","value":"No. The message is refused at SMTP time."},{"@type":"PropertyValue","name":"Privacy on a shared domain","value":"No. Anyone who knows the address can read the mailbox."},{"@type":"PropertyValue","name":"Paying by card","value":"No. Crypto only, credited to a balance the subscription draws on."},{"@type":"PropertyValue","name":"An uptime guarantee","value":"No. There is no SLA, on any plan."},{"@type":"PropertyValue","name":"Tracking, analytics or advertising","value":"No. No third-party script, and no cookie banner because there are no cookies to consent to."}],"potentialAction":{"@type":"ConsumeAction","target":{"@type":"EntryPoint","urlTemplate":"https://mail.neverla.web.id/api/v1/mailbox?address={address}","httpMethod":"GET","contentType":"application/json"}}},{"@type":"WebPage","@id":"https://mail.neverla.web.id/domains#page","url":"https://mail.neverla.web.id/domains","name":"Use Your Own Domain for Disposable Email | Neverla Mail","description":"Point your domain's MX at smtp.mail.neverla.web.id and every address on it becomes a mailbox. No account, no setup: the first message connects it.","isPartOf":{"@id":"https://mail.neverla.web.id/#site"},"inLanguage":"en"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Neverla Mail","item":"https://mail.neverla.web.id/"},{"@type":"ListItem","position":2,"name":"Connect your domain","item":"https://mail.neverla.web.id/domains"}]}]}</script>
+<script>
+    (function() {
+      var _origTitle = document.title;
+      Object.defineProperty(document, 'title', {
+        get: function() { return _origTitle.replace(/GrabMail/gi, 'Neverla Mail').replace(/🐴/g, ''); },
+        set: function(val) { _origTitle = val.replace(/GrabMail/gi, 'Neverla Mail').replace(/🐴/g, ''); }
+      });
+    })();
+    </script>
+<style>
+    :root {
+      --bg: #071529 !important;
+      --card-bg: #0C2340 !important;
+      --primary: #1E3A8A !important;
+      --accent: #2563EB !important;
+    }
+    body { background-color: #071529 !important; color: #E2E8F0 !important; }
+    .sheet-mobile, .inbox-msg-sheet { transition: none !important; }
+    iframe { transition: none !important; }
+    </style>
 </head>
 <body class="page-domains" id="top" data-loc="en" data-i18n="{}">
 
@@ -100,25 +93,12 @@
 
 <header class="hd" data-header>
   <div class="wrap hd-in">
-    <a class="hd-brand" href="/" aria-label="Neverla Mail — home">
-      <svg width="28" height="28" viewBox="0 0 48 48" fill="none" class="hd-logo-icon" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="nav-dongker-bg" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#0C2340"/>
-      <stop offset="100%" stop-color="#071529"/>
-    </linearGradient>
-    <linearGradient id="nav-dongker-diag" x1="11" y1="11" x2="37" y2="37" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#2563EB"/>
-      <stop offset="100%" stop-color="#1D4ED8"/>
-    </linearGradient>
-  </defs>
-  <rect width="48" height="48" rx="11" fill="url(#nav-dongker-bg)"/>
-  <rect x="0.75" y="0.75" width="46.5" height="46.5" rx="10.25" stroke="#1E3A8A" stroke-width="1.5" stroke-opacity="0.8"/>
-  <path d="M 11 37 V 11 H 17 V 37 Z" fill="#FFFFFF"/>
-  <path d="M 31 37 V 11 H 37 V 37 Z" fill="#FFFFFF"/>
-  <path d="M 11 11 H 17 L 37 37 H 31 Z" fill="url(#nav-dongker-diag)"/>
-</svg>
-      <span class="hd-brand-name">neverla<span class="hd-brand-mark">mail</span></span>
+    <a class="hd-brand" href="/" aria-label="mail.neverla.web.id — home">
+      <picture>
+        <source srcset="/assets/img/logo-nav.webp?v=3af85b61f5" type="image/webp">
+        <img class="hd-logo" src="/assets/img/logo-nav.png?v=3af85b61f5"
+             alt="Neverla Mail" width="126" height="30" decoding="async" fetchpriority="high">
+      </picture>
     </a>
 
     <span class="hd-sep" aria-hidden="true"></span>
@@ -204,7 +184,7 @@
                 <div class="rec-f rec-f-grow">
                   <span class="rec-l">Value <span class="rec-l-hint">— the part you paste</span></span>
                   <span class="rec-val">
-                    <code class="rec-v rec-v-strong" data-mx>smtp.neverla.web.id</code>
+                    <code class="rec-v rec-v-strong" data-mx>smtp.mail.neverla.web.id</code>
                     <button class="rec-copy" type="button" data-copy-mx>
                       <span data-copy-mx-label>Copy</span>
                     </button>
@@ -277,24 +257,11 @@
     <div class="ft-top">
       <div class="ft-brand">
         <a class="ft-logo" href="/" aria-label="Neverla Mail — home">
-          <svg width="28" height="28" viewBox="0 0 48 48" fill="none" class="hd-logo-icon" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="nav-dongker-bg" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#0C2340"/>
-      <stop offset="100%" stop-color="#071529"/>
-    </linearGradient>
-    <linearGradient id="nav-dongker-diag" x1="11" y1="11" x2="37" y2="37" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#2563EB"/>
-      <stop offset="100%" stop-color="#1D4ED8"/>
-    </linearGradient>
-  </defs>
-  <rect width="48" height="48" rx="11" fill="url(#nav-dongker-bg)"/>
-  <rect x="0.75" y="0.75" width="46.5" height="46.5" rx="10.25" stroke="#1E3A8A" stroke-width="1.5" stroke-opacity="0.8"/>
-  <path d="M 11 37 V 11 H 17 V 37 Z" fill="#FFFFFF"/>
-  <path d="M 31 37 V 11 H 37 V 37 Z" fill="#FFFFFF"/>
-  <path d="M 11 11 H 17 L 37 37 H 31 Z" fill="url(#nav-dongker-diag)"/>
-</svg>
-          <span class="ft-brand-name">neverla<span class="ft-brand-mark">mail</span></span>
+          <picture>
+            <source srcset="/assets/img/logo-nav.webp?v=3af85b61f5" type="image/webp">
+            <img class="ft-logo-img" src="/assets/img/logo-nav.png?v=3af85b61f5"
+                 alt="Neverla Mail" width="122" height="29" decoding="async" loading="lazy">
+          </picture>
         </a>
         <p class="ft-blurb">
                     Disposable email addresses with a free REST API. Grab one in a click, or point your own domain at us for an inbox nobody can guess into.        </p>
@@ -1113,7 +1080,7 @@
           </button>
         </div>
         <label class="sr-only" for="sh-d">Domain</label>
-        <select name="d" id="gm-domain" data-domain="" aria-label="Domain">
+        <select class="sh-cmp-d" name="d" id="sh-d" data-domain>
   <option value="neverla.web.id" selected="">@neverla.web.id</option>
   <option value="fldubai.com">@fldubai.com</option>
   <option value="mynes.com">@mynes.com</option>
@@ -1150,5 +1117,6 @@
 </dialog>
 
 <p class="sr-only" role="status" aria-live="polite" data-live></p>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"02cedb5f5f0546179edbe8511ded0ab3","r":1,"spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
