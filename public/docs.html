@@ -20,8 +20,8 @@
 <link rel="alternate" hreflang="ar" href="https://mail.neverla.web.id/ar/docs">
 <link rel="alternate" hreflang="ja" href="https://mail.neverla.web.id/ja/docs">
 <link rel="alternate" hreflang="x-default" href="https://mail.neverla.web.id/docs">
-<meta name="theme-color" content="#ffffff">
-<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#071529">
+<meta name="color-scheme" content="dark">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Neverla Mail">
@@ -71,6 +71,369 @@
         body { background-color: #071529 !important; color: #F1F5F9 !important; }
         header, .card, .split-pane, .inbox-sidebar, .inbox-body, .sheet { background-color: #0C2340 !important; border-color: #1E3A8A !important; }
         </style>
+<style id="neverla-dongker-shield">
+  :root, html, body {
+    background-color: #071529 !important;
+    color: #F8FAFC !important;
+    color-scheme: dark !important;
+  }
+  body, main, section, .hero {
+    background-color: #071529 !important;
+    color: #F8FAFC !important;
+  }
+  header, nav, .bottom-nav, .tab-bar, .mobile-nav {
+    background-color: #0C2340 !important;
+    border-color: #1E3A8A !important;
+  }
+  .card, .composer, .box, [class*="card"], [class*="composer"] {
+    background-color: #0C2340 !important;
+    border: 1px solid #1E3A8A !important;
+    color: #F8FAFC !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
+  }
+  input, select {
+    background-color: #071529 !important;
+    border: 1px solid #1E3A8A !important;
+    color: #FFFFFF !important;
+  }
+  h1, h2, h3 { color: #FFFFFF !important; }
+  p, span, .text-muted { color: #94A3B8 !important; }
+  .btn-primary, button[type="submit"] {
+    background-color: #2563EB !important;
+    color: #FFFFFF !important;
+  }
+</style>
+<style id="neverla-dongker-master">
+
+/* ============================================================
+   NEVERLA MAIL: COMPLETE COHESIVE BIRU DONGKER MASTER OVERRIDE
+   ============================================================ */
+
+:root, html, body {
+  background-color: #071529 !important;
+  color: #F8FAFC !important;
+  color-scheme: dark !important;
+}
+
+body, main, section, .hero, .wrap, .hero-in, .ft, .features, .steps, .faq {
+  background-color: #071529 !important;
+  color: #F8FAFC !important;
+}
+
+/* Remove glowing white orbs */
+.hero-orb {
+  display: none !important;
+}
+
+/* Top Navigation Header */
+header, .hd, .hd-in {
+  background-color: #0C2340 !important;
+  border-bottom: 1px solid #1E3A8A !important;
+}
+.hd-brand, .hd-brand a, .hd-brand-name, .hd-nav a {
+  color: #F1F5F9 !important;
+}
+.hd-nav a:hover {
+  color: #38BDF8 !important;
+}
+.hd-burger {
+  background-color: #0C2340 !important;
+  color: #F8FAFC !important;
+  border: 1px solid #1E3A8A !important;
+}
+
+/* Hero Typography */
+.hero-h, h1, h2, h3, h4 {
+  color: #FFFFFF !important;
+}
+.hero-p, p, .hero-features li, .step-p, .ft p, .text-muted {
+  color: #94A3B8 !important;
+}
+.hero-features li {
+  color: #CBD5E1 !important;
+}
+
+/* Composer / Email Generator Panel */
+.panel, .hero-grab, #grab, .composer, .card, .step, .drawer {
+  background-color: #0C2340 !important;
+  border: 1px solid #1E3A8A !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6) !important;
+  color: #F8FAFC !important;
+}
+
+/* Composer Inputs & Bar */
+.composer-bar, .input-group {
+  background-color: #071529 !important;
+  border: 1px solid #1E3A8A !important;
+}
+.composer-name, input[type="text"] {
+  background-color: transparent !important;
+  color: #FFFFFF !important;
+  border: none !important;
+}
+.composer-domain, select {
+  background-color: #0C2340 !important;
+  color: #38BDF8 !important;
+  border: 1px solid #1E3A8A !important;
+}
+
+/* Primary Action Button (Open Inbox) */
+.btn-primary, .composer-go, button[type="submit"] {
+  background: linear-gradient(135deg, #1D4ED8 0%, #1E40AF 100%) !important;
+  background-color: #1D4ED8 !important;
+  color: #FFFFFF !important;
+  border: 1px solid #3B82F6 !important;
+  box-shadow: 0 4px 14px rgba(29, 78, 216, 0.4) !important;
+}
+.btn-primary:hover, .composer-go:hover {
+  background: #2563EB !important;
+}
+
+/* Secondary Actions inside Card */
+.composer-meta, .composer-meta a, .composer-btn, .btn-ghost, .hero-api-copy {
+  color: #38BDF8 !important;
+}
+.composer-foot, .panel-foot {
+  color: #94A3B8 !important;
+}
+.composer-foot a {
+  color: #38BDF8 !important;
+}
+
+/* Fixed Bottom Navigation (Mobile Toolbar .tb) */
+nav.tb, .tb {
+  background-color: #0C2340 !important;
+  background: #0C2340 !important;
+  border-top: 1px solid #1E3A8A !important;
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.4) !important;
+}
+.tb-link, .tb a {
+  color: #94A3B8 !important;
+}
+.tb-link.active, .tb-link:hover, .tb a.active {
+  color: #38BDF8 !important;
+}
+.tb-inbox {
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
+  border: 2px solid #38BDF8 !important;
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.6) !important;
+}
+.tb-inbox svg, .tb-inbox use {
+  fill: #FFFFFF !important;
+  color: #FFFFFF !important;
+}
+
+/* Step cards & Footer */
+.step {
+  background-color: #0C2340 !important;
+  border-color: #1E3A8A !important;
+}
+.step-h {
+  color: #FFFFFF !important;
+}
+.ft {
+  background-color: #05101E !important;
+  border-top: 1px solid #1E3A8A !important;
+}
+.ft a {
+  color: #94A3B8 !important;
+}
+.ft a:hover {
+  color: #38BDF8 !important;
+}
+
+</style>
+<style id="neverla-dongker-polish">
+
+/* ============================================================
+   NEVERLA MAIL: POLISH CONTRAST & UNIFORM DONGKER PALETTE
+   ============================================================ */
+
+/* 1. Fix Brand Name Contrast in Header */
+.hd-brand, .hd-brand a, .hd-brand-name, .brand, a[href="/"] {
+  color: #FFFFFF !important;
+}
+.hd-brand svg, .hd-brand span {
+  color: #FFFFFF !important;
+  fill: #FFFFFF !important;
+}
+
+/* 2. Kill the bright glowing radial spotlight in Hero */
+.hero, .hero-in, body {
+  background-image: none !important;
+  background: #071529 !important;
+}
+.hero-orb, .hero-orb-a, .hero-orb-b, .hero-orb-c, .glow, .spotlight {
+  display: none !important;
+  opacity: 0 !important;
+}
+
+/* 3. Subtext High Contrast */
+.hero-p, .desc, p, .text-muted {
+  color: #CBD5E1 !important; /* Slate 300 - clear & bright against #071529 */
+}
+
+/* 4. Fix 'Use your own domain' link contrast in Card Footer */
+.composer-foot a, .panel-foot a, .composer a, .card a {
+  color: #38BDF8 !important; /* Sky 400 - high contrast cyan */
+  text-decoration: underline !important;
+}
+.composer-foot a:hover, .composer a:hover {
+  color: #7DD3FC !important;
+}
+
+/* 5. Fix Language Selector Floating Pill (Make it dark navy) */
+.lang-switch, .lang-picker, .lang-pill, [class*="lang"], [id*="lang"] {
+  background-color: #0C2340 !important;
+  border: 1px solid #1E3A8A !important;
+  color: #F8FAFC !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+.lang-switch button, .lang-pill button, .lang-switch a {
+  color: #F8FAFC !important;
+}
+
+/* 6. Feature List Bullet points high contrast */
+.hero-features li, .features li, .feature-item {
+  color: #E2E8F0 !important;
+}
+
+</style>
+<style id="neverla-surgical-dongker">
+
+/* ============================================================
+   NEVERLA MAIL: SURGICAL PIXEL-PERFECT BIRU DONGKER FIX
+   ============================================================ */
+
+/* 1. Ensure 100% full-width dark background without side gutters */
+html, body {
+  background-color: #071529 !important;
+  color: #F8FAFC !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+}
+
+/* 2. COMPLETELY HIDE the hero background image that causes the bright spotlight */
+.hero-bg, .hero-bg img, .hero-orb, .hero-orb-a, .hero-orb-b, .hero-orb-c {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  width: 0 !important;
+}
+
+/* 3. Pure Flat Biru Dongker for Hero */
+.hero, .wrap.hero-in, section[class*="hero"] {
+  background-color: #071529 !important;
+  background-image: none !important;
+  background: #071529 !important;
+}
+
+/* 4. Fix Hero Typography (Ultra-crisp contrast) */
+.hero-h {
+  color: #FFFFFF !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5) !important;
+}
+.hero-p {
+  color: #CBD5E1 !important; /* Soft Slate 300, 100% readable on #071529 */
+}
+
+/* 5. Fix Button Text Bounding Box Glitch */
+.composer-go-t {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #FFFFFF !important;
+  display: inline !important;
+}
+
+/* 6. Composer Panel & Glow */
+.panel.hero-grab, #grab {
+  background-color: #0C2340 !important;
+  border: 1px solid #1E3A8A !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important; /* No harsh neon glow */
+}
+
+/* 7. Composer Foot Link */
+.composer-foot, .panel-foot {
+  color: #94A3B8 !important;
+}
+.composer-foot a, .panel-foot a {
+  color: #38BDF8 !important; /* Vivid cyan */
+  text-decoration: underline !important;
+}
+
+/* 8. Fix Floating Language Pill */
+.lang-switch, [class*="lang-switch"], .lm {
+  background-color: #0C2340 !important;
+  color: #F8FAFC !important;
+  border: 1px solid #1E3A8A !important;
+}
+
+</style>
+<style id="neverla-spotlight-killer">
+
+/* ============================================================
+   NEVERLA MAIL: COMPLETE ERADICATION OF WHITE SPOTLIGHT & LOGO GLITCH
+   ============================================================ */
+
+/* 1. COMPLETELY ELIMINATE the radial white spotlight pseudo-elements */
+.hero-in::before,
+.hero-bg::after,
+.hero::before,
+.hero::after,
+.hero-orb,
+.hero-orb-a,
+.hero-orb-b,
+.hero-orb-c {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  content: none !important;
+  background: none !important;
+  background-image: none !important;
+}
+
+/* 2. Flat Pure Biru Dongker Background Everywhere */
+.hero, .wrap.hero-in, .hero-bg, section.hero, body {
+  background: #071529 !important;
+  background-color: #071529 !important;
+  background-image: none !important;
+}
+
+/* 3. Make Nav Logo 100% Crisp White on Dark Navy */
+.hd-logo, picture source, picture img {
+  filter: brightness(0) invert(1) !important; /* Pure white SVG/PNG */
+}
+
+/* 4. High-contrast Login link in Header */
+.hd-login, .btn.btn-quiet.hd-login, button[data-auth-open="signin"] {
+  color: #CBD5E1 !important; /* Soft Slate 300 */
+}
+.hd-login:hover {
+  color: #38BDF8 !important;
+}
+
+/* 5. Subtext High Contrast (100% Readable) */
+.hero-p {
+  color: #CBD5E1 !important; /* Sharp readable grey-white */
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* 6. Fix Button Box Artifact */
+.composer-go {
+  border: none !important;
+  outline: none !important;
+}
+.composer-go-t {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+</style>
 </head>
 <body class="page-docs" id="top" data-loc="en" data-i18n="{}">
 

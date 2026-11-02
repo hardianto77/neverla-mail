@@ -1,0 +1,4 @@
+Structure:
+- backend/ (Go - High-Performance Inbound SMTP Server + Core HTTP REST API + SQLite engine)
+- frontend/ (TypeScript / Vite / Tailwind or modern TS client library & web types)
+- server.js (Node.js compatibility layer / microservice)

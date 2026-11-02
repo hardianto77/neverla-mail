@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"sync"
 	"time"
@@ -45,13 +46,19 @@ func initDB() {
 	CREATE TABLE IF NOT EXISTS messages (
 		id TEXT PRIMARY KEY,
 		address TEXT NOT NULL,
-		alias TEXT NOT NULL,
-		from_address TEXT NOT NULL,
-		subject TEXT NOT NULL,
-		body_text TEXT,
-		body_html TEXT,
-		otp_code TEXT,
-		created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		alias TEXT,
+		from_email TEXT NOT NULL,
+		from_name TEXT,
+		to_email TEXT NOT NULL,
+		subject TEXT,
+		date TEXT NOT NULL,
+		seen INTEGER DEFAULT 0,
+		text TEXT,
+		text_derived INTEGER DEFAULT 0,
+		html TEXT,
+		attachments_json TEXT DEFAULT '[]',
+		expires_at TEXT NOT NULL,
+		created_at INTEGER NOT NULL
 	);
 	CREATE INDEX IF NOT EXISTS idx_messages_address ON messages(address);
 	CREATE INDEX IF NOT EXISTS idx_messages_alias ON messages(alias);
@@ -64,6 +71,11 @@ func initDB() {
 func computeAlias(address string) string {
 	h := sha256.Sum256([]byte(strings.ToLower(strings.TrimSpace(address)) + "_neverla_salt_2026"))
 	return hex.EncodeToString(h[:])[:12] + "@uvorion.com"
+}
+
+func extractOTP(text string) string {
+	re := regexp.MustCompile(`\b\d{4,8}\b`)
+	return re.FindString(text)
 }
 
 func corsMiddleware(next http.Handler) http.Handler {
@@ -79,7 +91,8 @@ func corsMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-// REST APIs
+// ── REST API HANDLERS ──────────────────────────────────────────
+
 func handleDomains(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
@@ -88,12 +101,15 @@ func handleDomains(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-type MessageSummary struct {
-	ID          string `json:"id"`
-	FromAddress string `json:"from_address"`
-	Subject     string `json:"subject"`
-	OTPCode     string `json:"otp_code,omitempty"`
-	CreatedAt   string `json:"created_at"`
+type MessageItem struct {
+	ID        string      `json:"id"`
+	From      interface{} `json:"from"`
+	Subject   string      `json:"subject"`
+	Date      string      `json:"date"`
+	Seen      bool        `json:"seen"`
+	Intro     string      `json:"intro"`
+	CreatedAt int64       `json:"created_at"`
+	OTPCode   string      `json:"otp_code,omitempty"`
 }
 
 func handleMailbox(w http.ResponseWriter, r *http.Request) {
@@ -102,13 +118,14 @@ func handleMailbox(w http.ResponseWriter, r *http.Request) {
 		address = r.URL.Query().Get("mailbox")
 	}
 	if address == "" {
-		http.Error(w, `{"error":"Missing address parameter"}`, http.StatusBadRequest)
+		http.Error(w, `{"error":"Missing address query parameter"}`, http.StatusBadRequest)
 		return
 	}
 
 	alias := computeAlias(address)
 	dbMutex.RLock()
-	rows, err := db.Query("SELECT id, from_address, subject, otp_code, created_at FROM messages WHERE address = ? OR alias = ? ORDER BY created_at DESC", address, alias)
+	query := "SELECT id, from_email, from_name, subject, date, seen, text, created_at FROM messages WHERE address = ? OR alias = ? ORDER BY created_at DESC"
+	rows, err := db.Query(query, address, alias)
 	dbMutex.RUnlock()
 
 	if err != nil {
@@ -117,19 +134,37 @@ func handleMailbox(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 
-	var list []MessageSummary
+	var list []MessageItem
 	for rows.Next() {
-		var m MessageSummary
-		var otp sql.NullString
-		if err := rows.Scan(&m.ID, &m.FromAddress, &m.Subject, &otp, &m.CreatedAt); err == nil {
-			if otp.Valid {
-				m.OTPCode = otp.String
+		var (
+			id, fromEmail, fromName, subject, date, text sql.NullString
+			seen                                         int
+			createdAt                                    int64
+		)
+		if err := rows.Scan(&id, &fromEmail, &fromName, &subject, &date, &seen, &text, &createdAt); err == nil {
+			otp := extractOTP(subject.String + " " + text.String)
+			intro := text.String
+			if len(intro) > 100 {
+				intro = intro[:100]
 			}
-			list = append(list, m)
+			fromObj := map[string]string{
+				"address": fromEmail.String,
+				"name":    fromName.String,
+			}
+			list = append(list, MessageItem{
+				ID:        id.String,
+				From:      fromObj,
+				Subject:   subject.String,
+				Date:      date.String,
+				Seen:      seen == 1,
+				Intro:     intro,
+				CreatedAt: createdAt,
+				OTPCode:   otp,
+			})
 		}
 	}
 	if list == nil {
-		list = []MessageSummary{}
+		list = []MessageItem{}
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -151,20 +186,28 @@ func handleMessageDetail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dbMutex.RLock()
-	var m struct {
-		ID          string         `json:"id"`
-		Address     string         `json:"address"`
-		Alias       string         `json:"alias"`
-		FromAddress string         `json:"from_address"`
-		Subject     string         `json:"subject"`
-		BodyText    sql.NullString `json:"body_text"`
-		BodyHTML    sql.NullString `json:"body_html"`
-		OTPCode     sql.NullString `json:"otp_code"`
-		CreatedAt   string         `json:"created_at"`
+	if r.Method == "DELETE" {
+		dbMutex.Lock()
+		_, err := db.Exec("DELETE FROM messages WHERE id = ?", id)
+		dbMutex.Unlock()
+		if err != nil {
+			http.Error(w, fmt.Sprintf(`{"error":"%v"}`, err), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]interface{}{"success": true, "deleted_id": id})
+		return
 	}
-	err := db.QueryRow("SELECT id, address, alias, from_address, subject, body_text, body_html, otp_code, created_at FROM messages WHERE id = ?", id).Scan(
-		&m.ID, &m.Address, &m.Alias, &m.FromAddress, &m.Subject, &m.BodyText, &m.BodyHTML, &m.OTPCode, &m.CreatedAt,
+
+	dbMutex.RLock()
+	var (
+		address, alias, fromEmail, fromName, toEmail, subject, date, text, html, attachmentsJSON, expiresAt sql.NullString
+		seen                                                                                                int
+		createdAt                                                                                           int64
+	)
+	query := "SELECT address, alias, from_email, from_name, to_email, subject, date, seen, text, html, attachments_json, expires_at, created_at FROM messages WHERE id = ?"
+	err := db.QueryRow(query, id).Scan(
+		&address, &alias, &fromEmail, &fromName, &toEmail, &subject, &date, &seen, &text, &html, &attachmentsJSON, &expiresAt, &createdAt,
 	)
 	dbMutex.RUnlock()
 
@@ -173,17 +216,35 @@ func handleMessageDetail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var attachList []interface{}
+	if attachmentsJSON.Valid && attachmentsJSON.String != "" {
+		json.Unmarshal([]byte(attachmentsJSON.String), &attachList)
+	}
+	if attachList == nil {
+		attachList = []interface{}{}
+	}
+
+	otp := extractOTP(subject.String + " " + text.String)
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
-		"id":           m.ID,
-		"address":      m.Address,
-		"alias":        m.Alias,
-		"from_address": m.FromAddress,
-		"subject":      m.Subject,
-		"body_text":    m.BodyText.String,
-		"body_html":    m.BodyHTML.String,
-		"otp_code":     m.OTPCode.String,
-		"created_at":   m.CreatedAt,
+		"id":      id,
+		"address": address.String,
+		"alias":   alias.String,
+		"from": map[string]string{
+			"address": fromEmail.String,
+			"name":    fromName.String,
+		},
+		"to":          toEmail.String,
+		"subject":     subject.String,
+		"date":        date.String,
+		"seen":        seen == 1,
+		"text":        text.String,
+		"html":        html.String,
+		"attachments": attachList,
+		"expires_at":  expiresAt.String,
+		"created_at":  createdAt,
+		"otp_code":    otp,
 	})
 }
 
@@ -196,6 +257,7 @@ func handleSimulate(w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		Address  string `json:"address"`
 		From     string `json:"from"`
+		FromName string `json:"from_name"`
 		Subject  string `json:"subject"`
 		BodyText string `json:"body_text"`
 		BodyHTML string `json:"body_html"`
@@ -206,12 +268,26 @@ func handleSimulate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if req.OTPCode == "" {
+		req.OTPCode = extractOTP(req.Subject + " " + req.BodyText)
+	}
+
 	id := fmt.Sprintf("msg_%d", time.Now().UnixNano())
 	alias := computeAlias(req.Address)
+	now := time.Now()
+	dateStr := now.UTC().Format(time.RFC3339)
+	expiresAt := now.Add(5 * 24 * time.Hour).UTC().Format(time.RFC3339)
+	createdMs := now.UnixMilli()
+
+	if req.FromName == "" {
+		req.FromName = "Verification Service"
+	}
 
 	dbMutex.Lock()
-	query := "INSERT INTO messages (id, address, alias, from_address, subject, body_text, body_html, otp_code, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))"
-	_, err := db.Exec(query, id, req.Address, alias, req.From, req.Subject, req.BodyText, req.BodyHTML, req.OTPCode)
+	query := `INSERT INTO messages (
+		id, address, alias, from_email, from_name, to_email, subject, date, seen, text, html, attachments_json, expires_at, created_at
+	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, '[]', ?, ?)`
+	_, err := db.Exec(query, id, req.Address, alias, req.From, req.FromName, req.Address, req.Subject, dateStr, req.BodyText, req.BodyHTML, expiresAt, createdMs)
 	dbMutex.Unlock()
 
 	if err != nil {
@@ -221,11 +297,240 @@ func handleSimulate(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
-		"success": true,
-		"id":      id,
-		"address": req.Address,
-		"alias":   alias,
+		"success":  true,
+		"id":       id,
+		"address":  req.Address,
+		"alias":    alias,
+		"otp_code": req.OTPCode,
 	})
+}
+
+// ── MCP JSON-RPC 2.0 PROTOCOL HANDLER ────────────────────────
+
+type MCPRequest struct {
+	JSONRPC string          `json:"jsonrpc"`
+	ID      interface{}     `json:"id"`
+	Method  string          `json:"method"`
+	Params  json.RawMessage `json:"params,omitempty"`
+}
+
+type MCPResponse struct {
+	JSONRPC string      `json:"jsonrpc"`
+	ID      interface{} `json:"id"`
+	Result  interface{} `json:"result,omitempty"`
+	Error   interface{} `json:"error,omitempty"`
+}
+
+func handleMCP(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	if r.Method != "POST" {
+		json.NewEncoder(w).Encode(MCPResponse{
+			JSONRPC: "2.0",
+			Error:   map[string]interface{}{"code": -32600, "message": "Invalid Request: MCP requires POST"},
+		})
+		return
+	}
+
+	body, _ := io.ReadAll(r.Body)
+	var req MCPRequest
+	if err := json.Unmarshal(body, &req); err != nil {
+		json.NewEncoder(w).Encode(MCPResponse{
+			JSONRPC: "2.0",
+			Error:   map[string]interface{}{"code": -32700, "message": "Parse error"},
+		})
+		return
+	}
+
+	switch req.Method {
+	case "initialize":
+		json.NewEncoder(w).Encode(MCPResponse{
+			JSONRPC: "2.0",
+			ID:      req.ID,
+			Result: map[string]interface{}{
+				"protocolVersion": "2024-11-05",
+				"capabilities":    map[string]interface{}{"tools": map[string]interface{}{}},
+				"serverInfo":      map[string]interface{}{"name": "neverla-mail-mcp", "version": "1.0.0"},
+			},
+		})
+
+	case "tools/list":
+		json.NewEncoder(w).Encode(MCPResponse{
+			JSONRPC: "2.0",
+			ID:      req.ID,
+			Result: map[string]interface{}{
+				"tools": []map[string]interface{}{
+					{
+						"name":        "list_domains",
+						"description": "Get all active disposable mail domains available for inbox generation.",
+						"inputSchema": map[string]interface{}{"type": "object", "properties": map[string]interface{}{}},
+					},
+					{
+						"name":        "get_mailbox",
+						"description": "Retrieve received messages for a specific mailbox address.",
+						"inputSchema": map[string]interface{}{
+							"type":       "object",
+							"properties": map[string]interface{}{"address": map[string]interface{}{"type": "string", "description": "Full email address (e.g. test@fldubai.com)"}},
+							"required":   []string{"address"},
+						},
+					},
+					{
+						"name":        "read_message",
+						"description": "Read full message content, body text/HTML, and extracted OTP code by ID.",
+						"inputSchema": map[string]interface{}{
+							"type":       "object",
+							"properties": map[string]interface{}{"id": map[string]interface{}{"type": "string", "description": "Message ID"}},
+							"required":   []string{"id"},
+						},
+					},
+					{
+						"name":        "extract_code",
+						"description": "Directly get latest 4-8 digit OTP verification code for an email address.",
+						"inputSchema": map[string]interface{}{
+							"type":       "object",
+							"properties": map[string]interface{}{"address": map[string]interface{}{"type": "string", "description": "Email address"}},
+							"required":   []string{"address"},
+						},
+					},
+				},
+			},
+		})
+
+	case "tools/call":
+		var callParams struct {
+			Name      string                 `json:"name"`
+			Arguments map[string]interface{} `json:"arguments"`
+		}
+		json.Unmarshal(req.Params, &callParams)
+
+		switch callParams.Name {
+		case "list_domains":
+			json.NewEncoder(w).Encode(MCPResponse{
+				JSONRPC: "2.0",
+				ID:      req.ID,
+				Result: map[string]interface{}{
+					"content": []map[string]interface{}{{"type": "text", "text": fmt.Sprintf("%v", domains)}},
+					"domains": domains,
+				},
+			})
+
+		case "get_mailbox":
+			addr, _ := callParams.Arguments["address"].(string)
+			alias := computeAlias(addr)
+			dbMutex.RLock()
+			rows, _ := db.Query("SELECT id, from_email, from_name, subject, date, seen, text, created_at FROM messages WHERE address = ? OR alias = ? ORDER BY created_at DESC", addr, alias)
+			dbMutex.RUnlock()
+			var msgs []MessageItem
+			if rows != nil {
+				for rows.Next() {
+					var id, fromEmail, fromName, subject, date, text sql.NullString
+					var seen int
+					var createdAt int64
+					rows.Scan(&id, &fromEmail, &fromName, &subject, &date, &seen, &text, &createdAt)
+					otp := extractOTP(subject.String + " " + text.String)
+					msgs = append(msgs, MessageItem{
+						ID:        id.String,
+						From:      map[string]string{"address": fromEmail.String, "name": fromName.String},
+						Subject:   subject.String,
+						Date:      date.String,
+						Seen:      seen == 1,
+						CreatedAt: createdAt,
+						OTPCode:   otp,
+					})
+				}
+				rows.Close()
+			}
+			json.NewEncoder(w).Encode(MCPResponse{
+				JSONRPC: "2.0",
+				ID:      req.ID,
+				Result: map[string]interface{}{
+					"address":  addr,
+					"messages": msgs,
+					"content":  []map[string]interface{}{{"type": "text", "text": fmt.Sprintf("Found %d messages for %s", len(msgs), addr)}},
+				},
+			})
+
+		case "read_message":
+			msgID, _ := callParams.Arguments["id"].(string)
+			dbMutex.RLock()
+			var subj, from, body string
+			err := db.QueryRow("SELECT subject, from_email, COALESCE(text, '') FROM messages WHERE id = ?", msgID).Scan(&subj, &from, &body)
+			dbMutex.RUnlock()
+			if err != nil {
+				json.NewEncoder(w).Encode(MCPResponse{
+					JSONRPC: "2.0",
+					ID:      req.ID,
+					Error:   map[string]interface{}{"code": -32000, "message": "Message not found"},
+				})
+				return
+			}
+			otp := extractOTP(subj + " " + body)
+			json.NewEncoder(w).Encode(MCPResponse{
+				JSONRPC: "2.0",
+				ID:      req.ID,
+				Result: map[string]interface{}{
+					"id":       msgID,
+					"subject":  subj,
+					"from":     from,
+					"otp_code": otp,
+					"content":  []map[string]interface{}{{"type": "text", "text": body}},
+				},
+			})
+
+		case "extract_code":
+			addr, _ := callParams.Arguments["address"].(string)
+			alias := computeAlias(addr)
+			dbMutex.RLock()
+			rows, _ := db.Query("SELECT subject, text FROM messages WHERE (address = ? OR alias = ?) ORDER BY created_at DESC", addr, alias)
+			dbMutex.RUnlock()
+			var foundOTP string
+			if rows != nil {
+				for rows.Next() {
+					var subj, body sql.NullString
+					rows.Scan(&subj, &body)
+					otp := extractOTP(subj.String + " " + body.String)
+					if otp != "" {
+						foundOTP = otp
+						break
+					}
+				}
+				rows.Close()
+			}
+
+			if foundOTP == "" {
+				json.NewEncoder(w).Encode(MCPResponse{
+					JSONRPC: "2.0",
+					ID:      req.ID,
+					Result: map[string]interface{}{
+						"code":    nil,
+						"content": []map[string]interface{}{{"type": "text", "text": "No OTP code found for this mailbox"}},
+					},
+				})
+				return
+			}
+			json.NewEncoder(w).Encode(MCPResponse{
+				JSONRPC: "2.0",
+				ID:      req.ID,
+				Result: map[string]interface{}{
+					"code":    foundOTP,
+					"content": []map[string]interface{}{{"type": "text", "text": fmt.Sprintf("Latest OTP code: %s", foundOTP)}},
+				},
+			})
+
+		default:
+			json.NewEncoder(w).Encode(MCPResponse{
+				JSONRPC: "2.0",
+				ID:      req.ID,
+				Error:   map[string]interface{}{"code": -32601, "message": "Method not found"},
+			})
+		}
+
+	default:
+		json.NewEncoder(w).Encode(MCPResponse{
+			JSONRPC: "2.0",
+			ID:      req.ID,
+			Error:   map[string]interface{}{"code": -32601, "message": "Method not found"},
+		})
+	}
 }
 
 func servePage(filename string) http.HandlerFunc {
@@ -240,7 +545,7 @@ func main() {
 	}
 
 	initDB()
-	log.Printf("Neverla Mail High-Performance Go Core starting on port %s...", port)
+	log.Printf("Neverla Mail High-Performance Go Core (REST + MCP) running on :%s...", port)
 
 	mux := http.NewServeMux()
 
@@ -259,19 +564,20 @@ func main() {
 
 	mux.HandleFunc("/v1/simulate", handleSimulate)
 
-	// GrabMail Cloned Pages
+	// MCP JSON-RPC 2.0 Server
+	mux.HandleFunc("/mcp", handleMCP)
+
+	// Static Pages (GrabMail 1:1 Mirror)
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/" {
 			http.ServeFile(w, r, filepath.Join(pubDir, "index.html"))
 			return
 		}
-		// Static assets
 		filePath := filepath.Join(pubDir, r.URL.Path)
 		if fi, err := os.Stat(filePath); err == nil && !fi.IsDir() {
 			http.ServeFile(w, r, filePath)
 			return
 		}
-		// If unknown route, fallback to index
 		http.ServeFile(w, r, filepath.Join(pubDir, "index.html"))
 	})
 
