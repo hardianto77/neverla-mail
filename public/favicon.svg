@@ -1,26 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="GrabMail">
-  <!--
-    The favicon, drawn for the two places it is actually judged: a browser tab,
-    and a Google result on a phone.
-
-    SQUARE, EDGE TO EDGE, NO ROUNDED CORNERS. Google masks favicons into a
-    circle in mobile search results, so rounding the corners only puts white
-    slivers in the four places about to be discarded — while leaving them
-    visible in a tab, where nothing is cropped. Full bleed gives a clean disc
-    there and a clean square here.
-
-    THE FLAP RUNS CORNER TO CORNER. That is the whole difference between a
-    shape that reads as an envelope and a shape that reads as a tick next to a
-    box. An earlier version had the chevron floating in the middle with a
-    tear-off slot beside it; at sixteen pixels it read as "V |" and not as mail
-    at all. The slot went with it — at this size the job is to be recognised in
-    a fifth of a second, not to explain what disposable means.
-
-    SAFE INSIDE THE CIRCLE: the envelope's furthest corner is 24 units from the
-    centre against a radius of 32, so the mask never touches it.
-  -->
-  <rect width="64" height="64" fill="#1d4ed8"/>
-  <rect x="12" y="19" width="40" height="26" rx="3" fill="#fff"/>
-  <path d="M14.8 21.8 32 34.2 49.2 21.8" fill="none" stroke="#1d4ed8" stroke-width="4.6"
-        stroke-linecap="round" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="favBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0C2340"/>
+      <stop offset="100%" stop-color="#071529"/>
+    </linearGradient>
+    <linearGradient id="favWing" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="18" fill="url(#favBg)"/>
+  <!-- Left Pillar -->
+  <rect x="18" y="16" width="7" height="32" rx="2" fill="#FFFFFF"/>
+  <!-- Origami Diagonal & Right Pillar -->
+  <path d="M 22 17 L 40 40 C 40.5 40.7 41.5 40.3 41.5 39.4 L 41.5 18 C 41.5 16.9 42.4 16 43.5 16 L 45 16 C 46.1 16 47 16.9 47 18 L 47 46 C 47 47.1 46.1 48 45 48 L 41 48 C 39.8 48 38.7 47.3 38.1 46.3 L 22 22 Z" fill="url(#favWing)"/>
+  <circle cx="44.2" cy="20.5" r="2.5" fill="#38BDF8"/>
 </svg>
