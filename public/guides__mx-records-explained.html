@@ -1,0 +1,1209 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MX records explained: priority, lookups and what breaks | Neverla Mail</title>
+<meta name="description" content="What an MX record is, how to read one, what the priority number really decides, why no MX still receives mail, and the six ways the record breaks.">
+<link rel="canonical" href="https://neverla.web.id/guides/mx-records-explained">
+<meta name="robots" content="max-image-preview:large">
+<link rel="alternate" type="application/rss+xml" title="Neverla Mail — Guides" href="https://neverla.web.id/guides/feed.xml">
+<meta name="theme-color" content="#ffffff">
+<meta name="color-scheme" content="light">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Neverla Mail">
+<meta property="og:title" content="MX records explained: priority, lookups and what breaks | Neverla Mail">
+<meta property="og:description" content="What an MX record is, how to read one, what the priority number really decides, why no MX still receives mail, and the six ways the record breaks.">
+<meta property="og:url" content="https://neverla.web.id/guides/mx-records-explained">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://neverla.web.id/assets/img/guides/mxrecord-1376.webp">
+<meta property="og:image:width" content="1376">
+<meta property="og:image:height" content="768">
+<meta property="og:image:alt" content="Neverla Mail — Temporary email addresses, and an API to read them.">
+<meta name="twitter:image" content="https://neverla.web.id/assets/img/guides/mxrecord-1376.webp">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" sizes="96x96" href="/assets/img/icon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/img/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Neverla Mail">
+
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/main.css?v=3af85b61f5">
+<link rel="stylesheet" href="/assets/css/mobile.css?v=3af85b61f5" media="(max-width: 959.98px)">
+<script src="/assets/js/app.js?v=3af85b61f5" defer></script>
+<script src="/assets/js/mobile.js?v=3af85b61f5" defer></script>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://neverla.web.id/#org","name":"Neverla Mail","url":"https://neverla.web.id/","description":"Free disposable email addresses with a REST API and an MCP server for AI agents.","logo":{"@type":"ImageObject","url":"https://neverla.web.id/assets/img/logo.png","width":671,"height":160},"image":"https://neverla.web.id/assets/img/og-card.png","sameAs":["https://dev.to/neverla"]},{"@type":"WebSite","@id":"https://neverla.web.id/#site","name":"Neverla Mail","url":"https://neverla.web.id/","publisher":{"@id":"https://neverla.web.id/#org"},"inLanguage":["en","es","pt","fr","de","ru","tr","id","vi","ar","ja"]},{"@type":["WebAPI","SoftwareApplication"],"@id":"https://neverla.web.id/#api","name":"Neverla Mail disposable email API","url":"https://neverla.web.id/docs/api","documentation":"https://neverla.web.id/docs/api","provider":{"@id":"https://neverla.web.id/#org"},"applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"Create a disposable email address and read what arrives at it over HTTP. No account, no API key and no payment for the public domains. Messages are deleted 5 days after they arrive.","offers":[{"@type":"Offer","name":"Free","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"Public domains, your own domains, the REST API and the MCP server. No account, no key; the free API allows 60 requests a minute and 1,000 a day per IP address."},{"@type":"Offer","name":"Premium","price":"12.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"12.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Pro","price":"49.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"49.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Scale","price":"99.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"99.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}}],"featureList":["Connect your own domain — every address on it becomes a catch-all inbox","Disposable email addresses with no signup","REST API over HTTPS, no API key required","MCP server for AI agents (create_inbox, wait_for_message)","Every mailbox has an alias you can hand out instead of the address","Attachments up to 5 MB","Automatic deletion after 5 days"],"additionalProperty":[{"@type":"PropertyValue","name":"Sending mail","value":"No. There is no endpoint that sends, and no outbound mail of any kind."},{"@type":"PropertyValue","name":"IMAP or POP3","value":"No. HTTPS only — a REST API and an MCP server."},{"@type":"PropertyValue","name":"Webhooks or push notifications","value":"No. You poll, or you let the MCP server hold the call open until the message lands."},{"@type":"PropertyValue","name":"Keeping mail longer than 5 days","value":"No. Not a tier, not a setting, not a parameter."},{"@type":"PropertyValue","name":"Attachments over 5 MB","value":"No. The message is refused at SMTP time."},{"@type":"PropertyValue","name":"Privacy on a shared domain","value":"No. Anyone who knows the address can read the mailbox."},{"@type":"PropertyValue","name":"Paying by card","value":"No. Crypto only, credited to a balance the subscription draws on."},{"@type":"PropertyValue","name":"An uptime guarantee","value":"No. There is no SLA, on any plan."},{"@type":"PropertyValue","name":"Tracking, analytics or advertising","value":"No. No third-party script, and no cookie banner because there are no cookies to consent to."}],"potentialAction":{"@type":"ConsumeAction","target":{"@type":"EntryPoint","urlTemplate":"https://neverla.web.id/api/v1/mailbox?address={address}","httpMethod":"GET","contentType":"application/json"}}},{"@type":"WebPage","@id":"https://neverla.web.id/guides/mx-records-explained#page","url":"https://neverla.web.id/guides/mx-records-explained","name":"MX records explained: priority, lookups and what breaks | Neverla Mail","description":"What an MX record is, how to read one, what the priority number really decides, why no MX still receives mail, and the six ways the record breaks.","isPartOf":{"@id":"https://neverla.web.id/#site"},"inLanguage":"en"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Neverla Mail","item":"https://neverla.web.id/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://neverla.web.id/guides"},{"@type":"ListItem","position":3,"name":"Email & deliverability","item":"https://neverla.web.id/guides"},{"@type":"ListItem","position":4,"name":"MX records explained: priority, lookups and what breaks","item":"https://neverla.web.id/guides/mx-records-explained"}]},{"@type":"TechArticle","@id":"https://neverla.web.id/guides/mx-records-explained#article","headline":"MX records explained: priority, lookups and what breaks","description":"What an MX record is, how to read one, what the priority number really decides, why no MX still receives mail, and the six ways the record breaks.","image":"https://neverla.web.id/assets/img/guides/mxrecord-1376.webp","datePublished":"2026-09-09","dateModified":"2026-09-09","inLanguage":"en","articleSection":"Email & deliverability","timeRequired":"PT18M","keywords":"mx record, what is an mx record, mx record priority, mx lookup, dns mx, null mx, mail exchanger record, how to check mx record, mx record propagation, catch-all domain","author":{"@id":"https://neverla.web.id/#org"},"publisher":{"@id":"https://neverla.web.id/#org"},"isPartOf":{"@id":"https://neverla.web.id/#site"},"mainEntityOfPage":{"@id":"https://neverla.web.id/guides/mx-records-explained#page"},"proficiencyLevel":"Beginner"},{"@type":"FAQPage","@id":"https://neverla.web.id/guides/mx-records-explained#faq","mainEntity":[{"@type":"Question","name":"Can a domain have more than one MX record?","acceptedAnswer":{"@type":"Answer","text":"As many as you like, and the preference number is what puts them in order. What a domain cannot usefully have is two records belonging to two different mail providers: both are valid, both will be used, and your mail is split between them without anybody being told. A domain is accepted here only when we are its single MX, for exactly that reason."}},{"@type":"Question","name":"Is priority 10 better than priority 20?","acceptedAnswer":{"@type":"Answer","text":"It is tried first, which is all « better » can mean here. The numbers are only ever compared with each other, so 10 and 20 behave identically to 1 and 2. A single record's number is compared with nothing and could be anything from 0 to 65535 without changing a thing."}},{"@type":"Question","name":"Do I need an MX record to send email?","acceptedAnswer":{"@type":"Answer","text":"No. Nothing on the sending path reads your MX record. What a receiving server checks about your outgoing mail is SPF, DKIM and DMARC, which are TXT records with an entirely different purpose. A domain that only receives needs an MX and nothing more; a domain that only sends needs the other three, and arguably a null MX as well."}},{"@type":"Question","name":"Why does my MX point at a hostname with no website on it?","acceptedAnswer":{"@type":"Answer","text":"Because it is a mail server rather than a web server, and there is no reason for those to be the same machine. The host named in an MX record needs an A or AAAA record and something listening on port 25. Opening it in a browser and getting nothing back is the expected result, not a symptom."}},{"@type":"Question","name":"How long does an MX change take to work?","acceptedAnswer":{"@type":"Answer","text":"As long as the OLD record's TTL, and only for the resolvers that already had it — commonly an hour, sometimes a day. Any sender that never asked before gets the new answer immediately. There is no way to shorten the wait after the fact; lowering the TTL only helps when it is done before the change."}},{"@type":"Question","name":"Can an MX record point to an IP address?","acceptedAnswer":{"@type":"Answer","text":"No. The value is a domain name, and a sender that finds an IP address there will try to resolve it as a name and fail. Publish a hostname — smtp.neverla.web.id, for a domain pointed here — and let the address live in that host's own A record, which is where every sender knows to look for it."}},{"@type":"Question","name":"Does a subdomain inherit the MX record of its parent domain?","acceptedAnswer":{"@type":"Answer","text":"No, DNS inherits nothing downwards. Mail to you@sub.example.com asks for the MX of sub.example.com, and if there is none it falls back to that subdomain's own A record rather than to the parent's mail server. A subdomain that has to receive mail needs an MX record of its own."}}]}]}</script>
+<script>
+(function() {
+  var _t = document.title;
+  Object.defineProperty(document, 'title', {
+    get: function() { return _t; },
+    set: function(v) {
+      _t = (v || '').replace(/grabmail/gi, 'Neverla Mail').replace(/🐴/g, '').trim();
+    }
+  });
+})();
+</script>
+</head>
+<body class="page-guide" id="top" data-loc="en" data-i18n="{}">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="hd" data-header>
+  <div class="wrap hd-in">
+    <a class="hd-brand" href="/" aria-label="neverla.web.id — home">
+      <picture>
+        <source srcset="/assets/img/logo-nav.webp?v=3af85b61f5" type="image/webp">
+        <img class="hd-logo" src="/assets/img/logo-nav.png?v=3af85b61f5"
+             alt="Neverla Mail" width="126" height="30" decoding="async" fetchpriority="high">
+      </picture>
+    </a>
+
+    <span class="hd-sep" aria-hidden="true"></span>
+
+        <nav class="hd-nav" aria-label="Main">
+      <ul class="hd-list">
+                <li>
+          <a class="hd-link" href="/#how" data-spy="how">How it works</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/extensions" data-spy="ext">Extension</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/#api" data-spy="api">API</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/domains" data-spy="domains">Your domain</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/docs/api" data-spy="docs">Docs</a>
+        </li>
+              </ul>
+    </nav>
+
+    <div class="hd-act">
+                  <button class="btn btn-quiet hd-login" type="button" data-auth-open="signin">
+        Log in      </button>
+            <a class="btn btn-primary" href="/#grab" data-cta>
+        Open an inbox        <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+        <button class="hd-burger" type="button" data-burger
+            aria-expanded="false" aria-controls="gm-drawer" aria-label="Open menu">
+      <span class="hd-burger-box" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+  </div>
+</header>
+
+<div class="drawer" id="gm-drawer" data-drawer hidden>
+  <nav class="drawer-in" aria-label="Mobile">
+    <ul class="drawer-list">
+            <li><a class="drawer-link" href="/#how">How it works</a></li>
+            <li><a class="drawer-link" href="/extensions">Extension</a></li>
+            <li><a class="drawer-link" href="/#api">API</a></li>
+            <li><a class="drawer-link" href="/domains">Your domain</a></li>
+            <li><a class="drawer-link" href="/docs/api">Docs</a></li>
+          </ul>
+    <a class="btn btn-primary btn-block" href="/#grab">Open an inbox</a>
+            <button class="btn btn-ghost btn-block" type="button" data-auth-open="signin">Log in</button>
+        <p class="drawer-note">Free · No signup · Deleted after 5 days</p>
+
+  </nav>
+</div>
+
+<main id="main">
+<div class="ga">
+
+    <div class="ga-prog" data-guide-progress aria-hidden="true"><span></span></div>
+
+  <div class="wrap ga-top">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+                <li><a href="/guides">Guides</a></li>
+        <li><a href="/guides/topic/deliverability">Email &amp; deliverability</a></li>
+                <li aria-current="page">MX records explained: priority, lookups and what breaks</li>
+      </ol>
+    </nav>
+
+    <div class="ga-head">
+      <div class="ga-head-t">
+        <p class="ga-eyebrow">
+          <span class="ga-eyebrow-ic"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3.2 12.4a9.6 9.6 0 0 1 13.6 0M6 15.1a5.8 5.8 0 0 1 8 0"/><path d="M10 17.8h.01M2 8.2a12.5 12.5 0 0 1 16 0"/></svg></span>
+          <a class="ga-eyebrow-a" href="/guides/topic/deliverability">Email &amp; deliverability</a>
+        </p>
+        <h1 class="ga-h">MX records explained: priority, lookups and what breaks</h1>
+        <p class="ga-lede">One line of DNS decides where every message to your domain is taken. It is two fields — a number and a hostname — and almost everything people believe about the number is wrong. Here is how to read the record, what a sending server really does with it, the six ways it goes wrong, and why a change you made an hour ago has not happened yet.</p>
+
+                <ul class="ga-meta">
+                    <li class="ga-lvl ga-lvl-beginner">Beginner</li>
+                              <li class="ga-meta-i">
+            <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.4V8l2.4 1.6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            18 min read          </li>
+          <li class="ga-meta-i">
+            <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="2.3" y="3.4" width="11.4" height="10.3" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M2.3 6.6h11.4M5.6 2.3v2.2M10.4 2.3v2.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            <time datetime="2026-09-09">Updated 9 September 2026</time>
+          </li>
+        </ul>
+      </div>
+
+                  <figure class="ga-hero">
+        <img class="ga-hero-img" src="/assets/img/guides/mxrecord-800.webp?v=3af85b61f5" srcset="/assets/img/guides/mxrecord-480.webp?v=3af85b61f5 480w, /assets/img/guides/mxrecord-800.webp?v=3af85b61f5 800w, /assets/img/guides/mxrecord-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 520px, (min-width: 720px) calc(100vw - 64px), calc(100vw - 40px)" width="1376" height="768" alt="A blue envelope floating beside a grey signpost with two blank arm-boards pointing in different directions" fetchpriority="high" decoding="async">      </figure>
+    </div>
+  </div>
+
+  <div class="wrap ga-body">
+    <nav class="ga-rail doc-toc" aria-label="On this page">
+      <p class="doc-toc-h">On this page</p>
+      <ul>
+                <li><a href="#what-it-is" data-spy="what-it-is">What an MX record is, and what it is not</a></li>
+                <li><a href="#reading-one" data-spy="reading-one">Reading one: two fields and a full stop</a></li>
+                <li><a href="#preference" data-spy="preference">What the number actually decides</a></li>
+                <li><a href="#how-a-sender-uses-it" data-spy="how-a-sender-uses-it">The seven steps a sending server takes</a></li>
+                <li><a href="#no-mx-at-all" data-spy="no-mx-at-all">When there is no MX record at all</a></li>
+                <li><a href="#six-ways-it-breaks" data-spy="six-ways-it-breaks">Six ways an MX record goes wrong</a></li>
+                <li><a href="#pointing-a-domain-here" data-spy="pointing-a-domain-here">The one record that points a domain at Neverla Mail</a></li>
+                <li><a href="#still-wrong-an-hour-later" data-spy="still-wrong-an-hour-later">When it still looks wrong an hour later</a></li>
+                <li><a href="#checklist" data-spy="checklist">The short version</a></li>
+                <li><a href="#faq" data-spy="faq">Questions</a></li>
+              </ul>
+      <p class="ga-rail-back">
+                <a class="ga-rail-back-a" href="/guides">
+          <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          All guides        </a>
+      </p>
+    </nav>
+
+    <article class="ga-art">
+      <div class="toc-chip" data-toc-bar><button class="toc-chip-b" type="button" aria-haspopup="dialog"><svg class="toc-chip-ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 5.5h12M4 10h12M4 14.5h7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span class="toc-chip-k">On this page</span><span class="toc-chip-v"></span><svg class="toc-chip-dn" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 6.5 8 10.5l4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+                  <aside class="ga-key" aria-labelledby="ga-key-h">
+        <h2 class="ga-key-h" id="ga-key-h">In short</h2>
+        <ul>
+                    <li>An MX record answers one question: which HOST accepts mail for this domain. It is a number and a hostname, it belongs to the domain on the right of the <code>@</code>, and it knows nothing at all about the mailbox on the left.</li>
+                    <li>The number is a preference, not a rank. Lower is tried first, and the value on its own means nothing: <code>10</code> and <code>20</code> behave exactly as <code>1</code> and <code>2</code> would.</li>
+                    <li>A second host is only reached when the first cannot be reached. A server that answers and refuses the recipient has ended the delivery — nothing moves down the list after a verdict.</li>
+                    <li>A domain with no MX record still receives: senders fall back to its <code>A</code> record. The only way to say « no mail here » is the null MX, a single record whose whole value is <code>0 .</code></li>
+                  </ul>
+      </aside>
+      
+            <section class="ga-s" id="what-it-is" aria-labelledby="what-it-is-h">
+        <h2 class="ga-s-h" id="what-it-is-h">What an MX record is, and what it is not</h2>
+        <p>Every email address has a domain after the <code>@</code>, and every delivery begins by asking that domain one question: <em>who takes mail for you?</em> The answer is an MX record — MX for Mail eXchanger — and it is two things joined together, a number and a hostname.</p><p>That is the entire record. It names a machine, and it names it in a way that lets a domain list several of them in an order. It sits in DNS beside the <code>A</code> record that points at the website, and the two have nothing to do with each other: a domain can serve its site from one company and take its mail at another, which is what most domains actually do.</p><dl class="defs"><div class="def"><dt>Not an address</dt><dd>The record belongs to <code>example.com</code>, not to <code>you@example.com</code>. DNS has never heard of the part before the <code>@</code>. One MX record serves every address on the domain — the ones that exist and the ones nobody has thought of.</dd></div><div class="def"><dt>Not an IP address</dt><dd>The value is a hostname, which the sender then resolves to an address of its own in a second lookup. An IP address written where the hostname goes is a well-formed record that no sender can use.</dd></div><div class="def"><dt>Nothing to do with sending</dt><dd>Nothing consults your MX record when you send a message. What proves an outgoing message really came from your domain is <a href="/guides/spf-dmarc-for-a-receive-only-domain">SPF, DKIM and DMARC</a> — different records, in a different place, doing a different job.</dd></div><div class="def"><dt>Not a promise that the mailbox exists</dt><dd>An MX record says where to knock. Whether anybody answers to a particular name is decided by the server at the other end, during the conversation, long after DNS has finished.</dd></div></dl><p>This is why an MX record can be perfect while mail still fails, and why it can be missing while mail still arrives. It is one step of seven, and it is the only one that happens before anything connects to anything.</p><aside class="ga-call ga-call-note"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7.5"/><path d="M10 9.2v4.4M10 6.4h.01"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Note</span>Two records, two jobs.</p><p>The <code>A</code> record of <code>example.com</code> is where a browser goes. The MX record of <code>example.com</code> is where a mail server goes. Changing one has no effect whatever on the other, and a domain that has lost its website has not necessarily lost its mail.</p></div></aside>      </section>
+            <section class="ga-s" id="reading-one" aria-labelledby="reading-one-h">
+        <h2 class="ga-s-h" id="reading-one-h">Reading one: two fields and a full stop</h2>
+        <p>One command, on any machine that has <code>dig</code> installed:</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>shell</span><button class="code-copy" type="button" data-copy-code data-code="dig +short MX example.com" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code><span class="code-p">$</span> dig +short MX example.com</code></pre></div><p>A domain that takes mail answers with one line per record:</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>answer</span><button class="code-copy" type="button" data-copy-code data-code="10 mx1.example.com.
+20 mx2.example.com." aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code>10 mx1.example.com.
+20 mx2.example.com.</code></pre></div><p>Four things are now in front of you, and only two of them are the record.</p><dl class="defs"><div class="def"><dt><code>10</code></dt><dd>The preference. A whole number between <code>0</code> and <code>65535</code>, where lower means <em>tried first</em>. It is compared with the other numbers in this same answer and with nothing else in the world.</dd></div><div class="def"><dt><code>mx1.example.com</code></dt><dd>The host that accepts the mail. A name, not a machine: the sender has to resolve it to an address in a second lookup before it can connect to anything at all.</dd></div><div class="def"><dt>The trailing dot</dt><dd>It marks the name as complete, from here up to the root of DNS. Your provider may add it for you, may print it, or may hide it — all three spellings mean the same name.</dd></div><div class="def"><dt>What <code>+short</code> is hiding</dt><dd>The TTL, the class and the type. They matter exactly once, on the day you change the record, and the last section of this guide prints them.</dd></div></dl><p>Three ways to ask the same question, depending on what is installed where you are:</p><div class="ep-tw ga-tw" tabindex="0" role="region" aria-label="Where you are, The command, What comes back"><table class="ep-t ga-t ga-t-wide"><thead><tr><th scope="col">Where you are</th><th scope="col">The command</th><th scope="col">What comes back</th></tr></thead><tbody><tr><td>macOS, Linux, and Windows with the DNS tools installed</td><td><code>dig +short MX example.com</code></td><td>The two fields of each record and not one character more. This is the form the rest of the guide reads from.</td></tr><tr><td>Windows, out of the box</td><td><code>nslookup -type=mx example.com</code></td><td>The same records written out as sentences, with the preference labelled « MX preference » and the host « internet address ».</td></tr><tr><td>Anywhere <code>dig</code> is installed</td><td><code>host -t MX example.com</code></td><td>Shorter to type, and it puts « is handled by » between the number and the hostname, which is a fair description of what the record does.</td></tr></tbody></table></div><aside class="ga-call ga-call-tip"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.6a5.2 5.2 0 0 0-3 9.5v1.6h6v-1.6a5.2 5.2 0 0 0-3-9.5zM8 16.4h4"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Tip</span>Ask about the domain, never about the address.</p><p>The lookup takes what follows the <code>@</code> and nothing else. <code>dig MX you@example.com</code> is not a shortcut; it is a question about a domain named <code>you@example.com</code>, which does not exist, and the answer will be an empty one.</p></div></aside>      </section>
+            <section class="ga-s" id="preference" aria-labelledby="preference-h">
+        <h2 class="ga-s-h" id="preference-h">What the number actually decides</h2>
+        <p>The number is called a preference, and the name is exact. It is not a rank of quality, not a share of the traffic and not a version. A sender takes the hosts it was given, sorts them by that number smallest first, and starts at the top.</p><p>Only the ORDER carries meaning. <code>10</code> and <code>20</code> do precisely what <code>1</code> and <code>2</code> would do, and precisely what <code>5</code> and <code>4000</code> would do. Ten, twenty, thirty is a habit that leaves room to slide something in later, and that is its whole justification.</p><figure class="ga-fig"><svg class="ga-dia" viewBox="0 0 700 238" role="img" aria-label="Two rows. In the first, the preferred host answers and the delivery is finished there whatever it answered. In the second, the preferred host cannot be reached at all, and the next host in the list is tried instead."><rect x="8" y="26" width="214" height="70" rx="10" class="d-box d-box-a"/><text x="115" y="54" class="d-t" text-anchor="middle">Preference 10</text><text x="115" y="74" class="d-s" text-anchor="middle">answers the connection</text><rect x="478" y="26" width="214" height="70" rx="10" class="d-box"/><text x="585" y="54" class="d-t" text-anchor="middle">The delivery is over</text><text x="585" y="74" class="d-s" text-anchor="middle">preference 20 is never tried</text><path d="M226 75H467" class="d-line"/><path d="M466 70L474 75L466 80z" class="d-head"/><text x="350" y="52" class="d-b" text-anchor="middle">it accepts, or it refuses</text><rect x="8" y="136" width="214" height="70" rx="10" class="d-box"/><text x="115" y="164" class="d-t" text-anchor="middle">Preference 10</text><text x="115" y="184" class="d-s" text-anchor="middle">does not answer at all</text><rect x="478" y="136" width="214" height="70" rx="10" class="d-box d-box-a"/><text x="585" y="164" class="d-t" text-anchor="middle">Preference 20</text><text x="585" y="184" class="d-s" text-anchor="middle">tried next, same message</text><path d="M226 185H467" class="d-line"/><path d="M466 180L474 185L466 190z" class="d-head"/><text x="350" y="162" class="d-b" text-anchor="middle">nothing there to talk to</text><text x="350" y="230" class="d-s" text-anchor="middle">A refusal is an answer. Only silence moves a message further down the list.</text></svg><figcaption>A second host is a way around a machine that is not answering — not around a machine that said no. That difference is the entire job of the preference number.</figcaption></figure><p>Two hosts sharing one number is not a mistake either. When preferences tie, the sender is expected to pick between them at random, and that is how a domain spreads incoming mail across several machines. It is the only load sharing DNS offers here, and for mail it is enough.</p><div class="ep-tw ga-tw" tabindex="0" role="region" aria-label="What the domain publishes, What a sending server does with it"><table class="ep-t ga-t ga-t-wide"><thead><tr><th scope="col">What the domain publishes</th><th scope="col">What a sending server does with it</th></tr></thead><tbody><tr><td><code>10 mx1</code></td><td>One host, so everything goes there. If it is unreachable the message waits in the sender's own queue until it is not.</td></tr><tr><td><code>10 mx1</code> and <code>20 mx2</code></td><td>Two hosts, tried in that order. The second is used only when the first does not answer at all — never because the first said no.</td></tr><tr><td><code>10 mx1</code> and <code>10 mx2</code></td><td>Two hosts of equal preference. The sender chooses one at random, so over many messages the load falls roughly evenly on both.</td></tr><tr><td><code>20 mx1</code></td><td>One host again, and the number is alone in the answer. It is compared with nothing, so it decides nothing, and it might as well have been any other number.</td></tr></tbody></table></div><p>None of this is the failover story people expect. The next host down is reached when the one above refuses the CONNECTION: it is switched off, the port is closed, the name resolves to nothing. A host that answers and then rejects the recipient has finished the job — the sender has a verdict, and a verdict is not a reason to go and ask somebody else.</p><aside class="ga-call ga-call-warn"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.8 18 16.6H2z"/><path d="M10 8v3.4M10 13.8h.01"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Watch out</span>A backup host that does not know your addresses is a spam relay you published yourself.</p><p>The classic arrangement — a second machine that accepts everything and forwards it on later — accepts mail for names that do not exist, discovers this only after it has said yes, and then has to write the failure notice itself, addressed to a sender who is very often forged. You have volunteered to send <a href="/guides/email-bounce-codes-explained#a-bounce-you-did-not-send">backscatter</a>. A second MX is worth having only when it knows exactly what the first one knows.</p></div></aside>      </section>
+            <section class="ga-s" id="how-a-sender-uses-it" aria-labelledby="how-a-sender-uses-it-h">
+        <h2 class="ga-s-h" id="how-a-sender-uses-it-h">The seven steps a sending server takes</h2>
+        <p>From the moment somebody presses send, the MX record is consulted once, quite early, and then never again for that message.</p><ol class="steps-n"><li><strong>It splits the address.</strong> Everything after the last <code>@</code> is the domain. Everything before it is carried along untouched and means nothing until step five.</li><li><strong>It asks DNS for that domain's MX records.</strong> One question, answered out of a cache more often than not.</li><li><strong>It sorts the answer by preference,</strong> smallest number first, shuffling at random any hosts that tie.</li><li><strong>It resolves the first hostname</strong> to an <code>A</code> or <code>AAAA</code> record. This is a second lookup, and a hostname with no address record of its own is a host that cannot be tried.</li><li><strong>It connects on port <code>25</code></strong> and holds an SMTP conversation: who is sending, who it is for, and then the message itself.</li><li><strong>It reads the reply code.</strong> A <code>2xx</code> means accepted and the work is over. A <code>5xx</code> means refused for good, and the message <a href="/guides/email-bounce-codes-explained">comes back as a bounce</a>.</li><li><strong>It retries anything temporary.</strong> A <code>4xx</code>, a refused connection or a timeout puts the message back in the queue, where it is tried again for several days — five is the usual figure — before anybody is told it failed.</li></ol><p>Two useful things fall out of that list. A message is never delivered by DNS, only routed by it, so a correct MX record on its own proves nothing about whether mail arrives. And a wrong MX record usually produces silence for hours rather than an error in seconds, because step seven is patient by design.</p><p class="doc-n">Nothing in that sequence looks at the part before the <code>@</code> until step five, which is why an MX record can never tell you whether an address exists. That question is answered by a server, in a conversation — and on a <a href="/guides/own-domain-catch-all-inbox">domain pointed here</a> the answer is yes to every name on it, which is what a catch-all is.</p>      </section>
+            <section class="ga-s" id="no-mx-at-all" aria-labelledby="no-mx-at-all-h">
+        <h2 class="ga-s-h" id="no-mx-at-all-h">When there is no MX record at all</h2>
+        <p>A domain with no MX record is not a domain that refuses mail. The standard says a sender must then fall back to the domain's own address record and deliver there, exactly as though a record with preference <code>0</code> had been published pointing at the domain itself. It is called the implicit MX, and it is why a small company whose entire DNS is one web server goes on receiving mail nobody ever configured.</p><p>It is also why deleting an MX record does not stop mail. The attempts simply move to whatever the <code>A</code> record points at, which usually refuses the connection, and the messages then sit in the sender's queue for days before anyone is told anything at all.</p><p>The record that genuinely says <em>this domain accepts no mail</em> is the null MX: one record, preference <code>0</code>, and a value that is a single dot and nothing else.</p><p class="doc-inline ga-copy"><span class="ga-copy-l">The whole value of a null MX</span><code class="doc-code">0 .</code><button class="doc-copy" type="button" data-copy-text="0 ."><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-text-label>Copy</span></button></p><p>A sender that meets one stops immediately with a permanent failure instead of retrying for five days, and whoever wrote to you learns at once that they cannot. It belongs on a domain you own and never read — a brand you have parked, a name you bought so that somebody else could not.</p><div class="ep-tw ga-tw" tabindex="0" role="region" aria-label="What the domain publishes, What a sender does, How the sender finds out"><table class="ep-t ga-t ga-t-wide"><thead><tr><th scope="col">What the domain publishes</th><th scope="col">What a sender does</th><th scope="col">How the sender finds out</th></tr></thead><tbody><tr><td>One or more ordinary MX records</td><td>Tries the hosts in preference order.</td><td>Whatever the mail server at the other end decides to say.</td></tr><tr><td>No MX record whatever</td><td>Falls back to the <code>A</code> record of the domain itself.</td><td>Usually a refused connection, followed by days of quiet retrying.</td></tr><tr><td>A null MX, and nothing else</td><td>Stops. Nothing is tried, nothing is queued.</td><td>A permanent failure straight away, carrying the status <code>5.1.10</code>.</td></tr></tbody></table></div><aside class="ga-call ga-call-stop"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7.5"/><path d="m6.6 6.6 6.8 6.8"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Do not</span>publish a null MX on a domain that has a live inbox behind it.</p><p>It is the one DNS record that cannot fail quietly. Every message to every address on the domain is refused at the door, permanently, and no queue anywhere holds anything back for you to rescue once you notice. A parked domain wants it; a domain anybody writes to never does.</p></div></aside>      </section>
+            <section class="ga-s" id="six-ways-it-breaks" aria-labelledby="six-ways-it-breaks-h">
+        <h2 class="ga-s-h" id="six-ways-it-breaks-h">Six ways an MX record goes wrong</h2>
+        <p>Almost every broken MX is one of these six, and four of them look entirely correct in the DNS provider's own interface.</p><dl class="defs"><div class="def"><dt>The value points at an alias</dt><dd>An MX must name a host that has an address record, never a <code>CNAME</code>. The standards forbid it outright, and the punishment is worse than an error message: many senders follow the alias anyway and some refuse to, so the domain loses a share of its mail and keeps the rest.</dd></div><div class="def"><dt>The value is an IP address</dt><dd>There is nowhere in the record for one. A sender reads the value as a hostname, fails to resolve it, and moves on to whatever comes next — or gives up entirely when there is nothing next.</dd></div><div class="def"><dt>The trailing dot is missing in a zone file</dt><dd>In a raw zone file a name without a final dot is relative, so <code>smtp.neverla.web.id</code> quietly becomes <code>smtp.neverla.web.id.example.com</code>. Web interfaces normally add the dot for you; the ones that hand you a plain text box do not.</dd></div><div class="def"><dt>There is a second record nobody remembers</dt><dd>A record left behind by a previous provider does not conflict with the new one. It takes its share of the mail, in silence, and the symptom is the worst one there is: some messages arrive and some do not.</dd></div><div class="def"><dt>It was published on the wrong name</dt><dd>An MX on <code>mail.example.com</code> routes mail addressed to <code>@mail.example.com</code>, which is not what anybody typed. The record belongs on exactly the name that appears after the <code>@</code>.</dd></div><div class="def"><dt>The zone being edited is not the zone being read</dt><dd>If the domain's nameservers were delegated elsewhere, the DNS page at the registrar still works and still saves, and nothing on the internet ever reads it. This is the one failure where everything you can see is correct.</dd></div></dl><p>That last one deserves a command rather than a paragraph, because it is invisible from inside the interface that is misleading you:</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>shell</span><button class="code-copy" type="button" data-copy-code data-code="dig +short NS example.com" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code><span class="code-p">$</span> dig +short NS example.com</code></pre></div><p>Those are the machines that answer for the domain. If they are not the ones whose control panel you have been editing, nothing you typed has ever been published anywhere.</p><aside class="ga-call ga-call-warn"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.8 18 16.6H2z"/><path d="M10 8v3.4M10 13.8h.01"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Watch out</span>A wildcard record does not create an MX.</p><p>A <code>*</code> record only covers names that have no records of their own, and it does not cover the domain itself. Nothing is inherited downwards either: mail to <code>you@sub.example.com</code> wants an MX published on <code>sub.example.com</code>, and the parent domain's record is not consulted.</p></div></aside>      </section>
+            <section class="ga-s" id="pointing-a-domain-here" aria-labelledby="pointing-a-domain-here-h">
+        <h2 class="ga-s-h" id="pointing-a-domain-here-h">The one record that points a domain at Neverla Mail</h2>
+        <p>One record on the domain, and every address on it becomes readable here — the ones you have thought of and the ones you have not, which is what makes <a href="/guides/unlimited-test-accounts-catch-all-domain">an endless supply of test addresses</a> a DNS record rather than a feature. Nothing else in the zone is touched: the website, the TXT records and the subdomains stay exactly where they are.</p><p class="doc-inline ga-copy"><span class="ga-copy-l">The preference and the host, as one line</span><code class="doc-code">10 smtp.neverla.web.id</code><button class="doc-copy" type="button" data-copy-text="10 smtp.neverla.web.id"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-text-label>Copy</span></button></p><ol class="steps-n"><li><strong>Publish the record.</strong> Type <code>MX</code>, name <code>@</code> — or the bare domain, or an empty box, since providers disagree about the spelling and all three mean the same thing — preference <code>10</code>, value <code>smtp.neverla.web.id</code>.</li><li><strong>Delete every other MX record.</strong> Not so that ours wins, but because two providers means part of your mail goes elsewhere and nothing will tell you which part.</li><li><strong>Wait out the OLD record's TTL,</strong> not the new one's. If the previous answer said an hour, an hour is what you wait.</li><li><strong>Check it, then send yourself anything at all.</strong> The first message that arrives is the confirmation, and it is kept rather than discarded.</li></ol><p>The check is the same command as everywhere else in this guide, pointed at your own domain:</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>shell</span><button class="code-copy" type="button" data-copy-code data-code="dig +short MX yourdomain.com" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code><span class="code-p">$</span> dig +short MX yourdomain.com</code></pre></div><p>You want exactly one line back, reading <code>10 smtp.neverla.web.id.</code> — one preference, one host, nothing underneath it. If a second line appears, that is the record quietly eating your mail. There is no account to open and no token to paste, because the record is itself the proof: nobody who did not control the domain could have published it.</p><aside class="ga-call ga-call-tip"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.6a5.2 5.2 0 0 0-3 9.5v1.6h6v-1.6a5.2 5.2 0 0 0-3-9.5zM8 16.4h4"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Tip</span>Publish the anti-spoofing records in the same sitting.</p><p>A domain that receives here sends nothing, which makes it the easiest domain in the world to lock down: <a href="/guides/spf-dmarc-for-a-receive-only-domain">the strictest SPF and DMARC that exist</a>, on the first day, with none of the staged rollout a sending domain has to go through.</p></div></aside>      </section>
+            <section class="ga-s" id="still-wrong-an-hour-later" aria-labelledby="still-wrong-an-hour-later-h">
+        <h2 class="ga-s-h" id="still-wrong-an-hour-later-h">When it still looks wrong an hour later</h2>
+        <p>DNS pushes nothing anywhere. Your change is live at your own provider the instant you save it, and it reaches everybody else only as their caches expire — and the number that decides how long that takes is the TTL of the record that was there BEFORE, which you can no longer read anywhere. The long form of the lookup at least prints the one you have now:</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>shell</span><button class="code-copy" type="button" data-copy-code data-code="dig +noall +answer MX example.com" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code><span class="code-p">$</span> dig +noall +answer MX example.com</code></pre></div><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>answer</span><button class="code-copy" type="button" data-copy-code data-code="example.com.        3600    IN    MX    10 mx1.example.com.
+example.com.        3600    IN    MX    20 mx2.example.com." aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code>example.com.        3600    IN    MX    10 mx1.example.com.
+example.com.        3600    IN    MX    20 mx2.example.com.</code></pre></div><p><code>3600</code> is the TTL, in seconds: how long anything that already holds this answer is entitled to go on using it. To see the truth with no cache in the way, ask a machine that is authoritative for the domain instead of asking a resolver:</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>shell</span><button class="code-copy" type="button" data-copy-code data-code="dig +short MX example.com @ns1.example.net" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code><span class="code-p">$</span> dig +short MX example.com @ns1.example.net</code></pre></div><p>The nameserver to put after the <code>@</code> is one of the names <code>dig +short NS example.com</code> gave you. If the authoritative answer is right and your own is wrong, there is nothing left to fix — only a cache to outlive.</p><ol class="steps-n"><li><strong>Ask an authoritative nameserver.</strong> If the record is correct there, it is published, and everything after this is waiting.</li><li><strong>Count from the old TTL.</strong> An hour is common and a day is not rare. The new TTL changes nothing until the old answer has expired everywhere.</li><li><strong>Check the nameservers.</strong> The zone you edited and the zone the world reads have to be the same zone.</li><li><strong>Look for a second MX.</strong> One correct record plus one forgotten record is the hardest failure on this page to see.</li><li><strong>Resolve the target.</strong> The host named in the record needs an <code>A</code> or <code>AAAA</code> record of its own, or there is nothing to connect to.</li><li><strong>Then stop looking at DNS.</strong> Once the record is right, what is left is a conversation between two servers, and the <a href="/guides/email-bounce-codes-explained">bounce</a> is where that conversation is written down.</li></ol><p class="doc-n">Nothing you can do makes a cached answer expire early, and no service anywhere « flushes DNS worldwide ». Lowering a TTL helps only if it is lowered before the change, never after — which is the one piece of DNS advice that has to be taken a day early to be worth anything at all.</p>      </section>
+            <section class="ga-s" id="checklist" aria-labelledby="checklist-h">
+        <h2 class="ga-s-h" id="checklist-h">The short version</h2>
+        <ol class="steps-n"><li>An MX record is a preference number and a hostname, published on the domain that follows the <code>@</code>.</li><li>Lower is tried first. The number means nothing on its own, and equal numbers share the load at random.</li><li>The next host down is for a host that does not ANSWER. A refusal is a verdict, and a verdict ends the delivery.</li><li>The target is a hostname that has an address record — never a <code>CNAME</code>, never an IP address.</li><li>No MX means senders fall back to the <code>A</code> record. Only a null MX, <code>0 .</code>, means no mail at all.</li><li>One MX provider per domain, or you lose a share of your mail to the other one and never learn which share.</li><li>After a change, ask an authoritative nameserver and then wait out the old TTL. There is genuinely nothing else to do.</li></ol><p>If the record is right and mail still does not arrive, the problem has moved somewhere DNS cannot see it. <a href="/guides/verification-email-not-arriving">A message that never turned up</a> and <a href="/guides/email-bounce-codes-explained">a message that came back</a> are two different investigations, and both of them begin where this one ends.</p>      </section>
+      
+            <section class="ga-s" id="faq" aria-labelledby="faq-h">
+        <h2 class="ga-s-h" id="faq-h">Questions</h2>
+        <div class="faq ga-faq">
+                    <details class="faq-i" open>
+            <summary class="faq-q">
+              <span>Can a domain have more than one MX record?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>As many as you like, and the preference number is what puts them in order. What a domain cannot usefully have is two records belonging to two different mail providers: both are valid, both will be used, and your mail is split between them without anybody being told. A domain is accepted here only when we are its single MX, for exactly that reason.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Is priority 10 better than priority 20?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>It is tried first, which is all « better » can mean here. The numbers are only ever compared with each other, so <code>10</code> and <code>20</code> behave identically to <code>1</code> and <code>2</code>. A single record's number is compared with nothing and could be anything from <code>0</code> to <code>65535</code> without changing a thing.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Do I need an MX record to send email?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>No. Nothing on the sending path reads your MX record. What a receiving server checks about your outgoing mail is <a href="/guides/spf-dmarc-for-a-receive-only-domain">SPF, DKIM and DMARC</a>, which are TXT records with an entirely different purpose. A domain that only receives needs an MX and nothing more; a domain that only sends needs the other three, and arguably a null MX as well.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Why does my MX point at a hostname with no website on it?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Because it is a mail server rather than a web server, and there is no reason for those to be the same machine. The host named in an MX record needs an <code>A</code> or <code>AAAA</code> record and something listening on port <code>25</code>. Opening it in a browser and getting nothing back is the expected result, not a symptom.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>How long does an MX change take to work?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>As long as the OLD record's TTL, and only for the resolvers that already had it — commonly an hour, sometimes a day. Any sender that never asked before gets the new answer immediately. There is no way to shorten the wait after the fact; lowering the TTL only helps when it is done before the change.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Can an MX record point to an IP address?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>No. The value is a domain name, and a sender that finds an IP address there will try to resolve it as a name and fail. Publish a hostname — <code>smtp.neverla.web.id</code>, for a domain pointed here — and let the address live in that host's own <code>A</code> record, which is where every sender knows to look for it.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Does a subdomain inherit the MX record of its parent domain?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>No, DNS inherits nothing downwards. Mail to <code>you@sub.example.com</code> asks for the MX of <code>sub.example.com</code>, and if there is none it falls back to that subdomain's own <code>A</code> record rather than to the parent's mail server. A subdomain that has to receive mail needs an MX record of its own.</p></div>
+          </details>
+                  </div>
+      </section>
+      
+      
+                  <nav class="ga-pn" aria-label="More in this topic">
+                <a class="ga-pn-i ga-pn-p" href="/guides/email-bounce-codes-explained" rel="prev">
+          <span class="ga-pn-k">Previous</span>
+          <span class="ga-pn-t">Reading a bounce message</span>
+        </a>
+                        <a class="ga-pn-i ga-pn-n" href="/guides/email-address-validation" rel="next">
+          <span class="ga-pn-k">Next</span>
+          <span class="ga-pn-t">Validating an email address</span>
+        </a>
+              </nav>
+      
+    </article>
+  </div>
+
+    <div class="ga-rel">
+    <div class="wrap">
+      <h2 class="ga-rel-h">Keep reading</h2>
+      <ul class="gd-cards ga-rel-l">
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/own-domain-catch-all-inbox">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/domain-800.webp?v=3af85b61f5" srcset="/assets/img/guides/domain-480.webp?v=3af85b61f5 480w, /assets/img/guides/domain-800.webp?v=3af85b61f5 800w, /assets/img/guides/domain-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="A white globe with a blue route arcing over network cubes into a mailbox" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">Your own domain</span>
+              <span class="gd-card-t">Turn a domain you own into a catch-all inbox</span>
+              <span class="gd-card-x">The single DNS record, why the record itself is the proof of ownership, giving every service its own address on your domain, and the honest limits of a mailbox with no password on it.</span>
+              <span class="gd-card-m">9 min read</span>
+            </span>
+          </a>
+        </li>
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/spf-dmarc-for-a-receive-only-domain">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/spoofing-800.webp?v=3af85b61f5" srcset="/assets/img/guides/spoofing-480.webp?v=3af85b61f5 480w, /assets/img/guides/spoofing-800.webp?v=3af85b61f5 800w, /assets/img/guides/spoofing-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="A blue envelope sliding into a grey mailbox while a second envelope is turned away by a blue shield" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">Email &amp; deliverability</span>
+              <span class="gd-card-t">SPF and DMARC for a receive-only domain: stop spoofing</span>
+              <span class="gd-card-x">Why a domain that never sends can go straight to the strictest SPF and DMARC on day one, the three records in full, the DKIM one you publish empty, checking your work with dig, and the parked-domain advice that would silently break your inbox.</span>
+              <span class="gd-card-m">19 min read</span>
+            </span>
+          </a>
+        </li>
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/email-bounce-codes-explained">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/bounce-800.webp?v=3af85b61f5" srcset="/assets/img/guides/bounce-480.webp?v=3af85b61f5 480w, /assets/img/guides/bounce-800.webp?v=3af85b61f5 800w, /assets/img/guides/bounce-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="A blue envelope turned back in mid-air beside the slot of a grey letterbox, with a second blue envelope fallen below it" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">Email &amp; deliverability</span>
+              <span class="gd-card-t">Email bounces: how to read one, and what each code means</span>
+              <span class="gd-card-x">What a bounce actually is and the two very different moments it happens, the three parts of a delivery report and which line carries the reason, how to read a reply code and an enhanced status code, the dozen codes that account for almost every bounce anybody reads, what can and cannot bounce at a disposable address, the bounces that belong to the hour you point your own domain here, and why a report sometimes arrives for a message you never sent.</span>
+              <span class="gd-card-m">22 min read</span>
+            </span>
+          </a>
+        </li>
+              </ul>
+    </div>
+  </div>
+  
+  <section class="cta ga-cta" aria-labelledby="ga-cta-h">
+    <div class="wrap cta-in">
+      <h2 class="cta-h" id="ga-cta-h">Try it while it is fresh</h2>
+      <p class="cta-p">An address takes one click, no account and no card. Everything in this guide works on it straight away.</p>
+      <div class="cta-act">
+        <a class="btn btn-primary btn-lg" href="/#grab">Open an inbox</a>
+        <a class="btn btn-ghost btn-lg" href="/docs/api">Read the API reference</a>
+      </div>
+    </div>
+  </section>
+</div>
+</main>
+
+<footer class="ft" id="ft-map">
+  <div class="wrap">
+    <div class="ft-top">
+      <div class="ft-brand">
+        <a class="ft-logo" href="/" aria-label="Neverla Mail — home">
+          <picture>
+            <source srcset="/assets/img/logo-nav.webp?v=3af85b61f5" type="image/webp">
+            <img class="ft-logo-img" src="/assets/img/logo-nav.png?v=3af85b61f5"
+                 alt="Neverla Mail" width="122" height="29" decoding="async" loading="lazy">
+          </picture>
+        </a>
+        <p class="ft-blurb">
+                    Disposable email addresses with a free REST API. Grab one in a click, or point your own domain at us for an inbox nobody can guess into.        </p>
+                <p class="ft-status">
+          <span class="dot" aria-hidden="true"></span>
+          <a href="/status">System status</a>
+        </p>
+      </div>
+
+                  <nav class="ft-nav" aria-label="Product">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Product</h2></summary>
+          <ul>
+                                                <li><a href="/#grab">Grab an address</a></li>
+                                    <li><a href="/#how">How it works</a></li>
+                                    <li><a href="/domains">Connect a domain</a></li>
+                                    <li><a href="/extensions">Browser extension</a></li>
+                                    <li><a href="/pricing">Pricing</a></li>
+                                    <li><a href="/guides">Guides</a></li>
+                                    <li><a href="/compare">Comparing the APIs</a></li>
+                                    <li><a href="/vs">Neverla Mail vs the alternatives</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Developers">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Developers</h2></summary>
+          <ul>
+                                                <li><a href="/docs/quickstart#mcp">MCP for AI agents</a></li>
+                                    <li><a href="/openapi.json">OpenAPI 3.1</a></li>
+                                    <li><a href="/llms.txt">llms.txt</a></li>
+                                    <li><a href="/docs">Documentation</a></li>
+                                    <li><a href="/docs/api">API reference</a></li>
+                                    <li><a href="/docs/quickstart">Quickstart</a></li>
+                                    <li><a href="/docs/limits">Limits</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Company">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Company</h2></summary>
+          <ul>
+                                                <li><a href="/about">About</a></li>
+                                    <li><a href="/status">Status</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Legal">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Legal</h2></summary>
+          <ul>
+                                                <li><a href="/legal/terms">Terms of service</a></li>
+                                    <li><a href="/legal/privacy">Privacy</a></li>
+                      </ul>
+        </details>
+      </nav>
+          </div>
+
+    <div class="ft-bar">
+      <p>&copy; 2026 Neverla Mail. All rights reserved.</p>
+      <ul class="ft-facts">
+        <li>Receive-only</li>
+        <li>No tracking, no ads</li>
+        <li>Messages deleted after 5 days</li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<div class="lang" data-lang>
+    <button class="lang-fab" type="button" data-lang-open
+          aria-haspopup="dialog" aria-expanded="false"
+          title="Language: English">
+    <span class="lang-fab-fl" aria-hidden="true"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+    <span class="lang-code" aria-hidden="true">EN</span>
+        <span class="lang-fab-n" aria-hidden="true"><span>English</span></span>
+    <svg class="lang-globe" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+         aria-hidden="true" focusable="false">
+      <circle cx="10" cy="10" r="7.25"/>
+      <path d="M2.75 10h14.5M10 2.75c3.85 4.4 3.85 10.1 0 14.5-3.85-4.4-3.85-10.1 0-14.5z"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="sr-only">Change language: English</span>
+  </button>
+
+  <dialog class="lm" data-lang-modal aria-labelledby="lm-title">
+    <div class="lm-panel">
+            <div class="lm-grab" aria-hidden="true"></div>
+
+            <header class="lm-hd">
+        <h2 class="lm-t" id="lm-title">Language</h2>
+                <form method="dialog">
+          <button class="lm-x" type="submit" aria-label="Change language">
+            <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+              <path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor"
+                    stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </form>
+      </header>
+
+      <ul class="lm-grid">
+                <li>
+          <a class="lm-i is-on"
+             href="/guides/mx-records-explained"
+             hreflang="en" lang="en"
+             aria-current="true" data-lang-current>
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">English</span>
+                            <span class="lm-n-l" lang="en">English</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">EN</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/es"
+             hreflang="es" lang="es"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-es"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Español</span>
+                            <span class="lm-n-l" lang="en">Spanish</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">ES</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/pt"
+             hreflang="pt" lang="pt"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-pt"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Português</span>
+                            <span class="lm-n-l" lang="en">Portuguese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">PT</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/fr"
+             hreflang="fr" lang="fr"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-fr"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Français</span>
+                            <span class="lm-n-l" lang="en">French</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">FR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/de"
+             hreflang="de" lang="de"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-de"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Deutsch</span>
+                            <span class="lm-n-l" lang="en">German</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">DE</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ru"
+             hreflang="ru" lang="ru"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ru"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Русский</span>
+                            <span class="lm-n-l" lang="en">Russian</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">RU</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/tr"
+             hreflang="tr" lang="tr"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-tr"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Türkçe</span>
+                            <span class="lm-n-l" lang="en">Turkish</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">TR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/id"
+             hreflang="id" lang="id"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-id"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Bahasa Indonesia</span>
+                            <span class="lm-n-l" lang="en">Indonesian</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">ID</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/vi"
+             hreflang="vi" lang="vi"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-vi"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Tiếng Việt</span>
+                            <span class="lm-n-l" lang="en">Vietnamese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">VI</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ar"
+             hreflang="ar" lang="ar"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ar"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">العربية</span>
+                            <span class="lm-n-l" lang="en">Arabic</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">AR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ja"
+             hreflang="ja" lang="ja"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ja"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">日本語</span>
+                            <span class="lm-n-l" lang="en">Japanese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">JA</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+              </ul>
+    </div>
+  </dialog>
+
+  <noscript>
+    <ul class="lang-ns" aria-label="Language">
+            <li><a href="/guides/mx-records-explained" hreflang="en" lang="en">English</a></li>
+            <li><a href="/es" hreflang="es" lang="es">Español</a></li>
+            <li><a href="/pt" hreflang="pt" lang="pt">Português</a></li>
+            <li><a href="/fr" hreflang="fr" lang="fr">Français</a></li>
+            <li><a href="/de" hreflang="de" lang="de">Deutsch</a></li>
+            <li><a href="/ru" hreflang="ru" lang="ru">Русский</a></li>
+            <li><a href="/tr" hreflang="tr" lang="tr">Türkçe</a></li>
+            <li><a href="/id" hreflang="id" lang="id">Bahasa Indonesia</a></li>
+            <li><a href="/vi" hreflang="vi" lang="vi">Tiếng Việt</a></li>
+            <li><a href="/ar" hreflang="ar" lang="ar">العربية</a></li>
+            <li><a href="/ja" hreflang="ja" lang="ja">日本語</a></li>
+          </ul>
+  </noscript>
+</div>
+<svg class="lm-sprite" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+    <symbol id="fl-en" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#012169"/>
+      <path d="M0 0 24 16M24 0 0 16" stroke="#fff" stroke-width="3.2"/>
+      <path d="M0 0 24 16M24 0 0 16" stroke="#C8102E" stroke-width="1.9"/>
+      <path d="M12 0v16M0 8h24" stroke="#fff" stroke-width="5.3"/>
+      <path d="M12 0v16M0 8h24" stroke="#C8102E" stroke-width="3.2"/>
+    </symbol>
+    <symbol id="fl-es" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#AA151B"/>
+      <rect y="4" width="24" height="8" fill="#F1BF00"/>
+    </symbol>
+    <symbol id="fl-pt" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#DA291C"/>
+      <rect width="9.6" height="16" fill="#046A38"/>
+      <circle cx="9.6" cy="8" r="3.4" fill="#FFE800" stroke="#046A38" stroke-width="1"/>
+    </symbol>
+    <symbol id="fl-fr" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <rect width="8" height="16" fill="#002395"/>
+      <rect x="16" width="8" height="16" fill="#ED2939"/>
+    </symbol>
+    <symbol id="fl-de" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#FFCE00"/>
+      <rect width="24" height="10.7" fill="#DD0000"/>
+      <rect width="24" height="5.3"/>
+    </symbol>
+    <symbol id="fl-ru" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#D52B1E"/>
+      <rect width="24" height="10.7" fill="#0039A6"/>
+      <rect width="24" height="5.3" fill="#fff"/>
+    </symbol>
+    <symbol id="fl-tr" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#E30A17"/>
+      <circle cx="9.4" cy="8" r="3.9" fill="#fff"/>
+      <circle cx="10.9" cy="8" r="3.1" fill="#E30A17"/>
+      <path d="m15.1 8 1.35.44-.83 1.15V8.2l.83 1.15z" fill="#fff"/>
+      <path d="m14.6 6.2.72 1.98 2.1.06-1.67 1.28.6 2.02-1.75-1.18-1.75 1.18.6-2.02-1.67-1.28 2.1-.06z" fill="#fff"/>
+    </symbol>
+    <symbol id="fl-id" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <rect width="24" height="8" fill="#CE1126"/>
+    </symbol>
+    <symbol id="fl-vi" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#DA251D"/>
+      <path d="m12 3.6 1.32 4.06h4.27l-3.46 2.51 1.33 4.06L12 11.72l-3.46 2.51 1.33-4.06-3.46-2.51h4.27z" fill="#FFFF00"/>
+    </symbol>
+    <symbol id="fl-ar" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#165D31"/>
+      <path d="M5.6 6.4h12.8" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M5.6 10.4h11.2" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M16.8 10.4c.9 0 1.6.5 1.6 1.2" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="fl-ja" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <circle cx="12" cy="8" r="4.8" fill="#BC002D"/>
+    </symbol>
+  </defs>
+</svg><dialog class="am" data-auth-modal aria-labelledby="am-h-signin">
+  <div class="am-panel" data-am-panel data-view="signin">
+
+        <div class="am-grab" aria-hidden="true"></div>
+
+        <div class="am-body" data-am-body>
+
+            <div class="am-hd">
+                <div class="am-seg" role="tablist" aria-label="Account">
+          <span class="am-seg-pill" aria-hidden="true"></span>
+          <button class="am-seg-b" type="button" role="tab" id="am-tab-signin"
+                  aria-selected="true" aria-controls="am-view-signin"
+                  data-am-go="signin">Sign in</button>
+          <button class="am-seg-b" type="button" role="tab" id="am-tab-signup"
+                  aria-selected="false" aria-controls="am-view-signup" tabindex="-1"
+                  data-am-go="signup">Create account</button>
+        </div>
+
+        <button class="am-x" type="button" data-am-close aria-label="Close">
+          <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor"
+                  stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+            <div class="am-alert" role="alert" data-am-alert hidden>
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" aria-hidden="true" focusable="false">
+          <circle cx="10" cy="10" r="7.6"/><path d="M10 6.2v4.4M10 13.4v.1"/>
+        </svg>
+        <span data-am-alert-t></span>
+      </div>
+
+      <div class="am-views" data-am-views>
+
+        <!-- ── sign in ──────────────────────────────────────────────────── -->
+        <form class="am-view" id="am-view-signin" data-am-view="signin"
+              role="tabpanel" aria-labelledby="am-tab-signin"
+              method="post" action="/api/v1/auth" novalidate>
+          <input type="hidden" name="action" value="signin">
+
+          <h2 class="am-h" id="am-h-signin">Welcome back</h2>
+          <p class="am-sub">Your inboxes and your domains, in one place.</p>
+
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-si-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-si-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-si-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-si-email-e" data-am-err hidden></p>
+    </div>
+                  <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-si-pass">Password</label>
+                <button class="am-link" type="button" data-am-go="reset">Forgot?</button>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-si-pass" name="password"
+               type="password"
+                              autocomplete="current-password"
+               placeholder="••••••••"
+               aria-describedby="am-si-pass-e"
+                                             data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+      
+      <p class="am-err" id="am-si-pass-e" data-am-err hidden></p>
+    </div>
+    
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Sign in</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+        <!-- ── create an account ───────────────────────────────────────── -->
+        <form class="am-view" id="am-view-signup" data-am-view="signup"
+              role="tabpanel" aria-labelledby="am-tab-signup"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <input type="hidden" name="action" value="signup">
+
+          <h2 class="am-h" id="am-h-signup">Create your account</h2>
+                              <p class="am-sub" data-am-sub>It stays free. The address is only so you can find your inboxes again.</p>
+          <p class="am-sub" data-am-sub="save" hidden>Create a free account to keep this inbox — and every inbox you open from now on.</p>
+                    <ul class="am-perks">
+            <li>Every inbox you open, saved</li>
+            <li>A free API key</li>
+            <li>No card, no trial</li>
+          </ul>
+          
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-su-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-su-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-su-email-e" data-am-err hidden></p>
+    </div>
+                  <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-pass">Password</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-su-pass" name="password"
+               type="password"
+                              autocomplete="new-password"
+               placeholder="••••••••"
+               aria-describedby="am-su-pass-e"
+                                             data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+                  <div class="am-str" data-am-str data-strength="0" hidden>
+        <div class="am-str-bars" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <span class="am-str-t" data-am-str-t></span>
+      </div>
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+            <p class="am-hint">At least 10 characters. Length beats punctuation.</p>
+      
+      <p class="am-err" id="am-su-pass-e" data-am-err hidden></p>
+    </div>
+    
+                        <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-pass2">Confirm password</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-su-pass2" name="password2"
+               type="password"
+                              autocomplete="new-password"
+               placeholder="••••••••"
+               aria-describedby="am-su-pass2-e"
+                              data-am-match="am-su-pass" data-am-skip               data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+      
+      <p class="am-err" id="am-su-pass2-e" data-am-err hidden></p>
+    </div>
+    
+                              <div class="am-cf" data-am-cf data-sitekey="0x4AAAAAAEfWgqSU6xDxtH5m"></div>
+          
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Create my account</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    
+          <p class="am-note">
+            By creating an account you agree to the <a href="/legal/terms">Terms</a> and the <a href="/legal/privacy">Privacy Policy</a>.          </p>
+        </form>
+
+        <!-- ── reset a password ────────────────────────────────────────── -->
+        <form class="am-view" id="am-view-reset" data-am-view="reset"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <input type="hidden" name="action" value="reset">
+
+          <button class="am-back" type="button" data-am-go="signin">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor"
+                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to sign in          </button>
+
+          <h2 class="am-h" id="am-h-reset">Reset your password</h2>
+          <p class="am-sub">Give us the address you signed up with and we will send a link to choose a new password.</p>
+
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-rs-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-rs-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-rs-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-rs-email-e" data-am-err hidden></p>
+    </div>
+    
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Send the link</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+        <!-- ── the link is on its way ──────────────────────────────────── -->
+                <div class="am-view am-view-done" id="am-view-sent" data-am-view="sent" hidden>
+          <span class="am-done-ic" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.4"
+                 stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="m9 16.6 4.6 4.6L23 11"/>
+            </svg>
+          </span>
+          <h2 class="am-h" id="am-h-sent">Check your inbox</h2>
+          <p class="am-sub">If an account exists for that address, a link to choose a new password is on its way. It is valid for one hour.</p>
+          <button class="btn btn-ghost am-go" type="button" data-am-go="signin">Back to sign in</button>
+        </div>
+
+        <!-- ── le second facteur (01/10/2026) ──────────────────────────── -->
+                <form class="am-view" id="am-view-mfa" data-am-view="mfa"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <button class="am-back" type="button" data-am-go="signin">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor"
+                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to sign in          </button>
+
+          <h2 class="am-h" id="am-h-mfa">Two-factor authentication</h2>
+          <p class="am-sub">Type the six digits your authenticator app shows — or one of your recovery codes.</p>
+
+          <div class="am-f">
+            <div class="am-f-top">
+              <label class="am-l" for="am-mfa-code">Code</label>
+            </div>
+            <div class="am-in">
+              <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>              <input class="am-i am-i-code" id="am-mfa-code" name="code" type="text"
+                     inputmode="numeric" autocomplete="one-time-code" spellcheck="false"
+                     autocapitalize="off" maxlength="24" placeholder="123 456"
+                     aria-describedby="am-mfa-code-e" data-am-in data-am-code required>
+            </div>
+            <p class="am-err" id="am-mfa-code-e" data-am-err hidden></p>
+          </div>
+
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Verify</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+      </div>
+    </div>
+
+  </div>
+</dialog>
+<nav class="tb" data-tb aria-label="Main">
+  <a class="tb-i" href="/" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.8 10.4 12 3.8l8.2 6.6v8.7a1.4 1.4 0 0 1-1.4 1.4h-4.3v-5.8h-5v5.8H5.2a1.4 1.4 0 0 1-1.4-1.4z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+    <span class="tb-n">Home</span>
+  </a>
+  <a class="tb-i is-on" aria-current="true" href="/guides" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 6.6C10.3 5.2 7.9 4.6 4.3 4.6v13.2c3.6 0 6 .6 7.7 2 1.7-1.4 4.1-2 7.7-2V4.6c-3.6 0-6 .6-7.7 2zM12 6.6v13.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+    <span class="tb-n">Guides</span>
+  </a>
+    <a class="tb-i tb-go" href="/inbox" data-sheet-open="inbox"
+     aria-haspopup="dialog">
+    <span class="tb-go-b" aria-hidden="true">
+      <svg viewBox="0 0 24 24" focusable="false"><rect x="3.2" y="5.6" width="17.6" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m4.2 7 7 5.3a1.3 1.3 0 0 0 1.6 0l7-5.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <span class="tb-n">Inbox</span>
+  </a>
+    <a class="tb-i" href="/pricing" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.8 12.4V5.2a1.4 1.4 0 0 1 1.4-1.4h7.2l7.9 7.9a1.4 1.4 0 0 1 0 2l-6.7 6.7a1.4 1.4 0 0 1-2 0z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="8.4" cy="8.4" r="1.5" fill="currentColor"/></svg>
+    <span class="tb-n">Pricing</span>
+  </a>
+    <a class="tb-i" href="#ft-map" data-sheet-open="menu" aria-haspopup="dialog">
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 7h15M4.5 12h15M4.5 17h15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <span class="tb-n">Menu</span>
+  </a>
+</nav>
+
+<dialog class="sh" data-sheet="menu" aria-labelledby="sh-menu-t">
+  <div class="sh-panel">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <header class="sh-hd">
+      <h2 class="sh-t" id="sh-menu-t">Menu</h2>
+      <form method="dialog">
+        <button class="sh-x" type="submit" aria-label="Close"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+      </form>
+    </header>
+
+    <div class="sh-body">
+            <div class="sh-auth">
+        <button class="btn btn-primary" type="button" data-auth-open="signin">Log in</button>
+        <button class="btn btn-ghost" type="button" data-auth-open="signup">Create account</button>
+      </div>
+      
+            <p class="sh-sec">Product</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/#how"><span>How it works</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/domains"><span>Connect a domain</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/extensions"><span>Browser extension</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/pricing"><span>Pricing</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/guides"><span>Guides</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/compare"><span>Comparing the APIs</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/vs"><span>Neverla Mail vs the alternatives</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Developers</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/docs/quickstart#mcp"><span>MCP for AI agents</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs"><span>Documentation</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/api"><span>API reference</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/quickstart"><span>Quickstart</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/limits"><span>Limits</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Company</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/about"><span>About</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/status"><span>Status</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Legal</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/legal/terms"><span>Terms of service</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/legal/privacy"><span>Privacy</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+      
+      <p class="sh-sec">Language</p>
+      <div class="sh-card sh-list">
+                <button class="sh-row sh-lang" type="button" data-sheet-lang>
+          <span class="sh-lang-fl" aria-hidden="true"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+          <span class="sh-lang-n">English</span>
+          <span class="sh-lang-c" aria-hidden="true">EN</span>
+          <svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>        </button>
+      </div>
+
+            <p class="sh-note">Free · No signup · Deleted after 5 days</p>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="sh sh-ibx" data-sheet="inbox" aria-labelledby="sh-ibx-t">
+  <div class="sh-panel">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <header class="sh-hd">
+      <h2 class="sh-t" id="sh-ibx-t">New address</h2>
+      <form method="dialog">
+        <button class="sh-x" type="submit" aria-label="Close"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+      </form>
+    </header>
+
+    <div class="sh-body">
+            <form class="sh-cmp" action="/inbox" method="get" data-composer data-sheet-composer novalidate>
+        <div class="sh-cmp-f">
+          <label class="sr-only" for="sh-u">Address name</label>
+          <input class="sh-cmp-u" type="text" name="u" id="sh-u" data-user
+                 placeholder="pick-any-name" maxlength="64"
+                 autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false"
+                 enterkeyhint="go" aria-describedby="sh-hint">
+          <button class="sh-cmp-dice" type="button" data-random
+                  aria-label="Random name" title="Random name">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="2" y="2" width="12" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="5.5" cy="5.5" r="1.1" fill="currentColor"/><circle cx="10.5" cy="5.5" r="1.1" fill="currentColor"/><circle cx="8" cy="8" r="1.1" fill="currentColor"/><circle cx="5.5" cy="10.5" r="1.1" fill="currentColor"/><circle cx="10.5" cy="10.5" r="1.1" fill="currentColor"/></svg>
+          </button>
+        </div>
+        <label class="sr-only" for="sh-d">Domain</label>
+        <select class="sh-cmp-d" name="d" id="sh-d" data-domain>
+                    <option value="neverla.web.id">@neverla.web.id</option>
+                    <option value="mixozia.com">@mixozia.com</option>
+                    <option value="linqmail.com">@linqmail.com</option>
+                  </select>
+        <p class="sh-hint composer-hint" id="sh-hint" data-hint hidden></p>
+        <button class="btn btn-primary btn-lg btn-block sh-cmp-go" type="submit">
+          <span>Open inbox</span>
+          <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <p class="sh-cmp-note">Public inbox — anyone with the address can read it.</p>
+      </form>
+
+                  <div class="sh-recent" data-sh-recent hidden>
+        <p class="sh-sec">Opened in this tab</p>
+        <ul class="sh-card sh-list" data-sh-recent-list></ul>
+              </div>
+    </div>
+  </div>
+</dialog>
+
+<p class="sr-only" role="status" aria-live="polite" data-live></p>
+
+</body>
+</html>

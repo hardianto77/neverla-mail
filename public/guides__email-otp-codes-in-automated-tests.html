@@ -1,0 +1,1302 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OTP codes from email in automated tests, without flaking | Neverla Mail</title>
+<meta name="description" content="Extract a one-time code from a verification email reliably: anchored regex, text vs HTML, the newest-message trap, expiry, plus jq, Python and TypeScript helpers.">
+<link rel="canonical" href="https://neverla.web.id/guides/email-otp-codes-in-automated-tests">
+<meta name="robots" content="max-image-preview:large">
+<link rel="alternate" type="application/rss+xml" title="Neverla Mail — Guides" href="https://neverla.web.id/guides/feed.xml">
+<link rel="alternate" hreflang="en" href="https://neverla.web.id/guides/email-otp-codes-in-automated-tests">
+<link rel="alternate" hreflang="es" href="https://neverla.web.id/es/guides/email-otp-codes-in-automated-tests">
+<link rel="alternate" hreflang="pt" href="https://neverla.web.id/pt/guides/email-otp-codes-in-automated-tests">
+<link rel="alternate" hreflang="fr" href="https://neverla.web.id/fr/guides/email-otp-codes-in-automated-tests">
+<link rel="alternate" hreflang="de" href="https://neverla.web.id/de/guides/email-otp-codes-in-automated-tests">
+<link rel="alternate" hreflang="ru" href="https://neverla.web.id/ru/guides/email-otp-codes-in-automated-tests">
+<link rel="alternate" hreflang="tr" href="https://neverla.web.id/tr/guides/email-otp-codes-in-automated-tests">
+<link rel="alternate" hreflang="id" href="https://neverla.web.id/id/guides/email-otp-codes-in-automated-tests">
+<link rel="alternate" hreflang="vi" href="https://neverla.web.id/vi/guides/email-otp-codes-in-automated-tests">
+<link rel="alternate" hreflang="ar" href="https://neverla.web.id/ar/guides/email-otp-codes-in-automated-tests">
+<link rel="alternate" hreflang="ja" href="https://neverla.web.id/ja/guides/email-otp-codes-in-automated-tests">
+<link rel="alternate" hreflang="x-default" href="https://neverla.web.id/guides/email-otp-codes-in-automated-tests">
+<meta name="theme-color" content="#ffffff">
+<meta name="color-scheme" content="light">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Neverla Mail">
+<meta property="og:title" content="OTP codes from email in automated tests, without flaking | Neverla Mail">
+<meta property="og:description" content="Extract a one-time code from a verification email reliably: anchored regex, text vs HTML, the newest-message trap, expiry, plus jq, Python and TypeScript helpers.">
+<meta property="og:url" content="https://neverla.web.id/guides/email-otp-codes-in-automated-tests">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:locale:alternate" content="pt_BR">
+<meta property="og:locale:alternate" content="fr_FR">
+<meta property="og:locale:alternate" content="de_DE">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta property="og:locale:alternate" content="tr_TR">
+<meta property="og:locale:alternate" content="id_ID">
+<meta property="og:locale:alternate" content="vi_VN">
+<meta property="og:locale:alternate" content="ar_AR">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://neverla.web.id/assets/img/guides/otp-1376.webp">
+<meta property="og:image:width" content="1376">
+<meta property="og:image:height" content="768">
+<meta property="og:image:alt" content="Neverla Mail — Temporary email addresses, and an API to read them.">
+<meta name="twitter:image" content="https://neverla.web.id/assets/img/guides/otp-1376.webp">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" sizes="96x96" href="/assets/img/icon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/img/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Neverla Mail">
+
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/main.css?v=3af85b61f5">
+<link rel="stylesheet" href="/assets/css/mobile.css?v=3af85b61f5" media="(max-width: 959.98px)">
+<script src="/assets/js/app.js?v=3af85b61f5" defer></script>
+<script src="/assets/js/mobile.js?v=3af85b61f5" defer></script>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://neverla.web.id/#org","name":"Neverla Mail","url":"https://neverla.web.id/","description":"Free disposable email addresses with a REST API and an MCP server for AI agents.","logo":{"@type":"ImageObject","url":"https://neverla.web.id/assets/img/logo.png","width":671,"height":160},"image":"https://neverla.web.id/assets/img/og-card.png","sameAs":["https://dev.to/neverla"]},{"@type":"WebSite","@id":"https://neverla.web.id/#site","name":"Neverla Mail","url":"https://neverla.web.id/","publisher":{"@id":"https://neverla.web.id/#org"},"inLanguage":["en","es","pt","fr","de","ru","tr","id","vi","ar","ja"]},{"@type":["WebAPI","SoftwareApplication"],"@id":"https://neverla.web.id/#api","name":"Neverla Mail disposable email API","url":"https://neverla.web.id/docs/api","documentation":"https://neverla.web.id/docs/api","provider":{"@id":"https://neverla.web.id/#org"},"applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"Create a disposable email address and read what arrives at it over HTTP. No account, no API key and no payment for the public domains. Messages are deleted 5 days after they arrive.","offers":[{"@type":"Offer","name":"Free","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"Public domains, your own domains, the REST API and the MCP server. No account, no key; the free API allows 60 requests a minute and 1,000 a day per IP address."},{"@type":"Offer","name":"Premium","price":"12.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"12.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Pro","price":"49.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"49.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Scale","price":"99.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"99.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}}],"featureList":["Connect your own domain — every address on it becomes a catch-all inbox","Disposable email addresses with no signup","REST API over HTTPS, no API key required","MCP server for AI agents (create_inbox, wait_for_message)","Every mailbox has an alias you can hand out instead of the address","Attachments up to 5 MB","Automatic deletion after 5 days"],"additionalProperty":[{"@type":"PropertyValue","name":"Sending mail","value":"No. There is no endpoint that sends, and no outbound mail of any kind."},{"@type":"PropertyValue","name":"IMAP or POP3","value":"No. HTTPS only — a REST API and an MCP server."},{"@type":"PropertyValue","name":"Webhooks or push notifications","value":"No. You poll, or you let the MCP server hold the call open until the message lands."},{"@type":"PropertyValue","name":"Keeping mail longer than 5 days","value":"No. Not a tier, not a setting, not a parameter."},{"@type":"PropertyValue","name":"Attachments over 5 MB","value":"No. The message is refused at SMTP time."},{"@type":"PropertyValue","name":"Privacy on a shared domain","value":"No. Anyone who knows the address can read the mailbox."},{"@type":"PropertyValue","name":"Paying by card","value":"No. Crypto only, credited to a balance the subscription draws on."},{"@type":"PropertyValue","name":"An uptime guarantee","value":"No. There is no SLA, on any plan."},{"@type":"PropertyValue","name":"Tracking, analytics or advertising","value":"No. No third-party script, and no cookie banner because there are no cookies to consent to."}],"potentialAction":{"@type":"ConsumeAction","target":{"@type":"EntryPoint","urlTemplate":"https://neverla.web.id/api/v1/mailbox?address={address}","httpMethod":"GET","contentType":"application/json"}}},{"@type":"WebPage","@id":"https://neverla.web.id/guides/email-otp-codes-in-automated-tests#page","url":"https://neverla.web.id/guides/email-otp-codes-in-automated-tests","name":"OTP codes from email in automated tests, without flaking | Neverla Mail","description":"Extract a one-time code from a verification email reliably: anchored regex, text vs HTML, the newest-message trap, expiry, plus jq, Python and TypeScript helpers.","isPartOf":{"@id":"https://neverla.web.id/#site"},"inLanguage":"en"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Neverla Mail","item":"https://neverla.web.id/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://neverla.web.id/guides"},{"@type":"ListItem","position":3,"name":"Testing & CI","item":"https://neverla.web.id/guides"},{"@type":"ListItem","position":4,"name":"OTP codes from email in automated tests, without flaking","item":"https://neverla.web.id/guides/email-otp-codes-in-automated-tests"}]},{"@type":"TechArticle","@id":"https://neverla.web.id/guides/email-otp-codes-in-automated-tests#article","headline":"OTP codes from email in automated tests, without flaking","description":"Extract a one-time code from a verification email reliably: anchored regex, text vs HTML, the newest-message trap, expiry, plus jq, Python and TypeScript helpers.","image":"https://neverla.web.id/assets/img/guides/otp-1376.webp","datePublished":"2026-09-01","dateModified":"2026-09-01","inLanguage":"en","articleSection":"Testing & CI","timeRequired":"PT14M","keywords":"otp, one-time code, 2fa, verification code, email testing, regex, python, typescript, jq, magic link","author":{"@id":"https://neverla.web.id/#org"},"publisher":{"@id":"https://neverla.web.id/#org"},"isPartOf":{"@id":"https://neverla.web.id/#site"},"mainEntityOfPage":{"@id":"https://neverla.web.id/guides/email-otp-codes-in-automated-tests#page"},"proficiencyLevel":"Intermediate"},{"@type":"FAQPage","@id":"https://neverla.web.id/guides/email-otp-codes-in-automated-tests#faq","mainEntity":[{"@type":"Question","name":"Should I read the text part or the HTML part?","acceptedAnswer":{"@type":"Answer","text":"The text part when it exists: it is stable and has nothing to decode. Search both anyway, as the helpers do, so a template that only ships HTML still works and a template that only ships text never trips on empty HTML."}},{"@type":"Question","name":"My code has letters in it. Does the pattern change?","acceptedAnswer":{"@type":"Answer","text":"Only the character class: ([A-Z0-9]{6}), or whatever alphabet the sender uses, still anchored on the wording before it. Add the i flag if the case is not guaranteed, and be careful that the class does not also match an English word that follows the anchor."}},{"@type":"Question","name":"What about magic links instead of codes?","acceptedAnswer":{"@type":"Answer","text":"Same discipline, different pattern: match the URL on a path fragment you know — /confirm/, /auth/magic/ — rather than “the first link”, because a transactional email usually carries five links and the one you want is rarely first. Decode &amp; before visiting it."}},{"@type":"Question","name":"How long is a message available to read?","acceptedAnswer":{"@type":"Answer","text":"5 days after it arrives, whether or not it was read. That is far longer than any code stays valid, so a test never has to hurry the read — only the typing."}},{"@type":"Question","name":"Can I get the code without polling the mailbox?","acceptedAnswer":{"@type":"Answer","text":"Over REST, no: you poll once a second with a deadline, which is the documented rhythm and is never throttled. Over MCP there is a wait_for_message tool that holds the call open until the message lands, which is the shape an AI agent needs."}},{"@type":"Question","name":"Do I need an API key?","acceptedAnswer":{"@type":"Answer","text":"No. The public domains take no key, no account and no header. Only the paid pool of domains kept off the disposable-mail blocklists uses a bearer token, and the extraction code is identical either way."}}]}]}</script>
+<script>
+(function() {
+  var _t = document.title;
+  Object.defineProperty(document, 'title', {
+    get: function() { return _t; },
+    set: function(v) {
+      _t = (v || '').replace(/grabmail/gi, 'Neverla Mail').replace(/🐴/g, '').trim();
+    }
+  });
+})();
+</script>
+</head>
+<body class="page-guide" id="top" data-loc="en" data-i18n="{}">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="hd" data-header>
+  <div class="wrap hd-in">
+    <a class="hd-brand" href="/" aria-label="neverla.web.id — home">
+      <picture>
+        <source srcset="/assets/img/logo-nav.webp?v=3af85b61f5" type="image/webp">
+        <img class="hd-logo" src="/assets/img/logo-nav.png?v=3af85b61f5"
+             alt="Neverla Mail" width="126" height="30" decoding="async" fetchpriority="high">
+      </picture>
+    </a>
+
+    <span class="hd-sep" aria-hidden="true"></span>
+
+        <nav class="hd-nav" aria-label="Main">
+      <ul class="hd-list">
+                <li>
+          <a class="hd-link" href="/#how" data-spy="how">How it works</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/extensions" data-spy="ext">Extension</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/#api" data-spy="api">API</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/domains" data-spy="domains">Your domain</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/docs/api" data-spy="docs">Docs</a>
+        </li>
+              </ul>
+    </nav>
+
+    <div class="hd-act">
+                  <button class="btn btn-quiet hd-login" type="button" data-auth-open="signin">
+        Log in      </button>
+            <a class="btn btn-primary" href="/#grab" data-cta>
+        Open an inbox        <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+        <button class="hd-burger" type="button" data-burger
+            aria-expanded="false" aria-controls="gm-drawer" aria-label="Open menu">
+      <span class="hd-burger-box" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+  </div>
+</header>
+
+<div class="drawer" id="gm-drawer" data-drawer hidden>
+  <nav class="drawer-in" aria-label="Mobile">
+    <ul class="drawer-list">
+            <li><a class="drawer-link" href="/#how">How it works</a></li>
+            <li><a class="drawer-link" href="/extensions">Extension</a></li>
+            <li><a class="drawer-link" href="/#api">API</a></li>
+            <li><a class="drawer-link" href="/domains">Your domain</a></li>
+            <li><a class="drawer-link" href="/docs/api">Docs</a></li>
+          </ul>
+    <a class="btn btn-primary btn-block" href="/#grab">Open an inbox</a>
+            <button class="btn btn-ghost btn-block" type="button" data-auth-open="signin">Log in</button>
+        <p class="drawer-note">Free · No signup · Deleted after 5 days</p>
+
+  </nav>
+</div>
+
+<main id="main">
+<div class="ga">
+
+    <div class="ga-prog" data-guide-progress aria-hidden="true"><span></span></div>
+
+  <div class="wrap ga-top">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+                <li><a href="/guides">Guides</a></li>
+        <li><a href="/guides/topic/testing">Testing &amp; CI</a></li>
+                <li aria-current="page">OTP codes from email in automated tests, without flaking</li>
+      </ol>
+    </nav>
+
+    <div class="ga-head">
+      <div class="ga-head-t">
+        <p class="ga-eyebrow">
+          <span class="ga-eyebrow-ic"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 2.5v5L3.5 15a1.6 1.6 0 0 0 1.4 2.5h10.2A1.6 1.6 0 0 0 16.5 15L12 7.5v-5"/><path d="M7 2.5h6M5.6 12.5h8.8"/></svg></span>
+          <a class="ga-eyebrow-a" href="/guides/topic/testing">Testing &amp; CI</a>
+        </p>
+        <h1 class="ga-h">OTP codes from email in automated tests, without flaking</h1>
+        <p class="ga-lede">A one-time code is six digits inside a message that also contains a year, a price, an order number and a phone number. Getting the right six out — every time, in every runner — is a small discipline: anchor the pattern, strip the markup, ignore the message you already saw, respect the expiry. This is that discipline, with drop-in code for the shell, Python and TypeScript.</p>
+
+                <ul class="ga-meta">
+                    <li class="ga-lvl ga-lvl-intermediate">Intermediate</li>
+                              <li class="ga-meta-i">
+            <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.4V8l2.4 1.6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            14 min read          </li>
+          <li class="ga-meta-i">
+            <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="2.3" y="3.4" width="11.4" height="10.3" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M2.3 6.6h11.4M5.6 2.3v2.2M10.4 2.3v2.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            <time datetime="2026-09-01">Updated 1 September 2026</time>
+          </li>
+        </ul>
+      </div>
+
+                  <figure class="ga-hero">
+        <img class="ga-hero-img" src="/assets/img/guides/otp-800.webp?v=3af85b61f5" srcset="/assets/img/guides/otp-480.webp?v=3af85b61f5 480w, /assets/img/guides/otp-800.webp?v=3af85b61f5 800w, /assets/img/guides/otp-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 520px, (min-width: 720px) calc(100vw - 64px), calc(100vw - 40px)" width="1376" height="768" alt="An open blue envelope with six small grey blocks lined up in front of it, each marked with a blue dot, under a grey magnifying glass" fetchpriority="high" decoding="async">      </figure>
+    </div>
+  </div>
+
+  <div class="wrap ga-body">
+    <nav class="ga-rail doc-toc" aria-label="On this page">
+      <p class="doc-toc-h">On this page</p>
+      <ul>
+                <li><a href="#where" data-spy="where">Where the code actually is</a></li>
+                <li><a href="#anchor" data-spy="anchor">Anchor the pattern on your own wording</a></li>
+                <li><a href="#html" data-spy="html">Templates that split the digits up</a></li>
+                <li><a href="#newest" data-spy="newest">The newest message is not always the right one</a></li>
+                <li><a href="#expiry" data-spy="expiry">Codes that expire during the run</a></li>
+                <li><a href="#helpers" data-spy="helpers">Drop-in extractors</a></li>
+                <li><a href="#checklist" data-spy="checklist">Before you call it done</a></li>
+                <li><a href="#faq" data-spy="faq">Questions</a></li>
+              </ul>
+      <p class="ga-rail-back">
+                <a class="ga-rail-back-a" href="/guides">
+          <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          All guides        </a>
+      </p>
+    </nav>
+
+    <article class="ga-art">
+      <div class="toc-chip" data-toc-bar><button class="toc-chip-b" type="button" aria-haspopup="dialog"><svg class="toc-chip-ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 5.5h12M4 10h12M4 14.5h7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span class="toc-chip-k">On this page</span><span class="toc-chip-v"></span><svg class="toc-chip-dn" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 6.5 8 10.5l4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+                  <aside class="ga-key" aria-labelledby="ga-key-h">
+        <h2 class="ga-key-h" id="ga-key-h">In short</h2>
+        <ul>
+                    <li>Anchor the pattern on <strong>your own wording</strong> — <code>code is (\d{6})</code> — never on “six digits somewhere”. The wrong six digits produce a green test on a broken feature.</li>
+                    <li>Search <strong>both parts</strong> of the message, with the HTML tags stripped and the entities decoded first. Some templates put each digit in its own table cell, and a regex on raw HTML never sees the number.</li>
+                    <li>The newest message is <strong>not always the right one</strong>. Snapshot the mailbox before triggering a resend, then accept only what was not there before.</li>
+                    <li>Codes expire. Request the code as late as possible, wait with a deadline shorter than the code’s lifetime, and never queue a code for later.</li>
+                  </ul>
+      </aside>
+      
+            <section class="ga-s" id="where" aria-labelledby="where-h">
+        <h2 class="ga-s-h" id="where-h">Where the code actually is</h2>
+        <p>A verification email has up to three places the code can live, and which one you should read decides everything downstream. The message JSON from the API gives you all three at once: <code>subject</code>, <code>text</code> (the plain-text part, or <code>null</code>) and <code>html</code> (the HTML part, or <code>null</code>).</p><div class="ep-tw ga-tw" tabindex="0" role="region" aria-label="Where, What it looks like, How to read it"><table class="ep-t ga-t ga-t-wide"><thead><tr><th scope="col">Where</th><th scope="col">What it looks like</th><th scope="col">How to read it</th></tr></thead><tbody><tr><td><strong>The plain-text part</strong> (<code>text</code>)</td><td><code>Your code is 481920. It expires in 10 minutes.</code></td><td>Parse this first when it exists. No markup, nothing to decode, and the wording is stable.</td></tr><tr><td><strong>The HTML part</strong> (<code>html</code>)</td><td>The same sentence inside a table, often with the digits styled one per cell, and every <code>&amp;</code> written as an entity.</td><td>Strip tags to spaces, decode entities, fold whitespace, <em>then</em> apply the pattern. Never regex raw HTML.</td></tr><tr><td><strong>The subject line</strong></td><td><code>481920 is your verification code</code></td><td>A gift when the sender does it: no body to parse at all. Match it on the subject and fall back to the body.</td></tr><tr><td><strong>An image</strong></td><td>The code drawn as a picture, to defeat exactly this kind of script.</td><td>Rare, and a sign the sender does not want automation. Change the sender’s template if it is yours; there is no honest workaround if it is not.</td></tr></tbody></table></div><p>The plain-text part is the one to prefer, and it is the one most templating systems generate automatically from the HTML — so it is usually there. When it is <code>null</code>, the HTML part is the only body, and the next two sections are about reading it safely.</p>      </section>
+            <section class="ga-s" id="anchor" aria-labelledby="anchor-h">
+        <h2 class="ga-s-h" id="anchor-h">Anchor the pattern on your own wording</h2>
+        <p>The instinct is <code>\d{6}</code>. It matches the code, and it also matches the year in the footer, the postcode in the address block, the last six digits of a phone number and the order number that appears two lines above the code. Whichever comes first wins, and the test types it into the form with complete confidence.</p><div class="ep-tw ga-tw" tabindex="0" role="region" aria-label="Pattern, Also matches, Verdict"><table class="ep-t ga-t ga-t-wide"><thead><tr><th scope="col">Pattern</th><th scope="col">Also matches</th><th scope="col">Verdict</th></tr></thead><tbody><tr><td><code>\d{6}</code></td><td>Years, postcodes, prices without a separator, order numbers, phone numbers, tracking numbers.</td><td>Never. It is not a pattern, it is a coin toss.</td></tr><tr><td><code>\b\d{6}\b</code></td><td>Everything above that happens to be exactly six digits with a space either side — still most of it.</td><td>Barely better. Word boundaries do not know what a code is.</td></tr><tr><td><code>code is\D{0,12}(\d{6})</code></td><td>Only the six digits that follow the words <em>your template</em> puts before the code, with room for a colon, a space or a tag’s worth of leftover whitespace.</td><td>Yes. It matches the code and nothing else, and it fails the day somebody rewords the email — which is a failure you want to hear about.</td></tr></tbody></table></div><p>The <code>\D{0,12}</code> is the practical detail: after tags have been replaced by spaces, the words and the digits can be separated by a colon, a run of spaces, or the debris of a <code>&lt;strong&gt;</code> that used to sit between them. Up to a dozen non-digits covers all of that without letting the pattern skip to a different number.</p><aside class="ga-call ga-call-tip"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.6a5.2 5.2 0 0 0-3 9.5v1.6h6v-1.6a5.2 5.2 0 0 0-3-9.5zM8 16.4h4"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Tip</span>Make the pattern a named constant, next to the template it matches.</p><p>When the copywriter changes “Your code is” to “Here is your code”, the person editing the template should see the regex beside it. A pattern buried in a test helper three directories away is a pattern that silently stops matching — and a test that stops matching does not go red, it times out, which looks like a slow mail server.</p></div></aside>      </section>
+            <section class="ga-s" id="html" aria-labelledby="html-h">
+        <h2 class="ga-s-h" id="html-h">Templates that split the digits up</h2>
+        <p>A popular design puts each digit of the code in its own box, so it reads well on a phone. In the HTML that is six table cells, or six <code>&lt;span&gt;</code>s, and the number never appears as six consecutive characters anywhere in the source:</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>what the HTML part actually contains</span><button class="code-copy" type="button" data-copy-code data-code="&lt;p&gt;Your code is&lt;/p&gt;
+&lt;table&gt;&lt;tr&gt;
+  &lt;td class=&quot;digit&quot;&gt;4&lt;/td&gt;&lt;td class=&quot;digit&quot;&gt;8&lt;/td&gt;&lt;td class=&quot;digit&quot;&gt;1&lt;/td&gt;
+  &lt;td class=&quot;digit&quot;&gt;9&lt;/td&gt;&lt;td class=&quot;digit&quot;&gt;2&lt;/td&gt;&lt;td class=&quot;digit&quot;&gt;0&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code>&lt;p&gt;Your code is&lt;/p&gt;
+&lt;table&gt;&lt;tr&gt;
+  &lt;td class=&quot;digit&quot;&gt;4&lt;/td&gt;&lt;td class=&quot;digit&quot;&gt;8&lt;/td&gt;&lt;td class=&quot;digit&quot;&gt;1&lt;/td&gt;
+  &lt;td class=&quot;digit&quot;&gt;9&lt;/td&gt;&lt;td class=&quot;digit&quot;&gt;2&lt;/td&gt;&lt;td class=&quot;digit&quot;&gt;0&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;</code></pre></div><p>A regex on the raw HTML finds nothing. The fix is not a cleverer regex; it is to turn the HTML into text first, in a fixed order:</p><ol class="steps-n"><li><strong>Replace every tag with a space.</strong> A space, not nothing — <code>&lt;td&gt;4&lt;/td&gt;&lt;td&gt;8&lt;/td&gt;</code> must become <code>4 8</code>, not <code>48</code> glued to whatever followed.</li><li><strong>Decode the entities.</strong> <code>&amp;amp;</code>, <code>&amp;nbsp;</code>, <code>&amp;#39;</code>. A non-breaking space between two digits is not a space to a regex until it is decoded.</li><li><strong>Fold whitespace, then match with the digits allowed to be spaced.</strong> For the boxed design, <code>code is\D{0,12}(\d)\s*(\d)\s*(\d)\s*(\d)\s*(\d)\s*(\d)</code> and join the groups; for a normal template the plain pattern from the previous section is enough.</li></ol><p class="doc-n">The helpers below do steps one and two for you and search both parts at once, so a test does not have to know which design the template uses this month.</p>      </section>
+            <section class="ga-s" id="newest" aria-labelledby="newest-h">
+        <h2 class="ga-s-h" id="newest-h">The newest message is not always the right one</h2>
+        <p>Every mailbox listing here comes back newest first, and <code>messages[0]</code> is what most first drafts read. Three situations make that the wrong message:</p><dl class="defs"><div class="def"><dt>Two messages from one action</dt><dd>Sign-up sends a welcome mail and a code mail, in whichever order the sender’s queue empties. Half the time the welcome is newest. Filter on the subject, or on the sender, before taking anything.</dd></div><div class="def"><dt>A resend</dt><dd>The test asked for the code twice — once by mistake, once on purpose — and the server only accepts the latest. The older message is still in the mailbox, still matches the pattern, and still parses into six digits that are now invalid.</dd></div><div class="def"><dt>A previous test run</dt><dd>Only if the address was reused, which it should never be. A fresh address per run makes this case impossible; if you cannot have one, the snapshot below is the fallback.</dd></div></dl><p>The robust shape is the same in every runner: look at what is in the mailbox <em>before</em> you trigger the mail, then accept only a message that was not there yet and matches the subject you expect.</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>wait for a message that did not exist before the resend</span><button class="code-copy" type="button" data-copy-code data-code="// Remember what is already there, THEN trigger the resend, THEN wait for something new.
+const before = new Set((await listMailbox(address)).messages.map(m =&gt; m.id));
+
+await page.getByRole(&#039;button&#039;, { name: &#039;Resend code&#039; }).click();
+
+const fresh = await waitFor(address, m =&gt; !before.has(m.id) &amp;&amp; /code/i.test(m.subject));" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code>// Remember what is already there, THEN trigger the resend, THEN wait for something new.
+const before = new Set((await listMailbox(address)).messages.map(m =&gt; m.id));
+
+await page.getByRole(&#039;button&#039;, { name: &#039;Resend code&#039; }).click();
+
+const fresh = await waitFor(address, m =&gt; !before.has(m.id) &amp;&amp; /code/i.test(m.subject));</code></pre></div>      </section>
+            <section class="ga-s" id="expiry" aria-labelledby="expiry-h">
+        <h2 class="ga-s-h" id="expiry-h">Codes that expire during the run</h2>
+        <p>Most one-time codes are valid for five to fifteen minutes. That sounds generous until a test suite queues twenty specs, each of which requested its code at the start and typed it at the end. Three rules keep the code alive:</p><ul class="doc-l"><li><strong>Request the code as late as possible.</strong> Trigger the send immediately before the wait, not in a setup step that runs while other tests are queued.</li><li><strong>Keep the wait deadline well under the code’s lifetime.</strong> A sixty-second deadline for a ten-minute code leaves nine minutes to type it. A ten-minute deadline leaves nothing.</li><li><strong>Never store a code for another test.</strong> Codes are single-use as well as short-lived; a shared fixture that hands one out is a race between two tests for one number.</li></ul><aside class="ga-call ga-call-warn"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.8 18 16.6H2z"/><path d="M10 8v3.4M10 13.8h.01"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Watch out</span>A “code expired” failure usually means the wait was in the wrong place.</p><p>If the test waited for the mail correctly and the server still rejects the code, look at the time between <em>sending</em> and <em>typing</em>, not at the mailbox. The mail is not late; the test is.</p></div></aside>      </section>
+            <section class="ga-s" id="helpers" aria-labelledby="helpers-h">
+        <h2 class="ga-s-h" id="helpers-h">Drop-in extractors</h2>
+        <p>Three versions of the same four lines: both parts joined, tags to spaces, entities decoded, whitespace folded, then the anchored pattern. Change the pattern to match your template’s wording and nothing else needs touching.</p><h3 class="ga-h3">From a shell, with jq</h3><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>shell</span><button class="code-copy" type="button" data-copy-code data-code="curl -sG &quot;https://neverla.web.id/api/v1/message/$ID&quot; --data-urlencode &quot;mailbox=$ADDR&quot; \
+| jq -r &#039;[.text, .html] | map(select(. != null)) | join(&quot; &quot;) | gsub(&quot;&lt;[^&gt;]*&gt;&quot;; &quot; &quot;)&#039; \
+| grep -oiE &#039;code is[^0-9]{0,12}[0-9]{6}&#039; | grep -oE &#039;[0-9]{6}&#039; | head -1" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code>curl -sG &quot;https://neverla.web.id/api/v1/message/$ID&quot; --data-urlencode &quot;mailbox=$ADDR&quot; \
+| jq -r &#039;[.text, .html] | map(select(. != null)) | join(&quot; &quot;) | gsub(&quot;&lt;[^&gt;]*&gt;&quot;; &quot; &quot;)&#039; \
+| grep -oiE &#039;code is[^0-9]{0,12}[0-9]{6}&#039; | grep -oE &#039;[0-9]{6}&#039; | head -1</code></pre></div><h3 class="ga-h3">Python</h3><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>extract.py</span><button class="code-copy" type="button" data-copy-code data-code="import html
+import re
+
+TAGS = re.compile(r&quot;&lt;[^&gt;]+&gt;&quot;)
+CODE = re.compile(r&quot;code is\D{0,12}(\d{6})&quot;, re.I)      # anchored on YOUR template&#039;s wording
+
+
+def text_of(message: dict) -&gt; str:
+    &quot;&quot;&quot;Both parts as plain text: tags out, entities decoded, whitespace folded.&quot;&quot;&quot;
+    raw = f&quot;{message.get(&#039;text&#039;) or &#039;&#039;}\n{message.get(&#039;html&#039;) or &#039;&#039;}&quot;
+    return re.sub(r&quot;\s+&quot;, &quot; &quot;, html.unescape(TAGS.sub(&quot; &quot;, raw)))
+
+
+def code_from(message: dict, pattern: re.Pattern = CODE) -&gt; str:
+    hit = pattern.search(text_of(message))
+    if not hit:
+        raise AssertionError(f&quot;no code in message {message[&#039;id&#039;]!r} ({message[&#039;subject&#039;]!r})&quot;)
+    return hit.group(1)" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code>import html
+import re
+
+TAGS = re.compile(r&quot;&lt;[^&gt;]+&gt;&quot;)
+CODE = re.compile(r&quot;code is\D{0,12}(\d{6})&quot;, re.I)      # anchored on YOUR template&#039;s wording
+
+
+def text_of(message: dict) -&gt; str:
+    &quot;&quot;&quot;Both parts as plain text: tags out, entities decoded, whitespace folded.&quot;&quot;&quot;
+    raw = f&quot;{message.get(&#039;text&#039;) or &#039;&#039;}\n{message.get(&#039;html&#039;) or &#039;&#039;}&quot;
+    return re.sub(r&quot;\s+&quot;, &quot; &quot;, html.unescape(TAGS.sub(&quot; &quot;, raw)))
+
+
+def code_from(message: dict, pattern: re.Pattern = CODE) -&gt; str:
+    hit = pattern.search(text_of(message))
+    if not hit:
+        raise AssertionError(f&quot;no code in message {message[&#039;id&#039;]!r} ({message[&#039;subject&#039;]!r})&quot;)
+    return hit.group(1)</code></pre></div><h3 class="ga-h3">TypeScript</h3><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>extract.ts</span><button class="code-copy" type="button" data-copy-code data-code="export type Message = { id: string; subject: string; text: string | null; html: string | null };
+
+const TAGS = /&lt;[^&gt;]+&gt;/g;
+const ENTITIES: Record&lt;string, string&gt; = { &#039;&amp;amp;&#039;: &#039;&amp;&#039;, &#039;&amp;lt;&#039;: &#039;&lt;&#039;, &#039;&amp;gt;&#039;: &#039;&gt;&#039;, &#039;&amp;quot;&#039;: &#039;&quot;&#039;, &#039;&amp;#39;&#039;: &quot;&#039;&quot;, &#039;&amp;nbsp;&#039;: &#039; &#039; };
+
+/** Both parts as plain text: tags out, the common entities decoded, whitespace folded. */
+export const textOf = (m: Message): string =&gt;
+  `${m.text ?? &#039;&#039;}\n${m.html ?? &#039;&#039;}`
+    .replace(TAGS, &#039; &#039;)
+    .replace(/&amp;(amp|lt|gt|quot|#39|nbsp);/g, e =&gt; ENTITIES[e])
+    .replace(/\s+/g, &#039; &#039;);
+
+/** Anchored on your own wording. A reworded template fails loudly. */
+export function codeFrom(m: Message, pattern = /code is\D{0,12}(\d{6})/i): string {
+  const hit = textOf(m).match(pattern);
+  if (!hit) throw new Error(`no code in message ${m.id} (&quot;${m.subject}&quot;)`);
+  return hit[1];
+}" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code>export type Message = { id: string; subject: string; text: string | null; html: string | null };
+
+const TAGS = /&lt;[^&gt;]+&gt;/g;
+const ENTITIES: Record&lt;string, string&gt; = { &#039;&amp;amp;&#039;: &#039;&amp;&#039;, &#039;&amp;lt;&#039;: &#039;&lt;&#039;, &#039;&amp;gt;&#039;: &#039;&gt;&#039;, &#039;&amp;quot;&#039;: &#039;&quot;&#039;, &#039;&amp;#39;&#039;: &quot;&#039;&quot;, &#039;&amp;nbsp;&#039;: &#039; &#039; };
+
+/** Both parts as plain text: tags out, the common entities decoded, whitespace folded. */
+export const textOf = (m: Message): string =&gt;
+  `${m.text ?? &#039;&#039;}\n${m.html ?? &#039;&#039;}`
+    .replace(TAGS, &#039; &#039;)
+    .replace(/&amp;(amp|lt|gt|quot|#39|nbsp);/g, e =&gt; ENTITIES[e])
+    .replace(/\s+/g, &#039; &#039;);
+
+/** Anchored on your own wording. A reworded template fails loudly. */
+export function codeFrom(m: Message, pattern = /code is\D{0,12}(\d{6})/i): string {
+  const hit = textOf(m).match(pattern);
+  if (!hit) throw new Error(`no code in message ${m.id} (&quot;${m.subject}&quot;)`);
+  return hit[1];
+}</code></pre></div><p>The message JSON these read comes from <code>GET /api/v1/message/{id}</code>, documented in <a href="/docs/api">the API reference</a>; the waiting that gets you the id in the first place is in <a href="/guides/test-email-verification-flows">the end-to-end testing guide</a>, and as ready-made helpers for <a href="/guides/playwright-email-testing">Playwright</a>, <a href="/guides/cypress-email-testing">Cypress</a>, <a href="/guides/python-disposable-email-api">Python</a> and <a href="/guides/nodejs-temp-mail-api">Node.js</a>.</p>      </section>
+            <section class="ga-s" id="checklist" aria-labelledby="checklist-h">
+        <h2 class="ga-s-h" id="checklist-h">Before you call it done</h2>
+        <ul class="doc-l"><li>The pattern anchored on your template’s wording, and kept beside the template.</li><li>Both parts searched, as text: tags to spaces, entities decoded, whitespace folded.</li><li>A filter on subject or sender, so a welcome mail never wins over a code mail.</li><li>A snapshot before any resend, and only new messages accepted after it.</li><li>The wait deadline well under the code’s lifetime, and the send triggered right before the wait.</li><li>A failure message that names the message id and subject it looked in.</li></ul><p>That covers every way a six-digit extractor has been seen to pass on the wrong number. An agent reading the same mail has the same problems and one fewer tool for them, which is why the MCP server hands it the whole message rather than a guess — <a href="/guides/mcp-inbox-for-ai-agents">an inbox an AI agent can read</a> goes through that.</p>      </section>
+      
+            <section class="ga-s" id="faq" aria-labelledby="faq-h">
+        <h2 class="ga-s-h" id="faq-h">Questions</h2>
+        <div class="faq ga-faq">
+                    <details class="faq-i" open>
+            <summary class="faq-q">
+              <span>Should I read the text part or the HTML part?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>The text part when it exists: it is stable and has nothing to decode. Search both anyway, as the helpers do, so a template that only ships HTML still works and a template that only ships text never trips on empty HTML.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>My code has letters in it. Does the pattern change?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Only the character class: <code>([A-Z0-9]{6})</code>, or whatever alphabet the sender uses, still anchored on the wording before it. Add the <code>i</code> flag if the case is not guaranteed, and be careful that the class does not also match an English word that follows the anchor.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>What about magic links instead of codes?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Same discipline, different pattern: match the URL on a path fragment you know — <code>/confirm/</code>, <code>/auth/magic/</code> — rather than “the first link”, because a transactional email usually carries five links and the one you want is rarely first. Decode <code>&amp;amp;</code> before visiting it.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>How long is a message available to read?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>5 days after it arrives, whether or not it was read. That is far longer than any code stays valid, so a test never has to hurry the read — only the typing.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Can I get the code without polling the mailbox?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Over REST, no: you poll once a second with a deadline, which is the documented rhythm and is never throttled. Over MCP there is a <code>wait_for_message</code> tool that holds the call open until the message lands, which is the shape an AI agent needs.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Do I need an API key?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>No. The public domains take no key, no account and no header. Only the paid pool of domains kept off the disposable-mail blocklists uses a bearer token, and the extraction code is identical either way.</p></div>
+          </details>
+                  </div>
+      </section>
+      
+      
+                  <nav class="ga-pn" aria-label="More in this topic">
+                <a class="ga-pn-i ga-pn-p" href="/guides/cypress-email-testing" rel="prev">
+          <span class="ga-pn-k">Previous</span>
+          <span class="ga-pn-t">Email testing in Cypress</span>
+        </a>
+                        <a class="ga-pn-i ga-pn-n" href="/guides/github-actions-email-e2e" rel="next">
+          <span class="ga-pn-k">Next</span>
+          <span class="ga-pn-t">Email tests in GitHub Actions</span>
+        </a>
+              </nav>
+      
+    </article>
+  </div>
+
+    <div class="ga-rel">
+    <div class="wrap">
+      <h2 class="ga-rel-h">Keep reading</h2>
+      <ul class="gd-cards ga-rel-l">
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/test-email-verification-flows">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/testing-800.webp?v=3af85b61f5" srcset="/assets/img/guides/testing-480.webp?v=3af85b61f5 480w, /assets/img/guides/testing-800.webp?v=3af85b61f5 800w, /assets/img/guides/testing-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="Envelopes travelling along a track through three arch gates, with a stopwatch beside it" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">Testing &amp; CI</span>
+              <span class="gd-card-t">Test an email verification flow end to end</span>
+              <span class="gd-card-x">The full sign-up loop against a real mailbox: unique address per run, polling with a wall-clock deadline, extracting the code or the confirmation link, and working Playwright and pytest helpers.</span>
+              <span class="gd-card-m">22 min read</span>
+            </span>
+          </a>
+        </li>
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/playwright-email-testing">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/playwright-800.webp?v=3af85b61f5" srcset="/assets/img/guides/playwright-480.webp?v=3af85b61f5 480w, /assets/img/guides/playwright-800.webp?v=3af85b61f5 800w, /assets/img/guides/playwright-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="A grey browser window with a blue cursor arrow, a blue envelope sliding into a slot in its side, and a grey stopwatch in front" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">Testing &amp; CI</span>
+              <span class="gd-card-t">Playwright email testing: read a code from a real inbox</span>
+              <span class="gd-card-x">A fixture that opens a fresh inbox per test, a wait with a wall-clock deadline instead of a retry count, extractors anchored on your own template, three complete flows (code, magic link, password reset), and how it survives CI without a secret.</span>
+              <span class="gd-card-m">20 min read</span>
+            </span>
+          </a>
+        </li>
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/cypress-email-testing">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/cypress-800.webp?v=3af85b61f5" srcset="/assets/img/guides/cypress-480.webp?v=3af85b61f5 480w, /assets/img/guides/cypress-800.webp?v=3af85b61f5 800w, /assets/img/guides/cypress-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="A grey mechanical arm lowering a blue envelope onto a bench of three grey cubes marked with blue ticks" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">Testing &amp; CI</span>
+              <span class="gd-card-t">Cypress email testing: sign-up, OTP and reset emails</span>
+              <span class="gd-card-x">A cy.task that polls a disposable inbox with a wall-clock deadline, two custom commands (fresh address, wait for mail) and two extractors, complete sign-up, one-time-code and password-reset specs, the timeouts Cypress gets wrong by default, and how it runs in CI without a secret.</span>
+              <span class="gd-card-m">19 min read</span>
+            </span>
+          </a>
+        </li>
+              </ul>
+    </div>
+  </div>
+  
+  <section class="cta ga-cta" aria-labelledby="ga-cta-h">
+    <div class="wrap cta-in">
+      <h2 class="cta-h" id="ga-cta-h">Try it while it is fresh</h2>
+      <p class="cta-p">An address takes one click, no account and no card. Everything in this guide works on it straight away.</p>
+      <div class="cta-act">
+        <a class="btn btn-primary btn-lg" href="/#grab">Open an inbox</a>
+        <a class="btn btn-ghost btn-lg" href="/docs/api">Read the API reference</a>
+      </div>
+    </div>
+  </section>
+</div>
+</main>
+
+<footer class="ft" id="ft-map">
+  <div class="wrap">
+    <div class="ft-top">
+      <div class="ft-brand">
+        <a class="ft-logo" href="/" aria-label="Neverla Mail — home">
+          <picture>
+            <source srcset="/assets/img/logo-nav.webp?v=3af85b61f5" type="image/webp">
+            <img class="ft-logo-img" src="/assets/img/logo-nav.png?v=3af85b61f5"
+                 alt="Neverla Mail" width="122" height="29" decoding="async" loading="lazy">
+          </picture>
+        </a>
+        <p class="ft-blurb">
+                    Disposable email addresses with a free REST API. Grab one in a click, or point your own domain at us for an inbox nobody can guess into.        </p>
+                <p class="ft-status">
+          <span class="dot" aria-hidden="true"></span>
+          <a href="/status">System status</a>
+        </p>
+      </div>
+
+                  <nav class="ft-nav" aria-label="Product">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Product</h2></summary>
+          <ul>
+                                                <li><a href="/#grab">Grab an address</a></li>
+                                    <li><a href="/#how">How it works</a></li>
+                                    <li><a href="/domains">Connect a domain</a></li>
+                                    <li><a href="/extensions">Browser extension</a></li>
+                                    <li><a href="/pricing">Pricing</a></li>
+                                    <li><a href="/guides">Guides</a></li>
+                                    <li><a href="/compare">Comparing the APIs</a></li>
+                                    <li><a href="/vs">Neverla Mail vs the alternatives</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Developers">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Developers</h2></summary>
+          <ul>
+                                                <li><a href="/docs/quickstart#mcp">MCP for AI agents</a></li>
+                                    <li><a href="/openapi.json">OpenAPI 3.1</a></li>
+                                    <li><a href="/llms.txt">llms.txt</a></li>
+                                    <li><a href="/docs">Documentation</a></li>
+                                    <li><a href="/docs/api">API reference</a></li>
+                                    <li><a href="/docs/quickstart">Quickstart</a></li>
+                                    <li><a href="/docs/limits">Limits</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Company">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Company</h2></summary>
+          <ul>
+                                                <li><a href="/about">About</a></li>
+                                    <li><a href="/status">Status</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Legal">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Legal</h2></summary>
+          <ul>
+                                                <li><a href="/legal/terms">Terms of service</a></li>
+                                    <li><a href="/legal/privacy">Privacy</a></li>
+                      </ul>
+        </details>
+      </nav>
+          </div>
+
+    <div class="ft-bar">
+      <p>&copy; 2026 Neverla Mail. All rights reserved.</p>
+      <ul class="ft-facts">
+        <li>Receive-only</li>
+        <li>No tracking, no ads</li>
+        <li>Messages deleted after 5 days</li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<div class="lang" data-lang>
+    <button class="lang-fab" type="button" data-lang-open
+          aria-haspopup="dialog" aria-expanded="false"
+          title="Language: English">
+    <span class="lang-fab-fl" aria-hidden="true"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+    <span class="lang-code" aria-hidden="true">EN</span>
+        <span class="lang-fab-n" aria-hidden="true"><span>English</span></span>
+    <svg class="lang-globe" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+         aria-hidden="true" focusable="false">
+      <circle cx="10" cy="10" r="7.25"/>
+      <path d="M2.75 10h14.5M10 2.75c3.85 4.4 3.85 10.1 0 14.5-3.85-4.4-3.85-10.1 0-14.5z"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="sr-only">Change language: English</span>
+  </button>
+
+  <dialog class="lm" data-lang-modal aria-labelledby="lm-title">
+    <div class="lm-panel">
+            <div class="lm-grab" aria-hidden="true"></div>
+
+            <header class="lm-hd">
+        <h2 class="lm-t" id="lm-title">Language</h2>
+                <form method="dialog">
+          <button class="lm-x" type="submit" aria-label="Change language">
+            <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+              <path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor"
+                    stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </form>
+      </header>
+
+      <ul class="lm-grid">
+                <li>
+          <a class="lm-i is-on"
+             href="/guides/email-otp-codes-in-automated-tests"
+             hreflang="en" lang="en"
+             aria-current="true" data-lang-current>
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">English</span>
+                            <span class="lm-n-l" lang="en">English</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">EN</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/es/guides/email-otp-codes-in-automated-tests"
+             hreflang="es" lang="es"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-es"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Español</span>
+                            <span class="lm-n-l" lang="en">Spanish</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">ES</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/pt/guides/email-otp-codes-in-automated-tests"
+             hreflang="pt" lang="pt"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-pt"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Português</span>
+                            <span class="lm-n-l" lang="en">Portuguese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">PT</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/fr/guides/email-otp-codes-in-automated-tests"
+             hreflang="fr" lang="fr"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-fr"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Français</span>
+                            <span class="lm-n-l" lang="en">French</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">FR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/de/guides/email-otp-codes-in-automated-tests"
+             hreflang="de" lang="de"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-de"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Deutsch</span>
+                            <span class="lm-n-l" lang="en">German</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">DE</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ru/guides/email-otp-codes-in-automated-tests"
+             hreflang="ru" lang="ru"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ru"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Русский</span>
+                            <span class="lm-n-l" lang="en">Russian</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">RU</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/tr/guides/email-otp-codes-in-automated-tests"
+             hreflang="tr" lang="tr"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-tr"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Türkçe</span>
+                            <span class="lm-n-l" lang="en">Turkish</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">TR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/id/guides/email-otp-codes-in-automated-tests"
+             hreflang="id" lang="id"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-id"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Bahasa Indonesia</span>
+                            <span class="lm-n-l" lang="en">Indonesian</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">ID</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/vi/guides/email-otp-codes-in-automated-tests"
+             hreflang="vi" lang="vi"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-vi"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Tiếng Việt</span>
+                            <span class="lm-n-l" lang="en">Vietnamese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">VI</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ar/guides/email-otp-codes-in-automated-tests"
+             hreflang="ar" lang="ar"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ar"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">العربية</span>
+                            <span class="lm-n-l" lang="en">Arabic</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">AR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ja/guides/email-otp-codes-in-automated-tests"
+             hreflang="ja" lang="ja"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ja"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">日本語</span>
+                            <span class="lm-n-l" lang="en">Japanese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">JA</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+              </ul>
+    </div>
+  </dialog>
+
+  <noscript>
+    <ul class="lang-ns" aria-label="Language">
+            <li><a href="/guides/email-otp-codes-in-automated-tests" hreflang="en" lang="en">English</a></li>
+            <li><a href="/es/guides/email-otp-codes-in-automated-tests" hreflang="es" lang="es">Español</a></li>
+            <li><a href="/pt/guides/email-otp-codes-in-automated-tests" hreflang="pt" lang="pt">Português</a></li>
+            <li><a href="/fr/guides/email-otp-codes-in-automated-tests" hreflang="fr" lang="fr">Français</a></li>
+            <li><a href="/de/guides/email-otp-codes-in-automated-tests" hreflang="de" lang="de">Deutsch</a></li>
+            <li><a href="/ru/guides/email-otp-codes-in-automated-tests" hreflang="ru" lang="ru">Русский</a></li>
+            <li><a href="/tr/guides/email-otp-codes-in-automated-tests" hreflang="tr" lang="tr">Türkçe</a></li>
+            <li><a href="/id/guides/email-otp-codes-in-automated-tests" hreflang="id" lang="id">Bahasa Indonesia</a></li>
+            <li><a href="/vi/guides/email-otp-codes-in-automated-tests" hreflang="vi" lang="vi">Tiếng Việt</a></li>
+            <li><a href="/ar/guides/email-otp-codes-in-automated-tests" hreflang="ar" lang="ar">العربية</a></li>
+            <li><a href="/ja/guides/email-otp-codes-in-automated-tests" hreflang="ja" lang="ja">日本語</a></li>
+          </ul>
+  </noscript>
+</div>
+<svg class="lm-sprite" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+    <symbol id="fl-en" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#012169"/>
+      <path d="M0 0 24 16M24 0 0 16" stroke="#fff" stroke-width="3.2"/>
+      <path d="M0 0 24 16M24 0 0 16" stroke="#C8102E" stroke-width="1.9"/>
+      <path d="M12 0v16M0 8h24" stroke="#fff" stroke-width="5.3"/>
+      <path d="M12 0v16M0 8h24" stroke="#C8102E" stroke-width="3.2"/>
+    </symbol>
+    <symbol id="fl-es" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#AA151B"/>
+      <rect y="4" width="24" height="8" fill="#F1BF00"/>
+    </symbol>
+    <symbol id="fl-pt" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#DA291C"/>
+      <rect width="9.6" height="16" fill="#046A38"/>
+      <circle cx="9.6" cy="8" r="3.4" fill="#FFE800" stroke="#046A38" stroke-width="1"/>
+    </symbol>
+    <symbol id="fl-fr" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <rect width="8" height="16" fill="#002395"/>
+      <rect x="16" width="8" height="16" fill="#ED2939"/>
+    </symbol>
+    <symbol id="fl-de" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#FFCE00"/>
+      <rect width="24" height="10.7" fill="#DD0000"/>
+      <rect width="24" height="5.3"/>
+    </symbol>
+    <symbol id="fl-ru" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#D52B1E"/>
+      <rect width="24" height="10.7" fill="#0039A6"/>
+      <rect width="24" height="5.3" fill="#fff"/>
+    </symbol>
+    <symbol id="fl-tr" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#E30A17"/>
+      <circle cx="9.4" cy="8" r="3.9" fill="#fff"/>
+      <circle cx="10.9" cy="8" r="3.1" fill="#E30A17"/>
+      <path d="m15.1 8 1.35.44-.83 1.15V8.2l.83 1.15z" fill="#fff"/>
+      <path d="m14.6 6.2.72 1.98 2.1.06-1.67 1.28.6 2.02-1.75-1.18-1.75 1.18.6-2.02-1.67-1.28 2.1-.06z" fill="#fff"/>
+    </symbol>
+    <symbol id="fl-id" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <rect width="24" height="8" fill="#CE1126"/>
+    </symbol>
+    <symbol id="fl-vi" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#DA251D"/>
+      <path d="m12 3.6 1.32 4.06h4.27l-3.46 2.51 1.33 4.06L12 11.72l-3.46 2.51 1.33-4.06-3.46-2.51h4.27z" fill="#FFFF00"/>
+    </symbol>
+    <symbol id="fl-ar" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#165D31"/>
+      <path d="M5.6 6.4h12.8" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M5.6 10.4h11.2" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M16.8 10.4c.9 0 1.6.5 1.6 1.2" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="fl-ja" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <circle cx="12" cy="8" r="4.8" fill="#BC002D"/>
+    </symbol>
+  </defs>
+</svg><dialog class="am" data-auth-modal aria-labelledby="am-h-signin">
+  <div class="am-panel" data-am-panel data-view="signin">
+
+        <div class="am-grab" aria-hidden="true"></div>
+
+        <div class="am-body" data-am-body>
+
+            <div class="am-hd">
+                <div class="am-seg" role="tablist" aria-label="Account">
+          <span class="am-seg-pill" aria-hidden="true"></span>
+          <button class="am-seg-b" type="button" role="tab" id="am-tab-signin"
+                  aria-selected="true" aria-controls="am-view-signin"
+                  data-am-go="signin">Sign in</button>
+          <button class="am-seg-b" type="button" role="tab" id="am-tab-signup"
+                  aria-selected="false" aria-controls="am-view-signup" tabindex="-1"
+                  data-am-go="signup">Create account</button>
+        </div>
+
+        <button class="am-x" type="button" data-am-close aria-label="Close">
+          <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor"
+                  stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+            <div class="am-alert" role="alert" data-am-alert hidden>
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" aria-hidden="true" focusable="false">
+          <circle cx="10" cy="10" r="7.6"/><path d="M10 6.2v4.4M10 13.4v.1"/>
+        </svg>
+        <span data-am-alert-t></span>
+      </div>
+
+      <div class="am-views" data-am-views>
+
+        <!-- ── sign in ──────────────────────────────────────────────────── -->
+        <form class="am-view" id="am-view-signin" data-am-view="signin"
+              role="tabpanel" aria-labelledby="am-tab-signin"
+              method="post" action="/api/v1/auth" novalidate>
+          <input type="hidden" name="action" value="signin">
+
+          <h2 class="am-h" id="am-h-signin">Welcome back</h2>
+          <p class="am-sub">Your inboxes and your domains, in one place.</p>
+
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-si-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-si-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-si-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-si-email-e" data-am-err hidden></p>
+    </div>
+                  <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-si-pass">Password</label>
+                <button class="am-link" type="button" data-am-go="reset">Forgot?</button>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-si-pass" name="password"
+               type="password"
+                              autocomplete="current-password"
+               placeholder="••••••••"
+               aria-describedby="am-si-pass-e"
+                                             data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+      
+      <p class="am-err" id="am-si-pass-e" data-am-err hidden></p>
+    </div>
+    
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Sign in</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+        <!-- ── create an account ───────────────────────────────────────── -->
+        <form class="am-view" id="am-view-signup" data-am-view="signup"
+              role="tabpanel" aria-labelledby="am-tab-signup"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <input type="hidden" name="action" value="signup">
+
+          <h2 class="am-h" id="am-h-signup">Create your account</h2>
+                              <p class="am-sub" data-am-sub>It stays free. The address is only so you can find your inboxes again.</p>
+          <p class="am-sub" data-am-sub="save" hidden>Create a free account to keep this inbox — and every inbox you open from now on.</p>
+                    <ul class="am-perks">
+            <li>Every inbox you open, saved</li>
+            <li>A free API key</li>
+            <li>No card, no trial</li>
+          </ul>
+          
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-su-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-su-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-su-email-e" data-am-err hidden></p>
+    </div>
+                  <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-pass">Password</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-su-pass" name="password"
+               type="password"
+                              autocomplete="new-password"
+               placeholder="••••••••"
+               aria-describedby="am-su-pass-e"
+                                             data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+                  <div class="am-str" data-am-str data-strength="0" hidden>
+        <div class="am-str-bars" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <span class="am-str-t" data-am-str-t></span>
+      </div>
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+            <p class="am-hint">At least 10 characters. Length beats punctuation.</p>
+      
+      <p class="am-err" id="am-su-pass-e" data-am-err hidden></p>
+    </div>
+    
+                        <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-pass2">Confirm password</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-su-pass2" name="password2"
+               type="password"
+                              autocomplete="new-password"
+               placeholder="••••••••"
+               aria-describedby="am-su-pass2-e"
+                              data-am-match="am-su-pass" data-am-skip               data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+      
+      <p class="am-err" id="am-su-pass2-e" data-am-err hidden></p>
+    </div>
+    
+                              <div class="am-cf" data-am-cf data-sitekey="0x4AAAAAAEfWgqSU6xDxtH5m"></div>
+          
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Create my account</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    
+          <p class="am-note">
+            By creating an account you agree to the <a href="/legal/terms">Terms</a> and the <a href="/legal/privacy">Privacy Policy</a>.          </p>
+        </form>
+
+        <!-- ── reset a password ────────────────────────────────────────── -->
+        <form class="am-view" id="am-view-reset" data-am-view="reset"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <input type="hidden" name="action" value="reset">
+
+          <button class="am-back" type="button" data-am-go="signin">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor"
+                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to sign in          </button>
+
+          <h2 class="am-h" id="am-h-reset">Reset your password</h2>
+          <p class="am-sub">Give us the address you signed up with and we will send a link to choose a new password.</p>
+
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-rs-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-rs-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-rs-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-rs-email-e" data-am-err hidden></p>
+    </div>
+    
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Send the link</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+        <!-- ── the link is on its way ──────────────────────────────────── -->
+                <div class="am-view am-view-done" id="am-view-sent" data-am-view="sent" hidden>
+          <span class="am-done-ic" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.4"
+                 stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="m9 16.6 4.6 4.6L23 11"/>
+            </svg>
+          </span>
+          <h2 class="am-h" id="am-h-sent">Check your inbox</h2>
+          <p class="am-sub">If an account exists for that address, a link to choose a new password is on its way. It is valid for one hour.</p>
+          <button class="btn btn-ghost am-go" type="button" data-am-go="signin">Back to sign in</button>
+        </div>
+
+        <!-- ── le second facteur (01/10/2026) ──────────────────────────── -->
+                <form class="am-view" id="am-view-mfa" data-am-view="mfa"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <button class="am-back" type="button" data-am-go="signin">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor"
+                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to sign in          </button>
+
+          <h2 class="am-h" id="am-h-mfa">Two-factor authentication</h2>
+          <p class="am-sub">Type the six digits your authenticator app shows — or one of your recovery codes.</p>
+
+          <div class="am-f">
+            <div class="am-f-top">
+              <label class="am-l" for="am-mfa-code">Code</label>
+            </div>
+            <div class="am-in">
+              <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>              <input class="am-i am-i-code" id="am-mfa-code" name="code" type="text"
+                     inputmode="numeric" autocomplete="one-time-code" spellcheck="false"
+                     autocapitalize="off" maxlength="24" placeholder="123 456"
+                     aria-describedby="am-mfa-code-e" data-am-in data-am-code required>
+            </div>
+            <p class="am-err" id="am-mfa-code-e" data-am-err hidden></p>
+          </div>
+
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Verify</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+      </div>
+    </div>
+
+  </div>
+</dialog>
+<nav class="tb" data-tb aria-label="Main">
+  <a class="tb-i" href="/" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.8 10.4 12 3.8l8.2 6.6v8.7a1.4 1.4 0 0 1-1.4 1.4h-4.3v-5.8h-5v5.8H5.2a1.4 1.4 0 0 1-1.4-1.4z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+    <span class="tb-n">Home</span>
+  </a>
+  <a class="tb-i is-on" aria-current="true" href="/guides" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 6.6C10.3 5.2 7.9 4.6 4.3 4.6v13.2c3.6 0 6 .6 7.7 2 1.7-1.4 4.1-2 7.7-2V4.6c-3.6 0-6 .6-7.7 2zM12 6.6v13.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+    <span class="tb-n">Guides</span>
+  </a>
+    <a class="tb-i tb-go" href="/inbox" data-sheet-open="inbox"
+     aria-haspopup="dialog">
+    <span class="tb-go-b" aria-hidden="true">
+      <svg viewBox="0 0 24 24" focusable="false"><rect x="3.2" y="5.6" width="17.6" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m4.2 7 7 5.3a1.3 1.3 0 0 0 1.6 0l7-5.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <span class="tb-n">Inbox</span>
+  </a>
+    <a class="tb-i" href="/pricing" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.8 12.4V5.2a1.4 1.4 0 0 1 1.4-1.4h7.2l7.9 7.9a1.4 1.4 0 0 1 0 2l-6.7 6.7a1.4 1.4 0 0 1-2 0z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="8.4" cy="8.4" r="1.5" fill="currentColor"/></svg>
+    <span class="tb-n">Pricing</span>
+  </a>
+    <a class="tb-i" href="#ft-map" data-sheet-open="menu" aria-haspopup="dialog">
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 7h15M4.5 12h15M4.5 17h15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <span class="tb-n">Menu</span>
+  </a>
+</nav>
+
+<dialog class="sh" data-sheet="menu" aria-labelledby="sh-menu-t">
+  <div class="sh-panel">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <header class="sh-hd">
+      <h2 class="sh-t" id="sh-menu-t">Menu</h2>
+      <form method="dialog">
+        <button class="sh-x" type="submit" aria-label="Close"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+      </form>
+    </header>
+
+    <div class="sh-body">
+            <div class="sh-auth">
+        <button class="btn btn-primary" type="button" data-auth-open="signin">Log in</button>
+        <button class="btn btn-ghost" type="button" data-auth-open="signup">Create account</button>
+      </div>
+      
+            <p class="sh-sec">Product</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/#how"><span>How it works</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/domains"><span>Connect a domain</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/extensions"><span>Browser extension</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/pricing"><span>Pricing</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/guides"><span>Guides</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/compare"><span>Comparing the APIs</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/vs"><span>Neverla Mail vs the alternatives</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Developers</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/docs/quickstart#mcp"><span>MCP for AI agents</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs"><span>Documentation</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/api"><span>API reference</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/quickstart"><span>Quickstart</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/limits"><span>Limits</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Company</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/about"><span>About</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/status"><span>Status</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Legal</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/legal/terms"><span>Terms of service</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/legal/privacy"><span>Privacy</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+      
+      <p class="sh-sec">Language</p>
+      <div class="sh-card sh-list">
+                <button class="sh-row sh-lang" type="button" data-sheet-lang>
+          <span class="sh-lang-fl" aria-hidden="true"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+          <span class="sh-lang-n">English</span>
+          <span class="sh-lang-c" aria-hidden="true">EN</span>
+          <svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>        </button>
+      </div>
+
+            <p class="sh-note">Free · No signup · Deleted after 5 days</p>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="sh sh-ibx" data-sheet="inbox" aria-labelledby="sh-ibx-t">
+  <div class="sh-panel">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <header class="sh-hd">
+      <h2 class="sh-t" id="sh-ibx-t">New address</h2>
+      <form method="dialog">
+        <button class="sh-x" type="submit" aria-label="Close"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+      </form>
+    </header>
+
+    <div class="sh-body">
+            <form class="sh-cmp" action="/inbox" method="get" data-composer data-sheet-composer novalidate>
+        <div class="sh-cmp-f">
+          <label class="sr-only" for="sh-u">Address name</label>
+          <input class="sh-cmp-u" type="text" name="u" id="sh-u" data-user
+                 placeholder="pick-any-name" maxlength="64"
+                 autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false"
+                 enterkeyhint="go" aria-describedby="sh-hint">
+          <button class="sh-cmp-dice" type="button" data-random
+                  aria-label="Random name" title="Random name">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="2" y="2" width="12" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="5.5" cy="5.5" r="1.1" fill="currentColor"/><circle cx="10.5" cy="5.5" r="1.1" fill="currentColor"/><circle cx="8" cy="8" r="1.1" fill="currentColor"/><circle cx="5.5" cy="10.5" r="1.1" fill="currentColor"/><circle cx="10.5" cy="10.5" r="1.1" fill="currentColor"/></svg>
+          </button>
+        </div>
+        <label class="sr-only" for="sh-d">Domain</label>
+        <select class="sh-cmp-d" name="d" id="sh-d" data-domain>
+                    <option value="neverla.web.id">@neverla.web.id</option>
+                    <option value="mixozia.com">@mixozia.com</option>
+                    <option value="linqmail.com">@linqmail.com</option>
+                  </select>
+        <p class="sh-hint composer-hint" id="sh-hint" data-hint hidden></p>
+        <button class="btn btn-primary btn-lg btn-block sh-cmp-go" type="submit">
+          <span>Open inbox</span>
+          <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <p class="sh-cmp-note">Public inbox — anyone with the address can read it.</p>
+      </form>
+
+                  <div class="sh-recent" data-sh-recent hidden>
+        <p class="sh-sec">Opened in this tab</p>
+        <ul class="sh-card sh-list" data-sh-recent-list></ul>
+              </div>
+    </div>
+  </div>
+</dialog>
+
+<p class="sr-only" role="status" aria-live="polite" data-live></p>
+
+</body>
+</html>

@@ -4,23 +4,23 @@
         "title": "neverla",
         "version": "1.0.0",
         "summary": "Disposable email addresses with a REST API. No account, no key, no payment.",
-        "description": "neverla hands out throwaway email addresses and lets you read what arrives at them over HTTP.\n\nThere is nothing to create: an address exists the moment mail reaches it. Pick any local part on one of the public domains (mail.neverla.web.id, mixozia.com, linqmail.com), use it, then poll GET /api/v1/mailbox.\n\nNo account, no API key and no payment are required for the public domains. Bring your own domain by pointing its MX at smtp.neverla.web.id — the first message connects it, with no registration and no key.\n\nMessages are deleted 5 days after they arrive, and attachments are capped at 5 MB. Anyone who guesses a public address can read it, so never send anything confidential to one.\n\nPREMIUM POOL. The public domains are on public disposable-mail blocklists, so many signup forms reject them. A paid plan gives API access to 97 private .com domains, kept off those lists. Same endpoints, same shapes — the only difference is that a premium address requires the `Authorization: Bearer gm_live_...` key of an account on a paid plan. Without a current plan it answers 404, exactly as an unhosted domain does, so the pool cannot be enumerated by guessing names. The public domains and your own domains stay free and keyless on every plan. Premium USD 12.99/month (2,000 premium messages/month, 1 API key, 2 req/s per address, no per-minute or daily API cap); Pro USD 49.99/month (15,000 premium messages/month, 5 API keys, 3 req/s per address, no per-minute or daily API cap); Scale USD 99.99/month (36,000 premium messages/month, 20 API keys, 5 req/s per address, no per-minute or daily API cap). See https://mail.neverla.web.id/pricing\n\nWITH A KEY: GET /api/v1/me verifies it and shows the plan, the period, the allowance left and the rate limit (401 if the key is unknown or revoked — a bad key is refused on every endpoint, whatever the domain). GET /api/v1/domains lists the public domains for everyone and the pool's names for a paid key only. The first authenticated read of a fresh premium address holds it for the account and counts one unit of the allowance (a unit is a message received on the pool OR an address opened, whichever comes first); reading a held address again is free, and it is released from the dashboard or when the plan lapses. Pool errors: 402 quota_reached / overage_cap / overage_funds, 403 address_taken, 409 address_limit (no plan caps addresses today). `alias` is returned for premium mailboxes too.",
+        "description": "neverla hands out throwaway email addresses and lets you read what arrives at them over HTTP.\n\nThere is nothing to create: an address exists the moment mail reaches it. Pick any local part on one of the public domains (neverla.web.id, mixozia.com, linqmail.com), use it, then poll GET /api/v1/mailbox.\n\nNo account, no API key and no payment are required for the public domains. Bring your own domain by pointing its MX at smtp.neverla.web.id — the first message connects it, with no registration and no key.\n\nMessages are deleted 5 days after they arrive, and attachments are capped at 5 MB. Anyone who guesses a public address can read it, so never send anything confidential to one.\n\nPREMIUM POOL. The public domains are on public disposable-mail blocklists, so many signup forms reject them. A paid plan gives API access to 97 private .com domains, kept off those lists. Same endpoints, same shapes — the only difference is that a premium address requires the `Authorization: Bearer gm_live_...` key of an account on a paid plan. Without a current plan it answers 404, exactly as an unhosted domain does, so the pool cannot be enumerated by guessing names. The public domains and your own domains stay free and keyless on every plan. Premium USD 12.99/month (2,000 premium messages/month, 1 API key, 2 req/s per address, no per-minute or daily API cap); Pro USD 49.99/month (15,000 premium messages/month, 5 API keys, 3 req/s per address, no per-minute or daily API cap); Scale USD 99.99/month (36,000 premium messages/month, 20 API keys, 5 req/s per address, no per-minute or daily API cap). See https://neverla.web.id/pricing\n\nWITH A KEY: GET /api/v1/me verifies it and shows the plan, the period, the allowance left and the rate limit (401 if the key is unknown or revoked — a bad key is refused on every endpoint, whatever the domain). GET /api/v1/domains lists the public domains for everyone and the pool's names for a paid key only. The first authenticated read of a fresh premium address holds it for the account and counts one unit of the allowance (a unit is a message received on the pool OR an address opened, whichever comes first); reading a held address again is free, and it is released from the dashboard or when the plan lapses. Pool errors: 402 quota_reached / overage_cap / overage_funds, 403 address_taken, 409 address_limit (no plan caps addresses today). `alias` is returned for premium mailboxes too.",
         "contact": {
-            "url": "https://mail.neverla.web.id/docs/api"
+            "url": "https://neverla.web.id/docs/api"
         },
         "license": {
             "name": "Free to use",
-            "url": "https://mail.neverla.web.id/legal/terms"
+            "url": "https://neverla.web.id/legal/terms"
         }
     },
     "servers": [
         {
-            "url": "https://mail.neverla.web.id",
+            "url": "https://neverla.web.id",
             "description": "Production"
         }
     ],
     "externalDocs": {
-        "url": "https://mail.neverla.web.id/docs/api",
+        "url": "https://neverla.web.id/docs/api",
         "description": "Reference with examples"
     },
     "tags": [
@@ -904,17 +904,14 @@
         }
     },
     "x-mcp": {
-        "endpoint": "https://mail.neverla.web.id/mcp",
+        "endpoint": "https://neverla.web.id/mcp",
         "transport": "streamable-http",
         "description": "The same service as MCP tools, for AI agents: create_inbox, wait_for_message, list_messages, read_message, delete_message, list_domains. A paid key sent as Authorization: Bearer on /mcp opens the premium pool there too."
     },
     "x-public-domains": [
         "neverla.web.id",
-        "gmail.com",
-        "googlemail.com",
-        "grabmail.io",
-        "linqmail.com",
-        "mixozia.com"
+        "mixozia.com",
+        "linqmail.com"
     ],
     "x-retention-days": 5,
     "x-requires-auth": false

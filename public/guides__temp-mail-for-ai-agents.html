@@ -1,0 +1,1425 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Email for AI agents: sign-up verification without a human | Neverla Mail</title>
+<meta name="description" content="Give an AI agent an email inbox with no key: MCP with a blocking wait, or a REST tool for LangChain, the OpenAI Agents SDK and Vercel AI SDK, plus guardrails.">
+<link rel="canonical" href="https://neverla.web.id/guides/temp-mail-for-ai-agents">
+<meta name="robots" content="max-image-preview:large">
+<link rel="alternate" type="application/rss+xml" title="Neverla Mail — Guides" href="https://neverla.web.id/guides/feed.xml">
+<link rel="alternate" hreflang="en" href="https://neverla.web.id/guides/temp-mail-for-ai-agents">
+<link rel="alternate" hreflang="es" href="https://neverla.web.id/es/guides/temp-mail-for-ai-agents">
+<link rel="alternate" hreflang="pt" href="https://neverla.web.id/pt/guides/temp-mail-for-ai-agents">
+<link rel="alternate" hreflang="fr" href="https://neverla.web.id/fr/guides/temp-mail-for-ai-agents">
+<link rel="alternate" hreflang="de" href="https://neverla.web.id/de/guides/temp-mail-for-ai-agents">
+<link rel="alternate" hreflang="ru" href="https://neverla.web.id/ru/guides/temp-mail-for-ai-agents">
+<link rel="alternate" hreflang="tr" href="https://neverla.web.id/tr/guides/temp-mail-for-ai-agents">
+<link rel="alternate" hreflang="id" href="https://neverla.web.id/id/guides/temp-mail-for-ai-agents">
+<link rel="alternate" hreflang="vi" href="https://neverla.web.id/vi/guides/temp-mail-for-ai-agents">
+<link rel="alternate" hreflang="ar" href="https://neverla.web.id/ar/guides/temp-mail-for-ai-agents">
+<link rel="alternate" hreflang="ja" href="https://neverla.web.id/ja/guides/temp-mail-for-ai-agents">
+<link rel="alternate" hreflang="x-default" href="https://neverla.web.id/guides/temp-mail-for-ai-agents">
+<meta name="theme-color" content="#ffffff">
+<meta name="color-scheme" content="light">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Neverla Mail">
+<meta property="og:title" content="Email for AI agents: sign-up verification without a human | Neverla Mail">
+<meta property="og:description" content="Give an AI agent an email inbox with no key: MCP with a blocking wait, or a REST tool for LangChain, the OpenAI Agents SDK and Vercel AI SDK, plus guardrails.">
+<meta property="og:url" content="https://neverla.web.id/guides/temp-mail-for-ai-agents">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:locale:alternate" content="pt_BR">
+<meta property="og:locale:alternate" content="fr_FR">
+<meta property="og:locale:alternate" content="de_DE">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta property="og:locale:alternate" content="tr_TR">
+<meta property="og:locale:alternate" content="id_ID">
+<meta property="og:locale:alternate" content="vi_VN">
+<meta property="og:locale:alternate" content="ar_AR">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://neverla.web.id/assets/img/guides/aiagents-1376.webp">
+<meta property="og:image:width" content="1376">
+<meta property="og:image:height" content="768">
+<meta property="og:image:alt" content="Neverla Mail — Temporary email addresses, and an API to read them.">
+<meta name="twitter:image" content="https://neverla.web.id/assets/img/guides/aiagents-1376.webp">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" sizes="96x96" href="/assets/img/icon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/img/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Neverla Mail">
+
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/main.css?v=3af85b61f5">
+<link rel="stylesheet" href="/assets/css/mobile.css?v=3af85b61f5" media="(max-width: 959.98px)">
+<script src="/assets/js/app.js?v=3af85b61f5" defer></script>
+<script src="/assets/js/mobile.js?v=3af85b61f5" defer></script>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://neverla.web.id/#org","name":"Neverla Mail","url":"https://neverla.web.id/","description":"Free disposable email addresses with a REST API and an MCP server for AI agents.","logo":{"@type":"ImageObject","url":"https://neverla.web.id/assets/img/logo.png","width":671,"height":160},"image":"https://neverla.web.id/assets/img/og-card.png","sameAs":["https://dev.to/neverla"]},{"@type":"WebSite","@id":"https://neverla.web.id/#site","name":"Neverla Mail","url":"https://neverla.web.id/","publisher":{"@id":"https://neverla.web.id/#org"},"inLanguage":["en","es","pt","fr","de","ru","tr","id","vi","ar","ja"]},{"@type":["WebAPI","SoftwareApplication"],"@id":"https://neverla.web.id/#api","name":"Neverla Mail disposable email API","url":"https://neverla.web.id/docs/api","documentation":"https://neverla.web.id/docs/api","provider":{"@id":"https://neverla.web.id/#org"},"applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"Create a disposable email address and read what arrives at it over HTTP. No account, no API key and no payment for the public domains. Messages are deleted 5 days after they arrive.","offers":[{"@type":"Offer","name":"Free","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"Public domains, your own domains, the REST API and the MCP server. No account, no key; the free API allows 60 requests a minute and 1,000 a day per IP address."},{"@type":"Offer","name":"Premium","price":"12.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"12.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Pro","price":"49.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"49.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Scale","price":"99.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"99.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}}],"featureList":["Connect your own domain — every address on it becomes a catch-all inbox","Disposable email addresses with no signup","REST API over HTTPS, no API key required","MCP server for AI agents (create_inbox, wait_for_message)","Every mailbox has an alias you can hand out instead of the address","Attachments up to 5 MB","Automatic deletion after 5 days"],"additionalProperty":[{"@type":"PropertyValue","name":"Sending mail","value":"No. There is no endpoint that sends, and no outbound mail of any kind."},{"@type":"PropertyValue","name":"IMAP or POP3","value":"No. HTTPS only — a REST API and an MCP server."},{"@type":"PropertyValue","name":"Webhooks or push notifications","value":"No. You poll, or you let the MCP server hold the call open until the message lands."},{"@type":"PropertyValue","name":"Keeping mail longer than 5 days","value":"No. Not a tier, not a setting, not a parameter."},{"@type":"PropertyValue","name":"Attachments over 5 MB","value":"No. The message is refused at SMTP time."},{"@type":"PropertyValue","name":"Privacy on a shared domain","value":"No. Anyone who knows the address can read the mailbox."},{"@type":"PropertyValue","name":"Paying by card","value":"No. Crypto only, credited to a balance the subscription draws on."},{"@type":"PropertyValue","name":"An uptime guarantee","value":"No. There is no SLA, on any plan."},{"@type":"PropertyValue","name":"Tracking, analytics or advertising","value":"No. No third-party script, and no cookie banner because there are no cookies to consent to."}],"potentialAction":{"@type":"ConsumeAction","target":{"@type":"EntryPoint","urlTemplate":"https://neverla.web.id/api/v1/mailbox?address={address}","httpMethod":"GET","contentType":"application/json"}}},{"@type":"WebPage","@id":"https://neverla.web.id/guides/temp-mail-for-ai-agents#page","url":"https://neverla.web.id/guides/temp-mail-for-ai-agents","name":"Email for AI agents: sign-up verification without a human | Neverla Mail","description":"Give an AI agent an email inbox with no key: MCP with a blocking wait, or a REST tool for LangChain, the OpenAI Agents SDK and Vercel AI SDK, plus guardrails.","isPartOf":{"@id":"https://neverla.web.id/#site"},"inLanguage":"en"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Neverla Mail","item":"https://neverla.web.id/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://neverla.web.id/guides"},{"@type":"ListItem","position":3,"name":"AI agents & MCP","item":"https://neverla.web.id/guides"},{"@type":"ListItem","position":4,"name":"Email for AI agents: sign-up verification without a human","item":"https://neverla.web.id/guides/temp-mail-for-ai-agents"}]},{"@type":"TechArticle","@id":"https://neverla.web.id/guides/temp-mail-for-ai-agents#article","headline":"Email for AI agents: sign-up verification without a human","description":"Give an AI agent an email inbox with no key: MCP with a blocking wait, or a REST tool for LangChain, the OpenAI Agents SDK and Vercel AI SDK, plus guardrails.","image":"https://neverla.web.id/assets/img/guides/aiagents-1376.webp","datePublished":"2026-09-01","dateModified":"2026-09-01","inLanguage":"en","articleSection":"AI agents & MCP","timeRequired":"PT21M","keywords":"ai agent, email for ai agents, langchain, openai agents sdk, vercel ai sdk, mcp, browser agent, email verification, autonomous agent, tool calling, temp mail api","author":{"@id":"https://neverla.web.id/#org"},"publisher":{"@id":"https://neverla.web.id/#org"},"isPartOf":{"@id":"https://neverla.web.id/#site"},"mainEntityOfPage":{"@id":"https://neverla.web.id/guides/temp-mail-for-ai-agents#page"},"proficiencyLevel":"Intermediate"},{"@type":"FAQPage","@id":"https://neverla.web.id/guides/temp-mail-for-ai-agents#faq","mainEntity":[{"@type":"Question","name":"Do I need an API key for the agent?","acceptedAnswer":{"@type":"Answer","text":"No. The public domains take no key, no account and no header, over REST and over MCP alike. Only the paid pool of domains kept off the disposable-mail blocklists uses a bearer token, and the tool functions are otherwise identical for it."}},{"@type":"Question","name":"MCP or a REST tool — which should I choose?","acceptedAnswer":{"@type":"Answer","text":"If the agent already lives in an MCP client, MCP: it is one line and the wait is server-side. If you are writing the agent in a framework, a tool function: it is forty lines, it works with any model, and you control the description the model reads. Both reach the same mailbox."}},{"@type":"Question","name":"How much does the waiting cost in tokens?","acceptedAnswer":{"@type":"Answer","text":"Nothing, either way. The MCP wait blocks on the server; the REST tool loops in your code. The model spends tokens on the tool call and on reading the result, not on the sixty seconds in between — which is the whole reason not to let a model poll a mailbox itself."}},{"@type":"Question","name":"Can several agents run at once?","acceptedAnswer":{"@type":"Answer","text":"Yes. Each task gets its own inbox and there is no session state. Without a key, all agents behind one IP address share 60 requests a minute and 1,000 a day, REST and MCP together; a paid key removes both caps. Over MCP, 8 wait_for_message calls can run at once — past that the tool answers timed_out at once and the agent calls again."}},{"@type":"Question","name":"Can the agent send email from the inbox?","acceptedAnswer":{"@type":"Answer","text":"No. The service receives only, by design — a free inbox with no account that could send would be a spam relay within the hour. An agent that has to send mail needs a sending provider and its own credentials."}},{"@type":"Question","name":"What if the site refuses the alias’s domain?","acceptedAnswer":{"@type":"Answer","text":"Then it is on a disposable-domain blocklist, and no name in front of the @ will change that. Point a domain you own at the service (one MX record, free), or use a domain from the paid pool kept off the lists — both plug into the same tools by changing the domain constant. Why sign-up forms block disposable email explains which check refused you."}},{"@type":"Question","name":"Is the inbox private to my agent?","acceptedAnswer":{"@type":"Answer","text":"No. Anyone who knows the address can read it, which is why the alias exists and why nothing confidential should ever be sent there. For a code that lives ten minutes that is fine; it is the one rule the agent’s instructions must state plainly."}}]}]}</script>
+<script>
+(function() {
+  var _t = document.title;
+  Object.defineProperty(document, 'title', {
+    get: function() { return _t; },
+    set: function(v) {
+      _t = (v || '').replace(/grabmail/gi, 'Neverla Mail').replace(/🐴/g, '').trim();
+    }
+  });
+})();
+</script>
+</head>
+<body class="page-guide" id="top" data-loc="en" data-i18n="{}">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="hd" data-header>
+  <div class="wrap hd-in">
+    <a class="hd-brand" href="/" aria-label="neverla.web.id — home">
+      <picture>
+        <source srcset="/assets/img/logo-nav.webp?v=3af85b61f5" type="image/webp">
+        <img class="hd-logo" src="/assets/img/logo-nav.png?v=3af85b61f5"
+             alt="Neverla Mail" width="126" height="30" decoding="async" fetchpriority="high">
+      </picture>
+    </a>
+
+    <span class="hd-sep" aria-hidden="true"></span>
+
+        <nav class="hd-nav" aria-label="Main">
+      <ul class="hd-list">
+                <li>
+          <a class="hd-link" href="/#how" data-spy="how">How it works</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/extensions" data-spy="ext">Extension</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/#api" data-spy="api">API</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/domains" data-spy="domains">Your domain</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/docs/api" data-spy="docs">Docs</a>
+        </li>
+              </ul>
+    </nav>
+
+    <div class="hd-act">
+                  <button class="btn btn-quiet hd-login" type="button" data-auth-open="signin">
+        Log in      </button>
+            <a class="btn btn-primary" href="/#grab" data-cta>
+        Open an inbox        <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+        <button class="hd-burger" type="button" data-burger
+            aria-expanded="false" aria-controls="gm-drawer" aria-label="Open menu">
+      <span class="hd-burger-box" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+  </div>
+</header>
+
+<div class="drawer" id="gm-drawer" data-drawer hidden>
+  <nav class="drawer-in" aria-label="Mobile">
+    <ul class="drawer-list">
+            <li><a class="drawer-link" href="/#how">How it works</a></li>
+            <li><a class="drawer-link" href="/extensions">Extension</a></li>
+            <li><a class="drawer-link" href="/#api">API</a></li>
+            <li><a class="drawer-link" href="/domains">Your domain</a></li>
+            <li><a class="drawer-link" href="/docs/api">Docs</a></li>
+          </ul>
+    <a class="btn btn-primary btn-block" href="/#grab">Open an inbox</a>
+            <button class="btn btn-ghost btn-block" type="button" data-auth-open="signin">Log in</button>
+        <p class="drawer-note">Free · No signup · Deleted after 5 days</p>
+
+  </nav>
+</div>
+
+<main id="main">
+<div class="ga">
+
+    <div class="ga-prog" data-guide-progress aria-hidden="true"><span></span></div>
+
+  <div class="wrap ga-top">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+                <li><a href="/guides">Guides</a></li>
+        <li><a href="/guides/topic/agents">AI agents &amp; MCP</a></li>
+                <li aria-current="page">Email for AI agents: sign-up verification without a human</li>
+      </ol>
+    </nav>
+
+    <div class="ga-head">
+      <div class="ga-head-t">
+        <p class="ga-eyebrow">
+          <span class="ga-eyebrow-ic"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.5" y="6.5" width="13" height="10" rx="2.6"/><path d="M10 3.2v3.3M7.3 11h.01M12.7 11h.01M7.8 13.6h4.4"/></svg></span>
+          <a class="ga-eyebrow-a" href="/guides/topic/agents">AI agents &amp; MCP</a>
+        </p>
+        <h1 class="ga-h">Email for AI agents: sign-up verification without a human</h1>
+        <p class="ga-lede">An agent that can browse, fill forms and pay still stops dead at “check your email for the code”, because it has no inbox. Here is how to give it one that needs no account and no key — over MCP with a blocking wait, or as a plain tool function for LangChain, the OpenAI Agents SDK and the Vercel AI SDK — with the four-step loop that carries a sign-up through and the guardrails an unattended agent needs.</p>
+
+                <ul class="ga-meta">
+                    <li class="ga-lvl ga-lvl-intermediate">Intermediate</li>
+                              <li class="ga-meta-i">
+            <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.4V8l2.4 1.6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            21 min read          </li>
+          <li class="ga-meta-i">
+            <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="2.3" y="3.4" width="11.4" height="10.3" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M2.3 6.6h11.4M5.6 2.3v2.2M10.4 2.3v2.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            <time datetime="2026-09-01">Updated 1 September 2026</time>
+          </li>
+        </ul>
+      </div>
+
+                  <figure class="ga-hero">
+        <img class="ga-hero-img" src="/assets/img/guides/aiagents-800.webp?v=3af85b61f5" srcset="/assets/img/guides/aiagents-480.webp?v=3af85b61f5 480w, /assets/img/guides/aiagents-800.webp?v=3af85b61f5 800w, /assets/img/guides/aiagents-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 520px, (min-width: 720px) calc(100vw - 64px), calc(100vw - 40px)" width="1376" height="768" alt="A small grey robot at a grey desk holding up a blue envelope, one hand on a keyboard, with a blue tick floating above" fetchpriority="high" decoding="async">      </figure>
+    </div>
+  </div>
+
+  <div class="wrap ga-body">
+    <nav class="ga-rail doc-toc" aria-label="On this page">
+      <p class="doc-toc-h">On this page</p>
+      <ul>
+                <li><a href="#the-wall" data-spy="the-wall">The wall every agent hits</a></li>
+                <li><a href="#two-ways" data-spy="two-ways">Two ways to give it an inbox</a></li>
+                <li><a href="#python-tool" data-spy="python-tool">A tool function: Python, for LangChain and the OpenAI Agents SDK</a></li>
+                <li><a href="#typescript-tool" data-spy="typescript-tool">The same tool in TypeScript, for the Vercel AI SDK</a></li>
+                <li><a href="#the-loop" data-spy="the-loop">The loop, in four steps</a></li>
+                <li><a href="#alias-rule" data-spy="alias-rule">The alias rule</a></li>
+                <li><a href="#guardrails" data-spy="guardrails">Guardrails for an unattended agent</a></li>
+                <li><a href="#browser-agents" data-spy="browser-agents">Browser agents</a></li>
+                <li><a href="#checklist" data-spy="checklist">Before you let it run unattended</a></li>
+                <li><a href="#faq" data-spy="faq">Questions</a></li>
+              </ul>
+      <p class="ga-rail-back">
+                <a class="ga-rail-back-a" href="/guides">
+          <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          All guides        </a>
+      </p>
+    </nav>
+
+    <article class="ga-art">
+      <div class="toc-chip" data-toc-bar><button class="toc-chip-b" type="button" aria-haspopup="dialog"><svg class="toc-chip-ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 5.5h12M4 10h12M4 14.5h7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span class="toc-chip-k">On this page</span><span class="toc-chip-v"></span><svg class="toc-chip-dn" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 6.5 8 10.5l4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+                  <aside class="ga-key" aria-labelledby="ga-key-h">
+        <h2 class="ga-key-h" id="ga-key-h">In short</h2>
+        <ul>
+                    <li>An agent needs an inbox it can <strong>read by itself</strong>. This one has no account and no key: the agent invents an address, uses it, and reads what arrives over HTTP or over MCP.</li>
+                    <li>Over MCP, <code>wait_for_message</code> <strong>blocks</strong> for up to 25 seconds and returns the message; over REST, the tool function below does the same with a one-read-a-second loop. Either way the agent never polls on its own.</li>
+                    <li>The one rule an agent gets wrong without being told: <strong>the alias goes into the form, the address is what it waits on</strong>. Give the site the address and you have given it the mailbox.</li>
+                    <li>Unattended means guardrails: one inbox per task, a budget of three waits, a deadline, and nothing confidential ever sent to a public inbox.</li>
+                  </ul>
+      </aside>
+      
+            <section class="ga-s" id="the-wall" aria-labelledby="the-wall-h">
+        <h2 class="ga-s-h" id="the-wall-h">The wall every agent hits</h2>
+        <p>Sign up for a trial, create a workspace, claim an API key, join a beta: every one of these ends at a form, and every form ends at a mailbox. A human glances at a phone. An agent has nothing to glance at — it has no address it can read, and the sensible ones stop and ask you for the code, which defeats the point of having sent an agent.</p><p>The fix is not a cleverer prompt. It is an inbox the agent can read programmatically, with no account to create first (an agent creating a mail account meets the same wall one level down) and no key to manage. A disposable mailbox is exactly that: a mailbox exists the moment mail reaches it, and reading it is one HTTP request.</p><aside class="ga-call ga-call-note"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7.5"/><path d="M10 9.2v4.4M10 6.4h.01"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Note</span>This is about the accounts an agent is allowed to create.</p><p>An agent signing up to a service on your behalf, with your consent and inside the service’s terms, is automation. An agent creating a thousand accounts to farm credits is abuse, and the sites that block disposable domains do so to stop it. Nothing here changes which side of that line a task is on — <a href="/guides/why-signup-forms-block-disposable-email">why sign-up forms block disposable email</a> is honest about both.</p></div></aside>      </section>
+            <section class="ga-s" id="two-ways" aria-labelledby="two-ways-h">
+        <h2 class="ga-s-h" id="two-ways-h">Two ways to give it an inbox</h2>
+        <p>The same mailbox is reachable two ways, and the choice depends on how the agent is built rather than on the mailbox:</p><div class="ep-tw ga-tw" tabindex="0" role="region" aria-label="MCP server, REST tool function"><table class="ep-t ga-t ga-t-wide"><thead><tr><th scope="col"></th><th scope="col">MCP server</th><th scope="col">REST tool function</th></tr></thead><tbody><tr><td><strong>Fits when</strong></td><td>The agent runs in an MCP client — Claude Code, Cursor, Claude Desktop, or a framework with an MCP adapter.</td><td>You write the agent in code: LangChain, the OpenAI Agents SDK, the Vercel AI SDK, or your own loop.</td></tr><tr><td><strong>Waiting</strong></td><td><code>wait_for_message</code> blocks server-side for up to 25 seconds and returns the message whole. Zero tokens spent while waiting.</td><td>The tool function loops once a second up to its deadline. Zero tokens too — the loop is in your code, not in the model.</td></tr><tr><td><strong>Setup</strong></td><td>One URL in the client’s configuration. No code.</td><td>Two functions, forty lines, one HTTP library.</td></tr><tr><td><strong>What the model sees</strong></td><td>Six tools with descriptions, plus a paragraph of instructions the server sends at connection time.</td><td>Whatever your tool descriptions say. The docstrings below are written to be them.</td></tr></tbody></table></div><p>The MCP path is one line, and <a href="/guides/mcp-email-claude-code-cursor-windsurf">the per-client setup</a> has the exact line for seven clients; <a href="/guides/mcp-inbox-for-ai-agents">an inbox an AI agent can read</a> explains the tools in depth. The rest of this guide is the REST path, for agents you build yourself.</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>the MCP path, in full</span><button class="code-copy" type="button" data-copy-code data-code="{&quot;mcpServers&quot;:{&quot;neverla&quot;:{&quot;url&quot;:&quot;https://neverla.web.id/mcp&quot;}}}" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code>{&quot;mcpServers&quot;:{&quot;neverla&quot;:{&quot;url&quot;:&quot;https://neverla.web.id/mcp&quot;}}}</code></pre></div>      </section>
+            <section class="ga-s" id="python-tool" aria-labelledby="python-tool-h">
+        <h2 class="ga-s-h" id="python-tool-h">A tool function: Python, for LangChain and the OpenAI Agents SDK</h2>
+        <p>Two plain functions with careful docstrings. The docstrings matter more than the code: in both frameworks they become the description the model reads to decide when to call the tool and what to do with the answer, so they say the two things an agent gets wrong — alias versus address, and what <code>timed_out</code> means.</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>inbox_tools.py</span><button class="code-copy" type="button" data-copy-code data-code="&quot;&quot;&quot;inbox_tools.py — two plain functions any agent framework can wrap. No key, no account.&quot;&quot;&quot;
+import secrets
+import time
+
+import requests
+
+API = &quot;https://neverla.web.id/api/v1&quot;
+
+
+def create_inbox() -&gt; dict:
+    &quot;&quot;&quot;Create a fresh disposable email inbox for this task.
+
+    Returns the ADDRESS to poll and the ALIAS to give to websites. Put the alias
+    into forms; never hand out the address. Nothing is created server-side.
+    &quot;&quot;&quot;
+    address = f&quot;agent-{secrets.token_hex(4)}@neverla.web.id&quot;
+    r = requests.get(f&quot;{API}/mailbox&quot;, params={&quot;address&quot;: address}, timeout=15)
+    r.raise_for_status()
+    return {
+        &quot;address&quot;: address,
+        &quot;alias&quot;: r.json().get(&quot;alias&quot;),
+        &quot;next_step&quot;: &quot;Put the alias into the form. Then call wait_for_message with the address.&quot;,
+    }
+
+
+def wait_for_message(address: str, subject_contains: str = &quot;&quot;, timeout_seconds: int = 60) -&gt; dict:
+    &quot;&quot;&quot;Wait for an email to arrive at the address, up to timeout_seconds.
+
+    Returns the message (from, subject, text, html) or {&quot;status&quot;: &quot;timed_out&quot;}.
+    On timed_out, call again — up to three times — before concluding no mail was sent.
+    &quot;&quot;&quot;
+    deadline = time.monotonic() + timeout_seconds
+    while time.monotonic() &lt; deadline:
+        r = requests.get(f&quot;{API}/mailbox&quot;, params={&quot;address&quot;: address}, timeout=15)
+        if r.status_code == 429:                       # slow down, do not fail
+            time.sleep(float(r.headers.get(&quot;Retry-After&quot;, 1)))
+            continue
+        r.raise_for_status()
+        for m in r.json()[&quot;messages&quot;]:
+            if subject_contains.lower() in m[&quot;subject&quot;].lower():
+                full = requests.get(f&quot;{API}/message/{m[&#039;id&#039;]}&quot;, params={&quot;mailbox&quot;: address}, timeout=15)
+                full.raise_for_status()
+                return full.json()
+        time.sleep(1)                                   # one read a second, never throttled
+    return {&quot;status&quot;: &quot;timed_out&quot;, &quot;hint&quot;: &quot;Call again, up to three times, before giving up.&quot;}" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code>&quot;&quot;&quot;inbox_tools.py — two plain functions any agent framework can wrap. No key, no account.&quot;&quot;&quot;
+import secrets
+import time
+
+import requests
+
+API = &quot;https://neverla.web.id/api/v1&quot;
+
+
+def create_inbox() -&gt; dict:
+    &quot;&quot;&quot;Create a fresh disposable email inbox for this task.
+
+    Returns the ADDRESS to poll and the ALIAS to give to websites. Put the alias
+    into forms; never hand out the address. Nothing is created server-side.
+    &quot;&quot;&quot;
+    address = f&quot;agent-{secrets.token_hex(4)}@neverla.web.id&quot;
+    r = requests.get(f&quot;{API}/mailbox&quot;, params={&quot;address&quot;: address}, timeout=15)
+    r.raise_for_status()
+    return {
+        &quot;address&quot;: address,
+        &quot;alias&quot;: r.json().get(&quot;alias&quot;),
+        &quot;next_step&quot;: &quot;Put the alias into the form. Then call wait_for_message with the address.&quot;,
+    }
+
+
+def wait_for_message(address: str, subject_contains: str = &quot;&quot;, timeout_seconds: int = 60) -&gt; dict:
+    &quot;&quot;&quot;Wait for an email to arrive at the address, up to timeout_seconds.
+
+    Returns the message (from, subject, text, html) or {&quot;status&quot;: &quot;timed_out&quot;}.
+    On timed_out, call again — up to three times — before concluding no mail was sent.
+    &quot;&quot;&quot;
+    deadline = time.monotonic() + timeout_seconds
+    while time.monotonic() &lt; deadline:
+        r = requests.get(f&quot;{API}/mailbox&quot;, params={&quot;address&quot;: address}, timeout=15)
+        if r.status_code == 429:                       # slow down, do not fail
+            time.sleep(float(r.headers.get(&quot;Retry-After&quot;, 1)))
+            continue
+        r.raise_for_status()
+        for m in r.json()[&quot;messages&quot;]:
+            if subject_contains.lower() in m[&quot;subject&quot;].lower():
+                full = requests.get(f&quot;{API}/message/{m[&#039;id&#039;]}&quot;, params={&quot;mailbox&quot;: address}, timeout=15)
+                full.raise_for_status()
+                return full.json()
+        time.sleep(1)                                   # one read a second, never throttled
+    return {&quot;status&quot;: &quot;timed_out&quot;, &quot;hint&quot;: &quot;Call again, up to three times, before giving up.&quot;}</code></pre></div><p>Wrapping them is one call per framework. LangChain’s <code>tool</code> reads the docstring and the type hints; the Agents SDK’s <code>function_tool</code> does the same and adds the tools to an agent whose instructions repeat the loop:</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>LangChain</span><button class="code-copy" type="button" data-copy-code data-code="# LangChain: the docstring becomes the tool description the model reads.
+from langchain_core.tools import tool
+
+create_inbox_tool = tool(create_inbox)
+wait_for_message_tool = tool(wait_for_message)
+# agent = create_react_agent(model, tools=[create_inbox_tool, wait_for_message_tool, ...])" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code># LangChain: the docstring becomes the tool description the model reads.
+from langchain_core.tools import tool
+
+create_inbox_tool = tool(create_inbox)
+wait_for_message_tool = tool(wait_for_message)
+# agent = create_react_agent(model, tools=[create_inbox_tool, wait_for_message_tool, ...])</code></pre></div><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>OpenAI Agents SDK</span><button class="code-copy" type="button" data-copy-code data-code="# OpenAI Agents SDK: same two functions, same docstrings.
+from agents import Agent, Runner, function_tool
+
+signup_agent = Agent(
+    name=&quot;Signup agent&quot;,
+    instructions=(
+        &quot;When a site needs an email address, call create_inbox once. Put the ALIAS in the form. &quot;
+        &quot;Right after submitting, call wait_for_message with the ADDRESS and a word from the expected &quot;
+        &quot;subject. If it returns timed_out, call it again, up to three times.&quot;
+    ),
+    tools=[function_tool(create_inbox), function_tool(wait_for_message)],
+)
+
+result = Runner.run_sync(signup_agent, &quot;Sign up for a trial at https://app.example.com/signup and report the login.&quot;)
+print(result.final_output)" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code># OpenAI Agents SDK: same two functions, same docstrings.
+from agents import Agent, Runner, function_tool
+
+signup_agent = Agent(
+    name=&quot;Signup agent&quot;,
+    instructions=(
+        &quot;When a site needs an email address, call create_inbox once. Put the ALIAS in the form. &quot;
+        &quot;Right after submitting, call wait_for_message with the ADDRESS and a word from the expected &quot;
+        &quot;subject. If it returns timed_out, call it again, up to three times.&quot;
+    ),
+    tools=[function_tool(create_inbox), function_tool(wait_for_message)],
+)
+
+result = Runner.run_sync(signup_agent, &quot;Sign up for a trial at https://app.example.com/signup and report the login.&quot;)
+print(result.final_output)</code></pre></div>      </section>
+            <section class="ga-s" id="typescript-tool" aria-labelledby="typescript-tool-h">
+        <h2 class="ga-s-h" id="typescript-tool-h">The same tool in TypeScript, for the Vercel AI SDK</h2>
+        <p>The AI SDK’s <code>tool()</code> takes a description, a schema and an <code>execute</code>; the description carries the same two sentences. Pass both tools to <code>generateText</code> or <code>streamText</code> with a <code>maxSteps</code> above four, because the loop is four tool calls long:</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>inbox-tools.ts</span><button class="code-copy" type="button" data-copy-code data-code="// inbox-tools.ts — the same two tools for the Vercel AI SDK (v5 shape: inputSchema + execute).
+import { tool } from &#039;ai&#039;;
+import { z } from &#039;zod&#039;;
+
+const API = &#039;https://neverla.web.id/api/v1&#039;;
+const sleep = (ms: number) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+export const createInbox = tool({
+  description: &#039;Create a fresh disposable email inbox for this task. Returns the ADDRESS to poll and the ALIAS to give to websites. Put the alias into forms; never hand out the address.&#039;,
+  inputSchema: z.object({}),
+  execute: async () =&gt; {
+    const address = `agent-${crypto.randomUUID().slice(0, 8)}@neverla.web.id`;
+    const res = await fetch(`${API}/mailbox?address=${encodeURIComponent(address)}`);
+    const { alias } = (await res.json()) as { alias: string | null };
+    return { address, alias, next_step: &#039;Put the alias into the form. Then call waitForMessage with the address.&#039; };
+  },
+});
+
+export const waitForMessage = tool({
+  description: &#039;Wait for an email to arrive at the address, up to timeoutSeconds. Returns the message (from, subject, text, html) or { status: &quot;timed_out&quot; }. On timed_out, call again — up to three times — before concluding no mail was sent.&#039;,
+  inputSchema: z.object({
+    address: z.string(),
+    subjectContains: z.string().optional(),
+    timeoutSeconds: z.number().int().min(5).max(120).default(60),
+  }),
+  execute: async ({ address, subjectContains = &#039;&#039;, timeoutSeconds }) =&gt; {
+    const deadline = Date.now() + timeoutSeconds * 1000;
+    while (Date.now() &lt; deadline) {
+      const res = await fetch(`${API}/mailbox?address=${encodeURIComponent(address)}`);
+      if (res.status === 429) { await sleep(Number(res.headers.get(&#039;retry-after&#039;) ?? 1) * 1000); continue; }
+      if (!res.ok) throw new Error(`GET /mailbox answered ${res.status}`);
+      const { messages } = (await res.json()) as { messages: { id: string; subject: string }[] };
+      const hit = messages.find(m =&gt; m.subject.toLowerCase().includes(subjectContains.toLowerCase()));
+      if (hit) return (await fetch(`${API}/message/${hit.id}?mailbox=${encodeURIComponent(address)}`)).json();
+      await sleep(1000);
+    }
+    return { status: &#039;timed_out&#039;, hint: &#039;Call again, up to three times, before giving up.&#039; };
+  },
+});" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code>// inbox-tools.ts — the same two tools for the Vercel AI SDK (v5 shape: inputSchema + execute).
+import { tool } from &#039;ai&#039;;
+import { z } from &#039;zod&#039;;
+
+const API = &#039;https://neverla.web.id/api/v1&#039;;
+const sleep = (ms: number) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+export const createInbox = tool({
+  description: &#039;Create a fresh disposable email inbox for this task. Returns the ADDRESS to poll and the ALIAS to give to websites. Put the alias into forms; never hand out the address.&#039;,
+  inputSchema: z.object({}),
+  execute: async () =&gt; {
+    const address = `agent-${crypto.randomUUID().slice(0, 8)}@neverla.web.id`;
+    const res = await fetch(`${API}/mailbox?address=${encodeURIComponent(address)}`);
+    const { alias } = (await res.json()) as { alias: string | null };
+    return { address, alias, next_step: &#039;Put the alias into the form. Then call waitForMessage with the address.&#039; };
+  },
+});
+
+export const waitForMessage = tool({
+  description: &#039;Wait for an email to arrive at the address, up to timeoutSeconds. Returns the message (from, subject, text, html) or { status: &quot;timed_out&quot; }. On timed_out, call again — up to three times — before concluding no mail was sent.&#039;,
+  inputSchema: z.object({
+    address: z.string(),
+    subjectContains: z.string().optional(),
+    timeoutSeconds: z.number().int().min(5).max(120).default(60),
+  }),
+  execute: async ({ address, subjectContains = &#039;&#039;, timeoutSeconds }) =&gt; {
+    const deadline = Date.now() + timeoutSeconds * 1000;
+    while (Date.now() &lt; deadline) {
+      const res = await fetch(`${API}/mailbox?address=${encodeURIComponent(address)}`);
+      if (res.status === 429) { await sleep(Number(res.headers.get(&#039;retry-after&#039;) ?? 1) * 1000); continue; }
+      if (!res.ok) throw new Error(`GET /mailbox answered ${res.status}`);
+      const { messages } = (await res.json()) as { messages: { id: string; subject: string }[] };
+      const hit = messages.find(m =&gt; m.subject.toLowerCase().includes(subjectContains.toLowerCase()));
+      if (hit) return (await fetch(`${API}/message/${hit.id}?mailbox=${encodeURIComponent(address)}`)).json();
+      await sleep(1000);
+    }
+    return { status: &#039;timed_out&#039;, hint: &#039;Call again, up to three times, before giving up.&#039; };
+  },
+});</code></pre></div><p>The shape is identical in any framework that has a notion of a tool: a description the model reads, a schema for the arguments, and a function that runs on your side. The two things to carry over are the alias sentence and the <code>timed_out</code> sentence; everything else is the client from <a href="/guides/nodejs-temp-mail-api">the Node guide</a> or <a href="/guides/python-disposable-email-api">the Python guide</a>.</p>      </section>
+            <section class="ga-s" id="the-loop" aria-labelledby="the-loop-h">
+        <h2 class="ga-s-h" id="the-loop-h">The loop, in four steps</h2>
+        <p>Whatever the framework, a sign-up is the same four tool calls, and the agent should be told so in its instructions rather than left to discover it:</p><ol class="steps-n"><li><strong><code>create_inbox</code>, once per task.</strong> Back come an address, an alias and a sentence saying which is which.</li><li><strong>The alias goes into the form.</strong> Submit.</li><li><strong><code>wait_for_message</code> on the address, immediately,</strong> with <code>subject_contains</code> set to a word the confirmation mail will carry — “code”, “verify”, “confirm”. Not on a timer, not after other work: the mail is already on its way.</li><li><strong>The code comes out of the message</strong> the wait returned; the agent types it or follows the link. Six digits after the words the template uses — <a href="/guides/email-otp-codes-in-automated-tests">OTP codes in automated tests</a> has the extraction rules, which apply to an agent exactly as to a test.</li></ol><p>A sixty-second wait that returns <code>timed_out</code> is not a failure; it is “not yet”. The instructions should say: call again, up to three times. Three calls is over three minutes, which covers any transactional mail that was actually sent — and gives the agent three chances to notice that the form showed an error, or that it typed the alias wrong.</p>      </section>
+            <section class="ga-s" id="alias-rule" aria-labelledby="alias-rule-h">
+        <h2 class="ga-s-h" id="alias-rule-h">The alias rule</h2>
+        <p>Every mailbox has two addresses. The <em>address</em> is the one the agent reads with; anyone who has it can open the mailbox, because there is no account and the address is the only key. The <em>alias</em> is a second address on a separate domain that delivers into the same mailbox and cannot be used to read it.</p><p>So the site gets the alias and the agent keeps the address. An agent that pastes the address into a form has handed the site — and anyone the site leaks it to — the ability to read every message the agent will ever receive there. The tool functions above return both with a <code>next_step</code> saying which goes where, and the instructions repeat it, because a rule stated twice is a rule followed.</p><figure class="ga-fig"><svg class="ga-dia" viewBox="0 0 700 214" role="img" aria-label="The alias is what you hand out and reads back an empty mailbox; the address is what you keep and reads back every message."><rect x="6" y="16" width="196" height="76" rx="10" class="d-box"/><text x="104" y="44" class="d-t" text-anchor="middle">alias@example</text><text x="104" y="64" class="d-s" text-anchor="middle">what you hand over</text><rect x="252" y="16" width="196" height="76" rx="10" class="d-box d-box-a"/><text x="350" y="44" class="d-t" text-anchor="middle">Neverla Mail</text><text x="350" y="64" class="d-s" text-anchor="middle">routes it to the mailbox</text><rect x="498" y="16" width="196" height="76" rx="10" class="d-box"/><text x="596" y="44" class="d-t" text-anchor="middle">you@example</text><text x="596" y="64" class="d-s" text-anchor="middle">what you keep</text><path d="M206 54H241" class="d-line"/><path d="M240 49L248 54L240 59z" class="d-head"/><path d="M452 54H487" class="d-line"/><path d="M486 49L494 54L486 59z" class="d-head"/><path d="M104 92v26" class="d-tick"/><path d="M596 92v26" class="d-tick"/><text x="104" y="138" class="d-l" text-anchor="middle">Read it back and you get</text><text x="104" y="160" class="d-b d-no" text-anchor="middle">an empty mailbox. Always.</text><text x="596" y="138" class="d-l" text-anchor="middle">Read it back and you get</text><text x="596" y="160" class="d-b d-yes" text-anchor="middle">every message.</text><text x="350" y="196" class="d-s" text-anchor="middle">The service you signed up to only ever holds the left-hand one.</text></svg><figcaption>The alias is what the agent hands out and reads back an empty mailbox; the address is what it keeps and reads back every message.</figcaption></figure>      </section>
+            <section class="ga-s" id="guardrails" aria-labelledby="guardrails-h">
+        <h2 class="ga-s-h" id="guardrails-h">Guardrails for an unattended agent</h2>
+        <p>A test suite fails and stops. An agent that misreads a situation keeps going, and keeps spending. Five limits keep an email step from becoming the expensive part of a task:</p><dl class="defs"><div class="def"><dt>One inbox per task</dt><dd>Never reuse an address across tasks or runs. An old message with a plausible code in it is the fastest way for an agent to confidently do the wrong thing. <code>create_inbox</code> costs nothing; call it every time.</dd></div><div class="def"><dt>A budget of waits</dt><dd>Three calls to <code>wait_for_message</code>, then stop and report. An agent that waits indefinitely for a mail that was never sent burns a worker slot and a bill.</dd></div><div class="def"><dt>A deadline on the whole step</dt><dd>Five minutes from submit to code, end to end. Past it, the right action is to tell a human what happened, not to try the form again.</dd></div><div class="def"><dt>Subject filtering</dt><dd>Always pass <code>subject_contains</code>. A welcome mail that arrives before the code mail is otherwise “the message”, and the agent parses six digits out of a marketing footer.</dd></div><div class="def"><dt>Logging the address</dt><dd>Write the address into the task log. Messages stay 5 days, so a human can open the mailbox afterwards and see exactly what the agent saw — the single most useful thing when a run goes wrong.</dd></div></dl><aside class="ga-call ga-call-stop"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7.5"/><path d="m6.6 6.6 6.8 6.8"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Do not</span>Never let an agent send anything confidential to one of these inboxes.</p><p>The mailbox is public to anyone who knows the address. A verification code that dies in ten minutes is fine. A password, an API key, an invoice, a document — anything an agent might be asked to “email to myself” — is not, and the instructions should say so in as many words.</p></div></aside>      </section>
+            <section class="ga-s" id="browser-agents" aria-labelledby="browser-agents-h">
+        <h2 class="ga-s-h" id="browser-agents-h">Browser agents</h2>
+        <p>An agent driving a real browser — Browser Use, a Playwright MCP server, a computer-use model — is the case where the email step bites hardest, because it will meet the form before anyone planned for it. Three things make it work:</p><ul class="doc-l"><li><strong>Give it both servers.</strong> The browser tools and the inbox tools in the same session, so that “check your email” is a tool call and not a dead end.</li><li><strong>Put the loop in the system prompt.</strong> Four lines: create an inbox at the first email field; alias into the form; wait on the address right after submit; three retries on <code>timed_out</code>.</li><li><strong>Expect refusals.</strong> A form that rejects the alias’s domain will say so in the page; the agent should read the error and stop, not try names. The honest ways round a refusal — a domain of your own, or a domain from the pool kept off the blocklists — are configuration decisions for you, not the agent.</li></ul><p>For the agent’s own reading, the site publishes <a href="/llms.txt">llms.txt</a>, a plain-text map that says the same things this page does in the form a model prefers, and <a href="/openapi.json">an OpenAPI document</a> a code-writing agent can build the client from.</p>      </section>
+            <section class="ga-s" id="checklist" aria-labelledby="checklist-h">
+        <h2 class="ga-s-h" id="checklist-h">Before you let it run unattended</h2>
+        <ul class="doc-l"><li>Tool descriptions that state the alias rule and what <code>timed_out</code> means.</li><li>Instructions with the four-step loop and a budget of three waits.</li><li><code>create_inbox</code> called once per task, never reused.</li><li><code>subject_contains</code> on every wait.</li><li>The address written to the task log.</li><li>A line forbidding anything confidential to be sent to the inbox.</li></ul><p>That is all an agent needs. The same inbox serves a test suite by day and an agent by night, because underneath it is the same three HTTP calls — and if the site the agent signs up to refuses the public domains, <a href="/guides/own-domain-catch-all-inbox">a domain of your own</a> or <a href="/pricing">the pool kept off the lists</a> plugs in without a change to the tools.</p>      </section>
+      
+            <section class="ga-s" id="faq" aria-labelledby="faq-h">
+        <h2 class="ga-s-h" id="faq-h">Questions</h2>
+        <div class="faq ga-faq">
+                    <details class="faq-i" open>
+            <summary class="faq-q">
+              <span>Do I need an API key for the agent?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>No. The public domains take no key, no account and no header, over REST and over MCP alike. Only the paid pool of domains kept off the disposable-mail blocklists uses a bearer token, and the tool functions are otherwise identical for it.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>MCP or a REST tool — which should I choose?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>If the agent already lives in an MCP client, MCP: it is one line and the wait is server-side. If you are writing the agent in a framework, a tool function: it is forty lines, it works with any model, and you control the description the model reads. Both reach the same mailbox.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>How much does the waiting cost in tokens?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Nothing, either way. The MCP wait blocks on the server; the REST tool loops in your code. The model spends tokens on the tool call and on reading the result, not on the sixty seconds in between — which is the whole reason not to let a model poll a mailbox itself.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Can several agents run at once?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Yes. Each task gets its own inbox and there is no session state. Without a key, all agents behind one IP address share 60 requests a minute and 1,000 a day, REST and MCP together; a paid key removes both caps. Over MCP, 8 <code>wait_for_message</code> calls can run at once — past that the tool answers <code>timed_out</code> at once and the agent calls again.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Can the agent send email from the inbox?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>No. The service receives only, by design — a free inbox with no account that could send would be a spam relay within the hour. An agent that has to send mail needs a sending provider and its own credentials.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>What if the site refuses the alias’s domain?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Then it is on a disposable-domain blocklist, and no name in front of the @ will change that. Point a domain you own at the service (one MX record, free), or use a domain from the paid pool kept off the lists — both plug into the same tools by changing the domain constant. <a href="/guides/why-signup-forms-block-disposable-email">Why sign-up forms block disposable email</a> explains which check refused you.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Is the inbox private to my agent?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>No. Anyone who knows the address can read it, which is why the alias exists and why nothing confidential should ever be sent there. For a code that lives ten minutes that is fine; it is the one rule the agent’s instructions must state plainly.</p></div>
+          </details>
+                  </div>
+      </section>
+      
+      
+                  <nav class="ga-pn" aria-label="More in this topic">
+                <a class="ga-pn-i ga-pn-p" href="/guides/mcp-email-claude-code-cursor-windsurf" rel="prev">
+          <span class="ga-pn-k">Previous</span>
+          <span class="ga-pn-t">An inbox in your coding agent</span>
+        </a>
+                      </nav>
+      
+    </article>
+  </div>
+
+    <div class="ga-rel">
+    <div class="wrap">
+      <h2 class="ga-rel-h">Keep reading</h2>
+      <ul class="gd-cards ga-rel-l">
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/mcp-inbox-for-ai-agents">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/agents-800.webp?v=3af85b61f5" srcset="/assets/img/guides/agents-480.webp?v=3af85b61f5 480w, /assets/img/guides/agents-800.webp?v=3af85b61f5 800w, /assets/img/guides/agents-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="A small grey robot holding a blue envelope out to an open mailbox, with a stopwatch waiting between them" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">AI agents &amp; MCP</span>
+              <span class="gd-card-t">MCP email inbox: let an AI agent confirm its own sign-up</span>
+              <span class="gd-card-x">Connecting an MCP client in one line, the four tool calls that carry an agent through a sign-up, why wait_for_message returns before the mail does, and what to write in the agent’s own instructions.</span>
+              <span class="gd-card-m">13 min read</span>
+            </span>
+          </a>
+        </li>
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/mcp-email-claude-code-cursor-windsurf">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/mcpclients-800.webp?v=3af85b61f5" srcset="/assets/img/guides/mcpclients-480.webp?v=3af85b61f5 480w, /assets/img/guides/mcpclients-800.webp?v=3af85b61f5 800w, /assets/img/guides/mcpclients-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="An open grey laptop with a blue envelope plugged into its side like a USB key, and a blue plug resting in a grey socket in front" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">AI agents &amp; MCP</span>
+              <span class="gd-card-t">Email inbox for Claude Code, Cursor and Windsurf via MCP</span>
+              <span class="gd-card-x">The configuration for seven clients (Claude Code, Claude Desktop, Cursor, Windsurf, VS Code, Codex CLI, Gemini CLI), how to check the server answers from a shell, the six tools, the sign-up loop in four calls, what to write in CLAUDE.md or the rules file, and a troubleshooting table.</span>
+              <span class="gd-card-m">14 min read</span>
+            </span>
+          </a>
+        </li>
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/python-disposable-email-api">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/python-800.webp?v=3af85b61f5" srcset="/assets/img/guides/python-480.webp?v=3af85b61f5 480w, /assets/img/guides/python-800.webp?v=3af85b61f5 800w, /assets/img/guides/python-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="A loosely coiled grey tube with a blue envelope emerging from its open end onto a small grey tray" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">API &amp; automation</span>
+              <span class="gd-card-t">Python: receive email with a disposable inbox API, no key</span>
+              <span class="gd-card-x">A drop-in module on requests (fresh address, wait with a deadline, read, delete, download), the asyncio version on httpx that waits on five inboxes at once, pagination with the before cursor, attachments to disk, 429 handling, a pytest fixture, and a table of the ways this goes wrong in production.</span>
+              <span class="gd-card-m">23 min read</span>
+            </span>
+          </a>
+        </li>
+              </ul>
+    </div>
+  </div>
+  
+  <section class="cta ga-cta" aria-labelledby="ga-cta-h">
+    <div class="wrap cta-in">
+      <h2 class="cta-h" id="ga-cta-h">Try it while it is fresh</h2>
+      <p class="cta-p">An address takes one click, no account and no card. Everything in this guide works on it straight away.</p>
+      <div class="cta-act">
+        <a class="btn btn-primary btn-lg" href="/#grab">Open an inbox</a>
+        <a class="btn btn-ghost btn-lg" href="/docs/api">Read the API reference</a>
+      </div>
+    </div>
+  </section>
+</div>
+</main>
+
+<footer class="ft" id="ft-map">
+  <div class="wrap">
+    <div class="ft-top">
+      <div class="ft-brand">
+        <a class="ft-logo" href="/" aria-label="Neverla Mail — home">
+          <picture>
+            <source srcset="/assets/img/logo-nav.webp?v=3af85b61f5" type="image/webp">
+            <img class="ft-logo-img" src="/assets/img/logo-nav.png?v=3af85b61f5"
+                 alt="Neverla Mail" width="122" height="29" decoding="async" loading="lazy">
+          </picture>
+        </a>
+        <p class="ft-blurb">
+                    Disposable email addresses with a free REST API. Grab one in a click, or point your own domain at us for an inbox nobody can guess into.        </p>
+                <p class="ft-status">
+          <span class="dot" aria-hidden="true"></span>
+          <a href="/status">System status</a>
+        </p>
+      </div>
+
+                  <nav class="ft-nav" aria-label="Product">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Product</h2></summary>
+          <ul>
+                                                <li><a href="/#grab">Grab an address</a></li>
+                                    <li><a href="/#how">How it works</a></li>
+                                    <li><a href="/domains">Connect a domain</a></li>
+                                    <li><a href="/extensions">Browser extension</a></li>
+                                    <li><a href="/pricing">Pricing</a></li>
+                                    <li><a href="/guides">Guides</a></li>
+                                    <li><a href="/compare">Comparing the APIs</a></li>
+                                    <li><a href="/vs">Neverla Mail vs the alternatives</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Developers">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Developers</h2></summary>
+          <ul>
+                                                <li><a href="/docs/quickstart#mcp">MCP for AI agents</a></li>
+                                    <li><a href="/openapi.json">OpenAPI 3.1</a></li>
+                                    <li><a href="/llms.txt">llms.txt</a></li>
+                                    <li><a href="/docs">Documentation</a></li>
+                                    <li><a href="/docs/api">API reference</a></li>
+                                    <li><a href="/docs/quickstart">Quickstart</a></li>
+                                    <li><a href="/docs/limits">Limits</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Company">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Company</h2></summary>
+          <ul>
+                                                <li><a href="/about">About</a></li>
+                                    <li><a href="/status">Status</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Legal">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Legal</h2></summary>
+          <ul>
+                                                <li><a href="/legal/terms">Terms of service</a></li>
+                                    <li><a href="/legal/privacy">Privacy</a></li>
+                      </ul>
+        </details>
+      </nav>
+          </div>
+
+    <div class="ft-bar">
+      <p>&copy; 2026 Neverla Mail. All rights reserved.</p>
+      <ul class="ft-facts">
+        <li>Receive-only</li>
+        <li>No tracking, no ads</li>
+        <li>Messages deleted after 5 days</li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<div class="lang" data-lang>
+    <button class="lang-fab" type="button" data-lang-open
+          aria-haspopup="dialog" aria-expanded="false"
+          title="Language: English">
+    <span class="lang-fab-fl" aria-hidden="true"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+    <span class="lang-code" aria-hidden="true">EN</span>
+        <span class="lang-fab-n" aria-hidden="true"><span>English</span></span>
+    <svg class="lang-globe" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+         aria-hidden="true" focusable="false">
+      <circle cx="10" cy="10" r="7.25"/>
+      <path d="M2.75 10h14.5M10 2.75c3.85 4.4 3.85 10.1 0 14.5-3.85-4.4-3.85-10.1 0-14.5z"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="sr-only">Change language: English</span>
+  </button>
+
+  <dialog class="lm" data-lang-modal aria-labelledby="lm-title">
+    <div class="lm-panel">
+            <div class="lm-grab" aria-hidden="true"></div>
+
+            <header class="lm-hd">
+        <h2 class="lm-t" id="lm-title">Language</h2>
+                <form method="dialog">
+          <button class="lm-x" type="submit" aria-label="Change language">
+            <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+              <path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor"
+                    stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </form>
+      </header>
+
+      <ul class="lm-grid">
+                <li>
+          <a class="lm-i is-on"
+             href="/guides/temp-mail-for-ai-agents"
+             hreflang="en" lang="en"
+             aria-current="true" data-lang-current>
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">English</span>
+                            <span class="lm-n-l" lang="en">English</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">EN</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/es/guides/temp-mail-for-ai-agents"
+             hreflang="es" lang="es"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-es"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Español</span>
+                            <span class="lm-n-l" lang="en">Spanish</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">ES</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/pt/guides/temp-mail-for-ai-agents"
+             hreflang="pt" lang="pt"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-pt"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Português</span>
+                            <span class="lm-n-l" lang="en">Portuguese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">PT</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/fr/guides/temp-mail-for-ai-agents"
+             hreflang="fr" lang="fr"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-fr"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Français</span>
+                            <span class="lm-n-l" lang="en">French</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">FR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/de/guides/temp-mail-for-ai-agents"
+             hreflang="de" lang="de"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-de"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Deutsch</span>
+                            <span class="lm-n-l" lang="en">German</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">DE</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ru/guides/temp-mail-for-ai-agents"
+             hreflang="ru" lang="ru"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ru"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Русский</span>
+                            <span class="lm-n-l" lang="en">Russian</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">RU</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/tr/guides/temp-mail-for-ai-agents"
+             hreflang="tr" lang="tr"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-tr"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Türkçe</span>
+                            <span class="lm-n-l" lang="en">Turkish</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">TR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/id/guides/temp-mail-for-ai-agents"
+             hreflang="id" lang="id"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-id"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Bahasa Indonesia</span>
+                            <span class="lm-n-l" lang="en">Indonesian</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">ID</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/vi/guides/temp-mail-for-ai-agents"
+             hreflang="vi" lang="vi"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-vi"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Tiếng Việt</span>
+                            <span class="lm-n-l" lang="en">Vietnamese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">VI</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ar/guides/temp-mail-for-ai-agents"
+             hreflang="ar" lang="ar"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ar"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">العربية</span>
+                            <span class="lm-n-l" lang="en">Arabic</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">AR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ja/guides/temp-mail-for-ai-agents"
+             hreflang="ja" lang="ja"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ja"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">日本語</span>
+                            <span class="lm-n-l" lang="en">Japanese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">JA</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+              </ul>
+    </div>
+  </dialog>
+
+  <noscript>
+    <ul class="lang-ns" aria-label="Language">
+            <li><a href="/guides/temp-mail-for-ai-agents" hreflang="en" lang="en">English</a></li>
+            <li><a href="/es/guides/temp-mail-for-ai-agents" hreflang="es" lang="es">Español</a></li>
+            <li><a href="/pt/guides/temp-mail-for-ai-agents" hreflang="pt" lang="pt">Português</a></li>
+            <li><a href="/fr/guides/temp-mail-for-ai-agents" hreflang="fr" lang="fr">Français</a></li>
+            <li><a href="/de/guides/temp-mail-for-ai-agents" hreflang="de" lang="de">Deutsch</a></li>
+            <li><a href="/ru/guides/temp-mail-for-ai-agents" hreflang="ru" lang="ru">Русский</a></li>
+            <li><a href="/tr/guides/temp-mail-for-ai-agents" hreflang="tr" lang="tr">Türkçe</a></li>
+            <li><a href="/id/guides/temp-mail-for-ai-agents" hreflang="id" lang="id">Bahasa Indonesia</a></li>
+            <li><a href="/vi/guides/temp-mail-for-ai-agents" hreflang="vi" lang="vi">Tiếng Việt</a></li>
+            <li><a href="/ar/guides/temp-mail-for-ai-agents" hreflang="ar" lang="ar">العربية</a></li>
+            <li><a href="/ja/guides/temp-mail-for-ai-agents" hreflang="ja" lang="ja">日本語</a></li>
+          </ul>
+  </noscript>
+</div>
+<svg class="lm-sprite" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+    <symbol id="fl-en" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#012169"/>
+      <path d="M0 0 24 16M24 0 0 16" stroke="#fff" stroke-width="3.2"/>
+      <path d="M0 0 24 16M24 0 0 16" stroke="#C8102E" stroke-width="1.9"/>
+      <path d="M12 0v16M0 8h24" stroke="#fff" stroke-width="5.3"/>
+      <path d="M12 0v16M0 8h24" stroke="#C8102E" stroke-width="3.2"/>
+    </symbol>
+    <symbol id="fl-es" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#AA151B"/>
+      <rect y="4" width="24" height="8" fill="#F1BF00"/>
+    </symbol>
+    <symbol id="fl-pt" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#DA291C"/>
+      <rect width="9.6" height="16" fill="#046A38"/>
+      <circle cx="9.6" cy="8" r="3.4" fill="#FFE800" stroke="#046A38" stroke-width="1"/>
+    </symbol>
+    <symbol id="fl-fr" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <rect width="8" height="16" fill="#002395"/>
+      <rect x="16" width="8" height="16" fill="#ED2939"/>
+    </symbol>
+    <symbol id="fl-de" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#FFCE00"/>
+      <rect width="24" height="10.7" fill="#DD0000"/>
+      <rect width="24" height="5.3"/>
+    </symbol>
+    <symbol id="fl-ru" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#D52B1E"/>
+      <rect width="24" height="10.7" fill="#0039A6"/>
+      <rect width="24" height="5.3" fill="#fff"/>
+    </symbol>
+    <symbol id="fl-tr" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#E30A17"/>
+      <circle cx="9.4" cy="8" r="3.9" fill="#fff"/>
+      <circle cx="10.9" cy="8" r="3.1" fill="#E30A17"/>
+      <path d="m15.1 8 1.35.44-.83 1.15V8.2l.83 1.15z" fill="#fff"/>
+      <path d="m14.6 6.2.72 1.98 2.1.06-1.67 1.28.6 2.02-1.75-1.18-1.75 1.18.6-2.02-1.67-1.28 2.1-.06z" fill="#fff"/>
+    </symbol>
+    <symbol id="fl-id" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <rect width="24" height="8" fill="#CE1126"/>
+    </symbol>
+    <symbol id="fl-vi" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#DA251D"/>
+      <path d="m12 3.6 1.32 4.06h4.27l-3.46 2.51 1.33 4.06L12 11.72l-3.46 2.51 1.33-4.06-3.46-2.51h4.27z" fill="#FFFF00"/>
+    </symbol>
+    <symbol id="fl-ar" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#165D31"/>
+      <path d="M5.6 6.4h12.8" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M5.6 10.4h11.2" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M16.8 10.4c.9 0 1.6.5 1.6 1.2" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="fl-ja" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <circle cx="12" cy="8" r="4.8" fill="#BC002D"/>
+    </symbol>
+  </defs>
+</svg><dialog class="am" data-auth-modal aria-labelledby="am-h-signin">
+  <div class="am-panel" data-am-panel data-view="signin">
+
+        <div class="am-grab" aria-hidden="true"></div>
+
+        <div class="am-body" data-am-body>
+
+            <div class="am-hd">
+                <div class="am-seg" role="tablist" aria-label="Account">
+          <span class="am-seg-pill" aria-hidden="true"></span>
+          <button class="am-seg-b" type="button" role="tab" id="am-tab-signin"
+                  aria-selected="true" aria-controls="am-view-signin"
+                  data-am-go="signin">Sign in</button>
+          <button class="am-seg-b" type="button" role="tab" id="am-tab-signup"
+                  aria-selected="false" aria-controls="am-view-signup" tabindex="-1"
+                  data-am-go="signup">Create account</button>
+        </div>
+
+        <button class="am-x" type="button" data-am-close aria-label="Close">
+          <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor"
+                  stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+            <div class="am-alert" role="alert" data-am-alert hidden>
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" aria-hidden="true" focusable="false">
+          <circle cx="10" cy="10" r="7.6"/><path d="M10 6.2v4.4M10 13.4v.1"/>
+        </svg>
+        <span data-am-alert-t></span>
+      </div>
+
+      <div class="am-views" data-am-views>
+
+        <!-- ── sign in ──────────────────────────────────────────────────── -->
+        <form class="am-view" id="am-view-signin" data-am-view="signin"
+              role="tabpanel" aria-labelledby="am-tab-signin"
+              method="post" action="/api/v1/auth" novalidate>
+          <input type="hidden" name="action" value="signin">
+
+          <h2 class="am-h" id="am-h-signin">Welcome back</h2>
+          <p class="am-sub">Your inboxes and your domains, in one place.</p>
+
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-si-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-si-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-si-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-si-email-e" data-am-err hidden></p>
+    </div>
+                  <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-si-pass">Password</label>
+                <button class="am-link" type="button" data-am-go="reset">Forgot?</button>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-si-pass" name="password"
+               type="password"
+                              autocomplete="current-password"
+               placeholder="••••••••"
+               aria-describedby="am-si-pass-e"
+                                             data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+      
+      <p class="am-err" id="am-si-pass-e" data-am-err hidden></p>
+    </div>
+    
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Sign in</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+        <!-- ── create an account ───────────────────────────────────────── -->
+        <form class="am-view" id="am-view-signup" data-am-view="signup"
+              role="tabpanel" aria-labelledby="am-tab-signup"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <input type="hidden" name="action" value="signup">
+
+          <h2 class="am-h" id="am-h-signup">Create your account</h2>
+                              <p class="am-sub" data-am-sub>It stays free. The address is only so you can find your inboxes again.</p>
+          <p class="am-sub" data-am-sub="save" hidden>Create a free account to keep this inbox — and every inbox you open from now on.</p>
+                    <ul class="am-perks">
+            <li>Every inbox you open, saved</li>
+            <li>A free API key</li>
+            <li>No card, no trial</li>
+          </ul>
+          
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-su-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-su-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-su-email-e" data-am-err hidden></p>
+    </div>
+                  <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-pass">Password</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-su-pass" name="password"
+               type="password"
+                              autocomplete="new-password"
+               placeholder="••••••••"
+               aria-describedby="am-su-pass-e"
+                                             data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+                  <div class="am-str" data-am-str data-strength="0" hidden>
+        <div class="am-str-bars" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <span class="am-str-t" data-am-str-t></span>
+      </div>
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+            <p class="am-hint">At least 10 characters. Length beats punctuation.</p>
+      
+      <p class="am-err" id="am-su-pass-e" data-am-err hidden></p>
+    </div>
+    
+                        <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-pass2">Confirm password</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-su-pass2" name="password2"
+               type="password"
+                              autocomplete="new-password"
+               placeholder="••••••••"
+               aria-describedby="am-su-pass2-e"
+                              data-am-match="am-su-pass" data-am-skip               data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+      
+      <p class="am-err" id="am-su-pass2-e" data-am-err hidden></p>
+    </div>
+    
+                              <div class="am-cf" data-am-cf data-sitekey="0x4AAAAAAEfWgqSU6xDxtH5m"></div>
+          
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Create my account</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    
+          <p class="am-note">
+            By creating an account you agree to the <a href="/legal/terms">Terms</a> and the <a href="/legal/privacy">Privacy Policy</a>.          </p>
+        </form>
+
+        <!-- ── reset a password ────────────────────────────────────────── -->
+        <form class="am-view" id="am-view-reset" data-am-view="reset"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <input type="hidden" name="action" value="reset">
+
+          <button class="am-back" type="button" data-am-go="signin">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor"
+                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to sign in          </button>
+
+          <h2 class="am-h" id="am-h-reset">Reset your password</h2>
+          <p class="am-sub">Give us the address you signed up with and we will send a link to choose a new password.</p>
+
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-rs-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-rs-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-rs-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-rs-email-e" data-am-err hidden></p>
+    </div>
+    
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Send the link</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+        <!-- ── the link is on its way ──────────────────────────────────── -->
+                <div class="am-view am-view-done" id="am-view-sent" data-am-view="sent" hidden>
+          <span class="am-done-ic" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.4"
+                 stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="m9 16.6 4.6 4.6L23 11"/>
+            </svg>
+          </span>
+          <h2 class="am-h" id="am-h-sent">Check your inbox</h2>
+          <p class="am-sub">If an account exists for that address, a link to choose a new password is on its way. It is valid for one hour.</p>
+          <button class="btn btn-ghost am-go" type="button" data-am-go="signin">Back to sign in</button>
+        </div>
+
+        <!-- ── le second facteur (01/10/2026) ──────────────────────────── -->
+                <form class="am-view" id="am-view-mfa" data-am-view="mfa"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <button class="am-back" type="button" data-am-go="signin">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor"
+                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to sign in          </button>
+
+          <h2 class="am-h" id="am-h-mfa">Two-factor authentication</h2>
+          <p class="am-sub">Type the six digits your authenticator app shows — or one of your recovery codes.</p>
+
+          <div class="am-f">
+            <div class="am-f-top">
+              <label class="am-l" for="am-mfa-code">Code</label>
+            </div>
+            <div class="am-in">
+              <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>              <input class="am-i am-i-code" id="am-mfa-code" name="code" type="text"
+                     inputmode="numeric" autocomplete="one-time-code" spellcheck="false"
+                     autocapitalize="off" maxlength="24" placeholder="123 456"
+                     aria-describedby="am-mfa-code-e" data-am-in data-am-code required>
+            </div>
+            <p class="am-err" id="am-mfa-code-e" data-am-err hidden></p>
+          </div>
+
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Verify</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+      </div>
+    </div>
+
+  </div>
+</dialog>
+<nav class="tb" data-tb aria-label="Main">
+  <a class="tb-i" href="/" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.8 10.4 12 3.8l8.2 6.6v8.7a1.4 1.4 0 0 1-1.4 1.4h-4.3v-5.8h-5v5.8H5.2a1.4 1.4 0 0 1-1.4-1.4z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+    <span class="tb-n">Home</span>
+  </a>
+  <a class="tb-i is-on" aria-current="true" href="/guides" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 6.6C10.3 5.2 7.9 4.6 4.3 4.6v13.2c3.6 0 6 .6 7.7 2 1.7-1.4 4.1-2 7.7-2V4.6c-3.6 0-6 .6-7.7 2zM12 6.6v13.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+    <span class="tb-n">Guides</span>
+  </a>
+    <a class="tb-i tb-go" href="/inbox" data-sheet-open="inbox"
+     aria-haspopup="dialog">
+    <span class="tb-go-b" aria-hidden="true">
+      <svg viewBox="0 0 24 24" focusable="false"><rect x="3.2" y="5.6" width="17.6" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m4.2 7 7 5.3a1.3 1.3 0 0 0 1.6 0l7-5.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <span class="tb-n">Inbox</span>
+  </a>
+    <a class="tb-i" href="/pricing" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.8 12.4V5.2a1.4 1.4 0 0 1 1.4-1.4h7.2l7.9 7.9a1.4 1.4 0 0 1 0 2l-6.7 6.7a1.4 1.4 0 0 1-2 0z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="8.4" cy="8.4" r="1.5" fill="currentColor"/></svg>
+    <span class="tb-n">Pricing</span>
+  </a>
+    <a class="tb-i" href="#ft-map" data-sheet-open="menu" aria-haspopup="dialog">
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 7h15M4.5 12h15M4.5 17h15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <span class="tb-n">Menu</span>
+  </a>
+</nav>
+
+<dialog class="sh" data-sheet="menu" aria-labelledby="sh-menu-t">
+  <div class="sh-panel">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <header class="sh-hd">
+      <h2 class="sh-t" id="sh-menu-t">Menu</h2>
+      <form method="dialog">
+        <button class="sh-x" type="submit" aria-label="Close"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+      </form>
+    </header>
+
+    <div class="sh-body">
+            <div class="sh-auth">
+        <button class="btn btn-primary" type="button" data-auth-open="signin">Log in</button>
+        <button class="btn btn-ghost" type="button" data-auth-open="signup">Create account</button>
+      </div>
+      
+            <p class="sh-sec">Product</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/#how"><span>How it works</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/domains"><span>Connect a domain</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/extensions"><span>Browser extension</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/pricing"><span>Pricing</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/guides"><span>Guides</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/compare"><span>Comparing the APIs</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/vs"><span>Neverla Mail vs the alternatives</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Developers</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/docs/quickstart#mcp"><span>MCP for AI agents</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs"><span>Documentation</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/api"><span>API reference</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/quickstart"><span>Quickstart</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/limits"><span>Limits</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Company</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/about"><span>About</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/status"><span>Status</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Legal</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/legal/terms"><span>Terms of service</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/legal/privacy"><span>Privacy</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+      
+      <p class="sh-sec">Language</p>
+      <div class="sh-card sh-list">
+                <button class="sh-row sh-lang" type="button" data-sheet-lang>
+          <span class="sh-lang-fl" aria-hidden="true"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+          <span class="sh-lang-n">English</span>
+          <span class="sh-lang-c" aria-hidden="true">EN</span>
+          <svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>        </button>
+      </div>
+
+            <p class="sh-note">Free · No signup · Deleted after 5 days</p>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="sh sh-ibx" data-sheet="inbox" aria-labelledby="sh-ibx-t">
+  <div class="sh-panel">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <header class="sh-hd">
+      <h2 class="sh-t" id="sh-ibx-t">New address</h2>
+      <form method="dialog">
+        <button class="sh-x" type="submit" aria-label="Close"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+      </form>
+    </header>
+
+    <div class="sh-body">
+            <form class="sh-cmp" action="/inbox" method="get" data-composer data-sheet-composer novalidate>
+        <div class="sh-cmp-f">
+          <label class="sr-only" for="sh-u">Address name</label>
+          <input class="sh-cmp-u" type="text" name="u" id="sh-u" data-user
+                 placeholder="pick-any-name" maxlength="64"
+                 autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false"
+                 enterkeyhint="go" aria-describedby="sh-hint">
+          <button class="sh-cmp-dice" type="button" data-random
+                  aria-label="Random name" title="Random name">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="2" y="2" width="12" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="5.5" cy="5.5" r="1.1" fill="currentColor"/><circle cx="10.5" cy="5.5" r="1.1" fill="currentColor"/><circle cx="8" cy="8" r="1.1" fill="currentColor"/><circle cx="5.5" cy="10.5" r="1.1" fill="currentColor"/><circle cx="10.5" cy="10.5" r="1.1" fill="currentColor"/></svg>
+          </button>
+        </div>
+        <label class="sr-only" for="sh-d">Domain</label>
+        <select class="sh-cmp-d" name="d" id="sh-d" data-domain>
+                    <option value="neverla.web.id">@neverla.web.id</option>
+                    <option value="mixozia.com">@mixozia.com</option>
+                    <option value="linqmail.com">@linqmail.com</option>
+                  </select>
+        <p class="sh-hint composer-hint" id="sh-hint" data-hint hidden></p>
+        <button class="btn btn-primary btn-lg btn-block sh-cmp-go" type="submit">
+          <span>Open inbox</span>
+          <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <p class="sh-cmp-note">Public inbox — anyone with the address can read it.</p>
+      </form>
+
+                  <div class="sh-recent" data-sh-recent hidden>
+        <p class="sh-sec">Opened in this tab</p>
+        <ul class="sh-card sh-list" data-sh-recent-list></ul>
+              </div>
+    </div>
+  </div>
+</dialog>
+
+<p class="sr-only" role="status" aria-live="polite" data-live></p>
+
+</body>
+</html>

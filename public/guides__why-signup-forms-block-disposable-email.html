@@ -1,0 +1,1219 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Why sign-up forms block disposable email, and what to do | Neverla Mail</title>
+<meta name="description" content="Why sign-up forms reject temp mail: how blocklists work, which checks a form runs, and three honest ways round it: own domain, off-list domain or alias.">
+<link rel="canonical" href="https://neverla.web.id/guides/why-signup-forms-block-disposable-email">
+<meta name="robots" content="max-image-preview:large">
+<link rel="alternate" type="application/rss+xml" title="Neverla Mail — Guides" href="https://neverla.web.id/guides/feed.xml">
+<link rel="alternate" hreflang="en" href="https://neverla.web.id/guides/why-signup-forms-block-disposable-email">
+<link rel="alternate" hreflang="es" href="https://neverla.web.id/es/guides/why-signup-forms-block-disposable-email">
+<link rel="alternate" hreflang="pt" href="https://neverla.web.id/pt/guides/why-signup-forms-block-disposable-email">
+<link rel="alternate" hreflang="fr" href="https://neverla.web.id/fr/guides/why-signup-forms-block-disposable-email">
+<link rel="alternate" hreflang="de" href="https://neverla.web.id/de/guides/why-signup-forms-block-disposable-email">
+<link rel="alternate" hreflang="ru" href="https://neverla.web.id/ru/guides/why-signup-forms-block-disposable-email">
+<link rel="alternate" hreflang="tr" href="https://neverla.web.id/tr/guides/why-signup-forms-block-disposable-email">
+<link rel="alternate" hreflang="id" href="https://neverla.web.id/id/guides/why-signup-forms-block-disposable-email">
+<link rel="alternate" hreflang="vi" href="https://neverla.web.id/vi/guides/why-signup-forms-block-disposable-email">
+<link rel="alternate" hreflang="ar" href="https://neverla.web.id/ar/guides/why-signup-forms-block-disposable-email">
+<link rel="alternate" hreflang="ja" href="https://neverla.web.id/ja/guides/why-signup-forms-block-disposable-email">
+<link rel="alternate" hreflang="x-default" href="https://neverla.web.id/guides/why-signup-forms-block-disposable-email">
+<meta name="theme-color" content="#ffffff">
+<meta name="color-scheme" content="light">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Neverla Mail">
+<meta property="og:title" content="Why sign-up forms block disposable email, and what to do | Neverla Mail">
+<meta property="og:description" content="Why sign-up forms reject temp mail: how blocklists work, which checks a form runs, and three honest ways round it: own domain, off-list domain or alias.">
+<meta property="og:url" content="https://neverla.web.id/guides/why-signup-forms-block-disposable-email">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:locale:alternate" content="pt_BR">
+<meta property="og:locale:alternate" content="fr_FR">
+<meta property="og:locale:alternate" content="de_DE">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta property="og:locale:alternate" content="tr_TR">
+<meta property="og:locale:alternate" content="id_ID">
+<meta property="og:locale:alternate" content="vi_VN">
+<meta property="og:locale:alternate" content="ar_AR">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://neverla.web.id/assets/img/guides/blocklist-1376.webp">
+<meta property="og:image:width" content="1376">
+<meta property="og:image:height" content="768">
+<meta property="og:image:alt" content="Neverla Mail — Temporary email addresses, and an API to read them.">
+<meta name="twitter:image" content="https://neverla.web.id/assets/img/guides/blocklist-1376.webp">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" sizes="96x96" href="/assets/img/icon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/img/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Neverla Mail">
+
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/main.css?v=3af85b61f5">
+<link rel="stylesheet" href="/assets/css/mobile.css?v=3af85b61f5" media="(max-width: 959.98px)">
+<script src="/assets/js/app.js?v=3af85b61f5" defer></script>
+<script src="/assets/js/mobile.js?v=3af85b61f5" defer></script>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://neverla.web.id/#org","name":"Neverla Mail","url":"https://neverla.web.id/","description":"Free disposable email addresses with a REST API and an MCP server for AI agents.","logo":{"@type":"ImageObject","url":"https://neverla.web.id/assets/img/logo.png","width":671,"height":160},"image":"https://neverla.web.id/assets/img/og-card.png","sameAs":["https://dev.to/neverla"]},{"@type":"WebSite","@id":"https://neverla.web.id/#site","name":"Neverla Mail","url":"https://neverla.web.id/","publisher":{"@id":"https://neverla.web.id/#org"},"inLanguage":["en","es","pt","fr","de","ru","tr","id","vi","ar","ja"]},{"@type":["WebAPI","SoftwareApplication"],"@id":"https://neverla.web.id/#api","name":"Neverla Mail disposable email API","url":"https://neverla.web.id/docs/api","documentation":"https://neverla.web.id/docs/api","provider":{"@id":"https://neverla.web.id/#org"},"applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"Create a disposable email address and read what arrives at it over HTTP. No account, no API key and no payment for the public domains. Messages are deleted 5 days after they arrive.","offers":[{"@type":"Offer","name":"Free","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"Public domains, your own domains, the REST API and the MCP server. No account, no key; the free API allows 60 requests a minute and 1,000 a day per IP address."},{"@type":"Offer","name":"Premium","price":"12.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"12.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Pro","price":"49.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"49.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Scale","price":"99.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"99.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}}],"featureList":["Connect your own domain — every address on it becomes a catch-all inbox","Disposable email addresses with no signup","REST API over HTTPS, no API key required","MCP server for AI agents (create_inbox, wait_for_message)","Every mailbox has an alias you can hand out instead of the address","Attachments up to 5 MB","Automatic deletion after 5 days"],"additionalProperty":[{"@type":"PropertyValue","name":"Sending mail","value":"No. There is no endpoint that sends, and no outbound mail of any kind."},{"@type":"PropertyValue","name":"IMAP or POP3","value":"No. HTTPS only — a REST API and an MCP server."},{"@type":"PropertyValue","name":"Webhooks or push notifications","value":"No. You poll, or you let the MCP server hold the call open until the message lands."},{"@type":"PropertyValue","name":"Keeping mail longer than 5 days","value":"No. Not a tier, not a setting, not a parameter."},{"@type":"PropertyValue","name":"Attachments over 5 MB","value":"No. The message is refused at SMTP time."},{"@type":"PropertyValue","name":"Privacy on a shared domain","value":"No. Anyone who knows the address can read the mailbox."},{"@type":"PropertyValue","name":"Paying by card","value":"No. Crypto only, credited to a balance the subscription draws on."},{"@type":"PropertyValue","name":"An uptime guarantee","value":"No. There is no SLA, on any plan."},{"@type":"PropertyValue","name":"Tracking, analytics or advertising","value":"No. No third-party script, and no cookie banner because there are no cookies to consent to."}],"potentialAction":{"@type":"ConsumeAction","target":{"@type":"EntryPoint","urlTemplate":"https://neverla.web.id/api/v1/mailbox?address={address}","httpMethod":"GET","contentType":"application/json"}}},{"@type":"WebPage","@id":"https://neverla.web.id/guides/why-signup-forms-block-disposable-email#page","url":"https://neverla.web.id/guides/why-signup-forms-block-disposable-email","name":"Why sign-up forms block disposable email, and what to do | Neverla Mail","description":"Why sign-up forms reject temp mail: how blocklists work, which checks a form runs, and three honest ways round it: own domain, off-list domain or alias.","isPartOf":{"@id":"https://neverla.web.id/#site"},"inLanguage":"en"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Neverla Mail","item":"https://neverla.web.id/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://neverla.web.id/guides"},{"@type":"ListItem","position":3,"name":"Privacy & everyday use","item":"https://neverla.web.id/guides"},{"@type":"ListItem","position":4,"name":"Why sign-up forms block disposable email, and what to do","item":"https://neverla.web.id/guides/why-signup-forms-block-disposable-email"}]},{"@type":"TechArticle","@id":"https://neverla.web.id/guides/why-signup-forms-block-disposable-email#article","headline":"Why sign-up forms block disposable email, and what to do","description":"Why sign-up forms reject temp mail: how blocklists work, which checks a form runs, and three honest ways round it: own domain, off-list domain or alias.","image":"https://neverla.web.id/assets/img/guides/blocklist-1376.webp","datePublished":"2026-09-01","dateModified":"2026-09-01","inLanguage":"en","articleSection":"Privacy & everyday use","timeRequired":"PT10M","keywords":"disposable email blocklist, temp mail blocked, address rejected, signup form, email validation, disposable email domains list, catch-all domain, premium domains, please enter a valid email","author":{"@id":"https://neverla.web.id/#org"},"publisher":{"@id":"https://neverla.web.id/#org"},"isPartOf":{"@id":"https://neverla.web.id/#site"},"mainEntityOfPage":{"@id":"https://neverla.web.id/guides/why-signup-forms-block-disposable-email#page"},"proficiencyLevel":"Beginner"},{"@type":"FAQPage","@id":"https://neverla.web.id/guides/why-signup-forms-block-disposable-email#faq","mainEntity":[{"@type":"Question","name":"Is using a disposable address against the site’s rules?","acceptedAnswer":{"@type":"Answer","text":"Sometimes. A site that blocks them usually also forbids them in its terms, and an account made that way can be closed. Nothing here helps you break a site’s rules — the honest ways round a refusal are all addresses you are entitled to use, and the alias option exists precisely for the accounts that matter."}},{"@type":"Question","name":"Will my own domain end up on the lists?","acceptedAnswer":{"@type":"Answer","text":"Only if it is published somewhere the list maintainers crawl, or reported. A domain that only ever appears in your own test suite or your own sign-ups has no way onto them. The MX lookup can still recognise it on a strict site, and the catch-all probe will — for those, the pool is the answer."}},{"@type":"Question","name":"How are the pool domains kept off the lists?","acceptedAnswer":{"@type":"Answer","text":"They are never printed on any page, they are ordinary .coms with their own plain MX records, and each is checked against the public blocklists every day. One that appears anyway is retired from the pool. The pool is read through the API with a key, which is what the paid plans provide."}},{"@type":"Question","name":"Why does the site accept my address and then never send the mail?","acceptedAnswer":{"@type":"Answer","text":"Some sites refuse silently: the form says “check your inbox” and nothing is sent. It looks like a delivery problem and is a block. Verification email not arriving has the sixty-second check that tells the two apart."}},{"@type":"Question","name":"Does Neverla Mail publish a list of its own domains?","acceptedAnswer":{"@type":"Answer","text":"The public ones are on the front page, which is the same as publishing them. The pool domains and customers’ own domains are never listed anywhere, and there is no endpoint that enumerates them."}},{"@type":"Question","name":"Can a form tell that my own domain points at Neverla Mail?","acceptedAnswer":{"@type":"Answer","text":"An MX lookup can, if the site keeps a list of disposable providers’ mail servers and checks against it. Few do, because it costs a DNS query per sign-up, but strict sites exist. A catch-all probe can too. The domain-list check, which is the common one, cannot."}},{"@type":"Question","name":"What is the difference between all of this and a “fake email generator”?","acceptedAnswer":{"@type":"Answer","text":"Nothing but the name. A generator gives you a random address on a public disposable domain — on the lists, refused by the same forms. What temp mail is sorts out the vocabulary."}}]}]}</script>
+<script>
+(function() {
+  var _t = document.title;
+  Object.defineProperty(document, 'title', {
+    get: function() { return _t; },
+    set: function(v) {
+      _t = (v || '').replace(/grabmail/gi, 'Neverla Mail').replace(/🐴/g, '').trim();
+    }
+  });
+})();
+</script>
+</head>
+<body class="page-guide" id="top" data-loc="en" data-i18n="{}">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="hd" data-header>
+  <div class="wrap hd-in">
+    <a class="hd-brand" href="/" aria-label="neverla.web.id — home">
+      <picture>
+        <source srcset="/assets/img/logo-nav.webp?v=3af85b61f5" type="image/webp">
+        <img class="hd-logo" src="/assets/img/logo-nav.png?v=3af85b61f5"
+             alt="Neverla Mail" width="126" height="30" decoding="async" fetchpriority="high">
+      </picture>
+    </a>
+
+    <span class="hd-sep" aria-hidden="true"></span>
+
+        <nav class="hd-nav" aria-label="Main">
+      <ul class="hd-list">
+                <li>
+          <a class="hd-link" href="/#how" data-spy="how">How it works</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/extensions" data-spy="ext">Extension</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/#api" data-spy="api">API</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/domains" data-spy="domains">Your domain</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/docs/api" data-spy="docs">Docs</a>
+        </li>
+              </ul>
+    </nav>
+
+    <div class="hd-act">
+                  <button class="btn btn-quiet hd-login" type="button" data-auth-open="signin">
+        Log in      </button>
+            <a class="btn btn-primary" href="/#grab" data-cta>
+        Open an inbox        <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+        <button class="hd-burger" type="button" data-burger
+            aria-expanded="false" aria-controls="gm-drawer" aria-label="Open menu">
+      <span class="hd-burger-box" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+  </div>
+</header>
+
+<div class="drawer" id="gm-drawer" data-drawer hidden>
+  <nav class="drawer-in" aria-label="Mobile">
+    <ul class="drawer-list">
+            <li><a class="drawer-link" href="/#how">How it works</a></li>
+            <li><a class="drawer-link" href="/extensions">Extension</a></li>
+            <li><a class="drawer-link" href="/#api">API</a></li>
+            <li><a class="drawer-link" href="/domains">Your domain</a></li>
+            <li><a class="drawer-link" href="/docs/api">Docs</a></li>
+          </ul>
+    <a class="btn btn-primary btn-block" href="/#grab">Open an inbox</a>
+            <button class="btn btn-ghost btn-block" type="button" data-auth-open="signin">Log in</button>
+        <p class="drawer-note">Free · No signup · Deleted after 5 days</p>
+
+  </nav>
+</div>
+
+<main id="main">
+<div class="ga">
+
+    <div class="ga-prog" data-guide-progress aria-hidden="true"><span></span></div>
+
+  <div class="wrap ga-top">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+                <li><a href="/guides">Guides</a></li>
+        <li><a href="/guides/topic/privacy">Privacy &amp; everyday use</a></li>
+                <li aria-current="page">Why sign-up forms block disposable email, and what to do</li>
+      </ol>
+    </nav>
+
+    <div class="ga-head">
+      <div class="ga-head-t">
+        <p class="ga-eyebrow">
+          <span class="ga-eyebrow-ic"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.5 3.5 5v5c0 4 2.8 6.7 6.5 7.5 3.7-.8 6.5-3.5 6.5-7.5V5z"/><path d="m7.2 10 2 2 3.6-3.8"/></svg></span>
+          <a class="ga-eyebrow-a" href="/guides/topic/privacy">Privacy &amp; everyday use</a>
+        </p>
+        <h1 class="ga-h">Why sign-up forms block disposable email, and what to do</h1>
+        <p class="ga-lede">You typed a perfectly good address and the form said “please enter a valid email”. Nothing is wrong with the address; the domain is on a list. Here is how those lists are built, the three checks a form can run, what a site gains and loses by blocking, why trying another name in front of the same @ never helps — and the three honest ways round it.</p>
+
+                <ul class="ga-meta">
+                    <li class="ga-lvl ga-lvl-beginner">Beginner</li>
+                              <li class="ga-meta-i">
+            <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.4V8l2.4 1.6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            10 min read          </li>
+          <li class="ga-meta-i">
+            <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="2.3" y="3.4" width="11.4" height="10.3" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M2.3 6.6h11.4M5.6 2.3v2.2M10.4 2.3v2.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            <time datetime="2026-09-01">Updated 1 September 2026</time>
+          </li>
+        </ul>
+      </div>
+
+                  <figure class="ga-hero">
+        <img class="ga-hero-img" src="/assets/img/guides/blocklist-800.webp?v=3af85b61f5" srcset="/assets/img/guides/blocklist-480.webp?v=3af85b61f5 480w, /assets/img/guides/blocklist-800.webp?v=3af85b61f5 800w, /assets/img/guides/blocklist-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 520px, (min-width: 720px) calc(100vw - 64px), calc(100vw - 40px)" width="1376" height="768" alt="A blue envelope stopped by a lowered grey barrier before a closed door, while a second door beside it stands open with a small blue key in front" fetchpriority="high" decoding="async">      </figure>
+    </div>
+  </div>
+
+  <div class="wrap ga-body">
+    <nav class="ga-rail doc-toc" aria-label="On this page">
+      <p class="doc-toc-h">On this page</p>
+      <ul>
+                <li><a href="#lists" data-spy="lists">Where the lists come from</a></li>
+                <li><a href="#checks" data-spy="checks">The four checks a form can run</a></li>
+                <li><a href="#why" data-spy="why">Why sites do it, and what it costs them</a></li>
+                <li><a href="#local-part" data-spy="local-part">Why changing the name before the @ never helps</a></li>
+                <li><a href="#ways-round" data-spy="ways-round">Three honest ways round it</a></li>
+                <li><a href="#if-you-run-the-form" data-spy="if-you-run-the-form">If you run the form: how to block well</a></li>
+                <li><a href="#checklist" data-spy="checklist">The short version</a></li>
+                <li><a href="#faq" data-spy="faq">Questions</a></li>
+              </ul>
+      <p class="ga-rail-back">
+                <a class="ga-rail-back-a" href="/guides">
+          <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          All guides        </a>
+      </p>
+    </nav>
+
+    <article class="ga-art">
+      <div class="toc-chip" data-toc-bar><button class="toc-chip-b" type="button" aria-haspopup="dialog"><svg class="toc-chip-ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 5.5h12M4 10h12M4 14.5h7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span class="toc-chip-k">On this page</span><span class="toc-chip-v"></span><svg class="toc-chip-dn" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 6.5 8 10.5l4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+                  <aside class="ga-key" aria-labelledby="ga-key-h">
+        <h2 class="ga-key-h" id="ga-key-h">In short</h2>
+        <ul>
+                    <li>A refused address is almost never a typo. The <strong>domain</strong> is on a public list of disposable-mail domains, and the form checked it before looking at anything else.</li>
+                    <li>Changing the part before the <code>@</code> never helps. The list is a list of domains; every address on <code>neverla.web.id</code> is refused together.</li>
+                    <li>Three honest ways round it: <strong>your own domain</strong> (one MX record, free), a domain from <strong>a pool kept off the lists</strong>, or <strong>an alias</strong> that reaches your real inbox.</li>
+                    <li>If you run the form, block well: check a list, then <em>send</em> a verification mail rather than probing the domain — and say why you refused, so people can fix it.</li>
+                  </ul>
+      </aside>
+      
+            <section class="ga-s" id="lists" aria-labelledby="lists-h">
+        <h2 class="ga-s-h" id="lists-h">Where the lists come from</h2>
+        <p>A disposable-domain blocklist is a text file: one domain per line, tens of thousands of lines. Several are public and maintained on GitHub, commercial validation APIs keep their own, and most application frameworks have a package that ships one. A domain gets onto them in three ways:</p><ul class="doc-l"><li><strong>It appears on a temp-mail website.</strong> The maintainers crawl the front pages of disposable services and add every domain they offer. <code>neverla.web.id</code> is on the lists for exactly this reason, and so is every public domain here — it is printed on this site’s own front page.</li><li><strong>It behaves like one.</strong> A domain whose MX points at a known disposable service, or which accepts any random address, gets added by the probes described below.</li><li><strong>Somebody reported it.</strong> A site that saw a burst of sign-ups from one domain submits it, and the next release carries it.</li></ul><p>The lists are large, public and slow to change in both directions: a domain added by mistake stays for months, and a genuinely disposable domain can take weeks to appear. The only reliable property is that a domain printed on a temp-mail site <em>is</em> on them, and a domain that never appears anywhere public is not.</p><aside class="ga-call ga-call-note"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7.5"/><path d="M10 9.2v4.4M10 6.4h.01"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Note</span>This site does not fight the lists for its public domains.</p><p>It cannot, and it would be pointless: the public domains are printed on every page here, which is what makes them public. What the service offers instead is the two things a list cannot see — a domain of your own, and a pool of ordinary-looking domains that are never published anywhere.</p></div></aside>      </section>
+            <section class="ga-s" id="checks" aria-labelledby="checks-h">
+        <h2 class="ga-s-h" id="checks-h">The four checks a form can run</h2>
+        <p>“Please enter a valid email” is one message for four different checks, and which one refused you decides what will work instead:</p><div class="ep-tw ga-tw" tabindex="0" role="region" aria-label="Check, How it works, What it catches, What gets past it"><table class="ep-t ga-t ga-t-wide"><thead><tr><th scope="col">Check</th><th scope="col">How it works</th><th scope="col">What it catches</th><th scope="col">What gets past it</th></tr></thead><tbody><tr><td><strong>Domain list</strong></td><td>The domain of the address is looked up in a blocklist, usually before the form is even submitted.</td><td>Every public disposable domain, on the day it was listed.</td><td>Any domain not on the list: your own, or one that is never published.</td></tr><tr><td><strong>MX lookup</strong></td><td>DNS is asked where the domain’s mail goes. If the MX names a known disposable provider, the address is refused.</td><td>Domains pointed at a listed provider’s mail server — including, sometimes, your own domain pointed here.</td><td>A domain whose MX is not on the provider list. Rarer than the domain check, because it costs a DNS query per sign-up.</td></tr><tr><td><strong>Catch-all probe</strong></td><td>The site’s server opens an SMTP conversation and asks the MX whether a random address on the domain would be accepted.</td><td>Every catch-all domain, disposable or not — including a company’s own catch-all.</td><td>A domain that refuses unknown addresses, which a catch-all inbox by definition does not.</td></tr><tr><td><strong>Provider risk score</strong></td><td>The address is sent to a validation API that combines all of the above with its own history and returns a score.</td><td>Whatever that provider has seen before, which is a lot.</td><td>Addresses the provider has no history of — which is most addresses on a domain nobody has used before.</td></tr></tbody></table></div><p>The first check is by far the most common, because it is free and runs in the browser. The third is the one that matters for the rest of this guide: it is the only check that refuses a domain of your own, and it is the reason the paid pool exists.</p>      </section>
+            <section class="ga-s" id="why" aria-labelledby="why-h">
+        <h2 class="ga-s-h" id="why-h">Why sites do it, and what it costs them</h2>
+        <p>It is easy to read a refusal as hostility. Usually it is arithmetic, and the arithmetic is worth understanding because it says which sites will never budge:</p><dl class="defs"><div class="def"><dt>Free-trial and credit abuse</dt><dd>A service that gives away credits, minutes or a free month per account is signed up to a thousand times an hour by scripts. Blocking disposable domains removes the cheapest way to do that. These sites will not stop blocking, and should not.</dd></div><div class="def"><dt>Bounces and deliverability</dt><dd>Mail sent to addresses that expire bounces, and a bounce rate above a percent or two gets a sender’s domain throttled by every major mailbox provider. A site that sends a lot of mail protects its own reputation by not sending to addresses that will not exist next week.</dd></div><div class="def"><dt>Fraud and chargebacks</dt><dd>Anything that touches payment is scored, and an unrecognised or disposable domain is one input among many. Here the block is often the score rather than a list.</dd></div></dl><p>What it costs them is real too: every list carries false positives — small mail providers, university domains, a company’s own catch-all — and every refused sign-up is a person who typed a real address and was told it was invalid. A site that blocks without saying why loses those people silently. The last section is for the people running such forms.</p>      </section>
+            <section class="ga-s" id="local-part" aria-labelledby="local-part-h">
+        <h2 class="ga-s-h" id="local-part-h">Why changing the name before the @ never helps</h2>
+        <p>The instinct after a refusal is to try <code>john.smith</code> instead of <code>js</code>. It does nothing. None of the four checks looks at the local part — the list is a list of domains, the MX lookup is per domain, the probe is per domain, and the score treats the domain as the strongest signal. Every address on <code>neverla.web.id</code> is refused together, and so is every address on <code>mixozia.com</code> and <code>linqmail.com</code>.</p><p>It is worth saying plainly because the opposite is also true: what <em>does</em> work is changing the domain, and only that. Everything in the next section is a different domain.</p><aside class="ga-call ga-call-warn"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.8 18 16.6H2z"/><path d="M10 8v3.4M10 13.8h.01"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Watch out</span>Do not use a stranger’s domain either.</p><p>Typing an address on a domain you do not control — a real company, a random <code>.com</code> — sends the confirmation mail to somebody else and locks the account to them. It is not a workaround; it is handing the account away.</p></div></aside>      </section>
+            <section class="ga-s" id="ways-round" aria-labelledby="ways-round-h">
+        <h2 class="ga-s-h" id="ways-round-h">Three honest ways round it</h2>
+        <p>Each of these is a different domain, and each answers a different check. Pick by which check refused you and by what the account is for:</p><div class="ep-tw ga-tw" tabindex="0" role="region" aria-label="Way round, Gets past, Costs, Right when"><table class="ep-t ga-t ga-t-wide"><thead><tr><th scope="col">Way round</th><th scope="col">Gets past</th><th scope="col">Costs</th><th scope="col">Right when</th></tr></thead><tbody><tr><td><strong>A domain of your own</strong>, pointed here with one MX record</td><td>The domain list and the provider score. Not the MX lookup on a strict site, and not the catch-all probe.</td><td>A domain you already own, or a cheap one. No account, no fee.</td><td>Testing your own application, or a personal address for sign-ups you would like to keep working.</td></tr><tr><td><strong>A domain from the pool kept off the lists</strong></td><td>All four checks: the domains are ordinary-looking <code>.com</code>s, never published, with plain MX records, and checked against the public lists every day.</td><td>A monthly plan, from <a href="/pricing">the pricing page</a>. The pool, in the inbox on this site or through the API with a key.</td><td>Automation that has to sign up on sites that block hard, and the domain of your own was refused too.</td></tr><tr><td><strong>An alias</strong> that forwards to your real inbox</td><td>Everything, usually — alias domains are on some lists, but most forms accept them.</td><td>An alias service, or your provider’s own feature.</td><td>An account you actually want to keep: one that may need a password reset, or that sends you something worth reading.</td></tr></tbody></table></div><h3 class="ga-h3">Your own domain, in one record</h3><p>Add this MX record at your DNS provider and every address on the domain becomes a mailbox here, readable exactly like the public ones. The first message that arrives connects it; there is no account and no form to fill in. <a href="/guides/own-domain-catch-all-inbox">The setup guide</a> walks through the common DNS providers, and <a href="/guides/unlimited-test-accounts-catch-all-domain">unlimited test accounts on one domain</a> shows what it looks like in a test suite.</p><p class="doc-inline ga-copy"><span class="ga-copy-l">MX record for your domain</span><code class="doc-code">10 smtp.neverla.web.id</code><button class="doc-copy" type="button" data-copy-text="10 smtp.neverla.web.id"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-text-label>Copy</span></button></p><h3 class="ga-h3">The pool that stays off the lists</h3><p>The pool exists for one reason: the catch-all probe. A domain of your own pointed here accepts every address, which is what makes it useful and what a probe detects. The pool domains are plain <code>.com</code>s that no temp-mail page has ever printed, and the service checks each one against the public lists daily; one that turns up is retired. It is the only paid thing on this site, and everything else stays free whether you take it or not.</p><h3 class="ga-h3">An alias, when the account matters</h3><p>If the site is refusing hard <em>and</em> the account is one you would mind losing, the answer is not a better disposable address; it is an address that reaches you. An alias delivers into your real inbox and can be switched off later. <a href="/guides/burner-email-vs-alias-vs-temp-mail">Burner, alias or temp mail</a> is the longer comparison, and <a href="/guides/disposable-address-for-signups">signing up without your real address</a> covers the habits that make any of them work.</p>      </section>
+            <section class="ga-s" id="if-you-run-the-form" aria-labelledby="if-you-run-the-form-h">
+        <h2 class="ga-s-h" id="if-you-run-the-form-h">If you run the form: how to block well</h2>
+        <p>Blocking disposable domains is a reasonable thing to do. Blocking badly costs real sign-ups, and the difference is five decisions:</p><ol class="steps-n"><li><strong>Check a list, not a heuristic.</strong> A maintained list is wrong less often than a rule like “refuse any domain younger than a year”. Update it on a schedule rather than at deploy time.</li><li><strong>Do not probe for catch-all.</strong> It refuses every company that runs one, and it makes your server open SMTP conversations with strangers on every sign-up. Let the verification mail do the work instead.</li><li><strong>Verify by sending.</strong> An address that receives your confirmation mail and clicks it has proved more than any list can. Most abuse fails at this step on its own, because it never reads the mail.</li><li><strong>Say why.</strong> “We don’t accept temporary email addresses — use one you can check later” loses fewer people than “please enter a valid email” on a valid email, and it tells the legitimate ones what to do.</li><li><strong>Rate-limit the thing being abused,</strong> not the address. If the problem is free credits, cap credits per payment method or per device; the domain check is a proxy for that, and proxies are what people route around.</li></ol><p>None of this stops a determined abuser with a paid pool of domains. It stops the cheap abuse, which is most of it, without refusing the customers who happen to run their own mail.</p>      </section>
+            <section class="ga-s" id="checklist" aria-labelledby="checklist-h">
+        <h2 class="ga-s-h" id="checklist-h">The short version</h2>
+        <ul class="doc-l"><li>A refusal is about the domain. The local part is irrelevant — do not keep trying names.</li><li>For your own application: a domain of your own, one MX record, free.</li><li>For automation on strict sites: a domain from the pool kept off the lists.</li><li>For an account you want to keep: an alias that reaches your real inbox, not a disposable address at all.</li></ul><p>And if the confirmation mail was accepted but never turned up, that is a different problem with its own guide: <a href="/guides/verification-email-not-arriving">verification email not arriving</a>.</p>      </section>
+      
+            <section class="ga-s" id="faq" aria-labelledby="faq-h">
+        <h2 class="ga-s-h" id="faq-h">Questions</h2>
+        <div class="faq ga-faq">
+                    <details class="faq-i" open>
+            <summary class="faq-q">
+              <span>Is using a disposable address against the site’s rules?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Sometimes. A site that blocks them usually also forbids them in its terms, and an account made that way can be closed. Nothing here helps you break a site’s rules — the honest ways round a refusal are all addresses you are entitled to use, and the alias option exists precisely for the accounts that matter.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Will my own domain end up on the lists?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Only if it is published somewhere the list maintainers crawl, or reported. A domain that only ever appears in your own test suite or your own sign-ups has no way onto them. The MX lookup can still recognise it on a strict site, and the catch-all probe will — for those, the pool is the answer.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>How are the pool domains kept off the lists?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>They are never printed on any page, they are ordinary <code>.com</code>s with their own plain MX records, and each is checked against the public blocklists every day. One that appears anyway is retired from the pool. The pool is read through the API with a key, which is what the paid plans provide.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Why does the site accept my address and then never send the mail?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Some sites refuse silently: the form says “check your inbox” and nothing is sent. It looks like a delivery problem and is a block. <a href="/guides/verification-email-not-arriving">Verification email not arriving</a> has the sixty-second check that tells the two apart.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Does Neverla Mail publish a list of its own domains?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>The public ones are on the front page, which is the same as publishing them. The pool domains and customers’ own domains are never listed anywhere, and there is no endpoint that enumerates them.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Can a form tell that my own domain points at Neverla Mail?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>An MX lookup can, if the site keeps a list of disposable providers’ mail servers and checks against it. Few do, because it costs a DNS query per sign-up, but strict sites exist. A catch-all probe can too. The domain-list check, which is the common one, cannot.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>What is the difference between all of this and a “fake email generator”?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Nothing but the name. A generator gives you a random address on a public disposable domain — on the lists, refused by the same forms. <a href="/guides/what-is-temp-mail">What temp mail is</a> sorts out the vocabulary.</p></div>
+          </details>
+                  </div>
+      </section>
+      
+      
+                  <nav class="ga-pn" aria-label="More in this topic">
+                <a class="ga-pn-i ga-pn-p" href="/guides/email-tracking-pixels" rel="prev">
+          <span class="ga-pn-k">Previous</span>
+          <span class="ga-pn-t">Tracking pixels and what they see</span>
+        </a>
+                        <a class="ga-pn-i ga-pn-n" href="/guides/burner-email-vs-alias-vs-temp-mail" rel="next">
+          <span class="ga-pn-k">Next</span>
+          <span class="ga-pn-t">Burner, alias or temp mail</span>
+        </a>
+              </nav>
+      
+    </article>
+  </div>
+
+    <div class="ga-rel">
+    <div class="wrap">
+      <h2 class="ga-rel-h">Keep reading</h2>
+      <ul class="gd-cards ga-rel-l">
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/own-domain-catch-all-inbox">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/domain-800.webp?v=3af85b61f5" srcset="/assets/img/guides/domain-480.webp?v=3af85b61f5 480w, /assets/img/guides/domain-800.webp?v=3af85b61f5 800w, /assets/img/guides/domain-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="A white globe with a blue route arcing over network cubes into a mailbox" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">Your own domain</span>
+              <span class="gd-card-t">Turn a domain you own into a catch-all inbox</span>
+              <span class="gd-card-x">The single DNS record, why the record itself is the proof of ownership, giving every service its own address on your domain, and the honest limits of a mailbox with no password on it.</span>
+              <span class="gd-card-m">9 min read</span>
+            </span>
+          </a>
+        </li>
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/burner-email-vs-alias-vs-temp-mail">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/burner-800.webp?v=3af85b61f5" srcset="/assets/img/guides/burner-480.webp?v=3af85b61f5 480w, /assets/img/guides/burner-800.webp?v=3af85b61f5 800w, /assets/img/guides/burner-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="Three grey pedestals holding a blue envelope with a torn corner, a blue envelope behind a small grey mask, and a blue envelope in an open grey box" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">Privacy &amp; everyday use</span>
+              <span class="gd-card-t">Burner email, alias or temp mail: which one, for what</span>
+              <span class="gd-card-x">The three tools defined by who ends up reading the mail, a side-by-side across privacy, lifetime, recovery, blocklists and cost, the decision rule (would you mind losing the account?), how to use them together, the alias services worth knowing, and the three situations where none of them is the answer.</span>
+              <span class="gd-card-m">9 min read</span>
+            </span>
+          </a>
+        </li>
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/disposable-address-for-signups">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/privacy-800.webp?v=3af85b61f5" srcset="/assets/img/guides/privacy-480.webp?v=3af85b61f5 480w, /assets/img/guides/privacy-800.webp?v=3af85b61f5 800w, /assets/img/guides/privacy-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="A blue envelope standing behind a frosted glass panel with a keyhole in it" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">Privacy &amp; everyday use</span>
+              <span class="gd-card-t">Sign up for anything without giving your real address</span>
+              <span class="gd-card-x">What a disposable address is, how to open one, the alias trick that keeps the service you signed up to from reading the rest of your mail, and the cases where a throwaway address is the wrong tool.</span>
+              <span class="gd-card-m">9 min read</span>
+            </span>
+          </a>
+        </li>
+              </ul>
+    </div>
+  </div>
+  
+  <section class="cta ga-cta" aria-labelledby="ga-cta-h">
+    <div class="wrap cta-in">
+      <h2 class="cta-h" id="ga-cta-h">Try it while it is fresh</h2>
+      <p class="cta-p">An address takes one click, no account and no card. Everything in this guide works on it straight away.</p>
+      <div class="cta-act">
+        <a class="btn btn-primary btn-lg" href="/#grab">Open an inbox</a>
+        <a class="btn btn-ghost btn-lg" href="/docs/api">Read the API reference</a>
+      </div>
+    </div>
+  </section>
+</div>
+</main>
+
+<footer class="ft" id="ft-map">
+  <div class="wrap">
+    <div class="ft-top">
+      <div class="ft-brand">
+        <a class="ft-logo" href="/" aria-label="Neverla Mail — home">
+          <picture>
+            <source srcset="/assets/img/logo-nav.webp?v=3af85b61f5" type="image/webp">
+            <img class="ft-logo-img" src="/assets/img/logo-nav.png?v=3af85b61f5"
+                 alt="Neverla Mail" width="122" height="29" decoding="async" loading="lazy">
+          </picture>
+        </a>
+        <p class="ft-blurb">
+                    Disposable email addresses with a free REST API. Grab one in a click, or point your own domain at us for an inbox nobody can guess into.        </p>
+                <p class="ft-status">
+          <span class="dot" aria-hidden="true"></span>
+          <a href="/status">System status</a>
+        </p>
+      </div>
+
+                  <nav class="ft-nav" aria-label="Product">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Product</h2></summary>
+          <ul>
+                                                <li><a href="/#grab">Grab an address</a></li>
+                                    <li><a href="/#how">How it works</a></li>
+                                    <li><a href="/domains">Connect a domain</a></li>
+                                    <li><a href="/extensions">Browser extension</a></li>
+                                    <li><a href="/pricing">Pricing</a></li>
+                                    <li><a href="/guides">Guides</a></li>
+                                    <li><a href="/compare">Comparing the APIs</a></li>
+                                    <li><a href="/vs">Neverla Mail vs the alternatives</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Developers">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Developers</h2></summary>
+          <ul>
+                                                <li><a href="/docs/quickstart#mcp">MCP for AI agents</a></li>
+                                    <li><a href="/openapi.json">OpenAPI 3.1</a></li>
+                                    <li><a href="/llms.txt">llms.txt</a></li>
+                                    <li><a href="/docs">Documentation</a></li>
+                                    <li><a href="/docs/api">API reference</a></li>
+                                    <li><a href="/docs/quickstart">Quickstart</a></li>
+                                    <li><a href="/docs/limits">Limits</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Company">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Company</h2></summary>
+          <ul>
+                                                <li><a href="/about">About</a></li>
+                                    <li><a href="/status">Status</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Legal">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Legal</h2></summary>
+          <ul>
+                                                <li><a href="/legal/terms">Terms of service</a></li>
+                                    <li><a href="/legal/privacy">Privacy</a></li>
+                      </ul>
+        </details>
+      </nav>
+          </div>
+
+    <div class="ft-bar">
+      <p>&copy; 2026 Neverla Mail. All rights reserved.</p>
+      <ul class="ft-facts">
+        <li>Receive-only</li>
+        <li>No tracking, no ads</li>
+        <li>Messages deleted after 5 days</li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<div class="lang" data-lang>
+    <button class="lang-fab" type="button" data-lang-open
+          aria-haspopup="dialog" aria-expanded="false"
+          title="Language: English">
+    <span class="lang-fab-fl" aria-hidden="true"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+    <span class="lang-code" aria-hidden="true">EN</span>
+        <span class="lang-fab-n" aria-hidden="true"><span>English</span></span>
+    <svg class="lang-globe" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+         aria-hidden="true" focusable="false">
+      <circle cx="10" cy="10" r="7.25"/>
+      <path d="M2.75 10h14.5M10 2.75c3.85 4.4 3.85 10.1 0 14.5-3.85-4.4-3.85-10.1 0-14.5z"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="sr-only">Change language: English</span>
+  </button>
+
+  <dialog class="lm" data-lang-modal aria-labelledby="lm-title">
+    <div class="lm-panel">
+            <div class="lm-grab" aria-hidden="true"></div>
+
+            <header class="lm-hd">
+        <h2 class="lm-t" id="lm-title">Language</h2>
+                <form method="dialog">
+          <button class="lm-x" type="submit" aria-label="Change language">
+            <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+              <path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor"
+                    stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </form>
+      </header>
+
+      <ul class="lm-grid">
+                <li>
+          <a class="lm-i is-on"
+             href="/guides/why-signup-forms-block-disposable-email"
+             hreflang="en" lang="en"
+             aria-current="true" data-lang-current>
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">English</span>
+                            <span class="lm-n-l" lang="en">English</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">EN</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/es/guides/why-signup-forms-block-disposable-email"
+             hreflang="es" lang="es"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-es"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Español</span>
+                            <span class="lm-n-l" lang="en">Spanish</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">ES</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/pt/guides/why-signup-forms-block-disposable-email"
+             hreflang="pt" lang="pt"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-pt"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Português</span>
+                            <span class="lm-n-l" lang="en">Portuguese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">PT</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/fr/guides/why-signup-forms-block-disposable-email"
+             hreflang="fr" lang="fr"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-fr"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Français</span>
+                            <span class="lm-n-l" lang="en">French</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">FR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/de/guides/why-signup-forms-block-disposable-email"
+             hreflang="de" lang="de"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-de"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Deutsch</span>
+                            <span class="lm-n-l" lang="en">German</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">DE</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ru/guides/why-signup-forms-block-disposable-email"
+             hreflang="ru" lang="ru"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ru"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Русский</span>
+                            <span class="lm-n-l" lang="en">Russian</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">RU</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/tr/guides/why-signup-forms-block-disposable-email"
+             hreflang="tr" lang="tr"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-tr"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Türkçe</span>
+                            <span class="lm-n-l" lang="en">Turkish</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">TR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/id/guides/why-signup-forms-block-disposable-email"
+             hreflang="id" lang="id"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-id"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Bahasa Indonesia</span>
+                            <span class="lm-n-l" lang="en">Indonesian</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">ID</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/vi/guides/why-signup-forms-block-disposable-email"
+             hreflang="vi" lang="vi"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-vi"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Tiếng Việt</span>
+                            <span class="lm-n-l" lang="en">Vietnamese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">VI</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ar/guides/why-signup-forms-block-disposable-email"
+             hreflang="ar" lang="ar"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ar"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">العربية</span>
+                            <span class="lm-n-l" lang="en">Arabic</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">AR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ja/guides/why-signup-forms-block-disposable-email"
+             hreflang="ja" lang="ja"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ja"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">日本語</span>
+                            <span class="lm-n-l" lang="en">Japanese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">JA</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+              </ul>
+    </div>
+  </dialog>
+
+  <noscript>
+    <ul class="lang-ns" aria-label="Language">
+            <li><a href="/guides/why-signup-forms-block-disposable-email" hreflang="en" lang="en">English</a></li>
+            <li><a href="/es/guides/why-signup-forms-block-disposable-email" hreflang="es" lang="es">Español</a></li>
+            <li><a href="/pt/guides/why-signup-forms-block-disposable-email" hreflang="pt" lang="pt">Português</a></li>
+            <li><a href="/fr/guides/why-signup-forms-block-disposable-email" hreflang="fr" lang="fr">Français</a></li>
+            <li><a href="/de/guides/why-signup-forms-block-disposable-email" hreflang="de" lang="de">Deutsch</a></li>
+            <li><a href="/ru/guides/why-signup-forms-block-disposable-email" hreflang="ru" lang="ru">Русский</a></li>
+            <li><a href="/tr/guides/why-signup-forms-block-disposable-email" hreflang="tr" lang="tr">Türkçe</a></li>
+            <li><a href="/id/guides/why-signup-forms-block-disposable-email" hreflang="id" lang="id">Bahasa Indonesia</a></li>
+            <li><a href="/vi/guides/why-signup-forms-block-disposable-email" hreflang="vi" lang="vi">Tiếng Việt</a></li>
+            <li><a href="/ar/guides/why-signup-forms-block-disposable-email" hreflang="ar" lang="ar">العربية</a></li>
+            <li><a href="/ja/guides/why-signup-forms-block-disposable-email" hreflang="ja" lang="ja">日本語</a></li>
+          </ul>
+  </noscript>
+</div>
+<svg class="lm-sprite" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+    <symbol id="fl-en" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#012169"/>
+      <path d="M0 0 24 16M24 0 0 16" stroke="#fff" stroke-width="3.2"/>
+      <path d="M0 0 24 16M24 0 0 16" stroke="#C8102E" stroke-width="1.9"/>
+      <path d="M12 0v16M0 8h24" stroke="#fff" stroke-width="5.3"/>
+      <path d="M12 0v16M0 8h24" stroke="#C8102E" stroke-width="3.2"/>
+    </symbol>
+    <symbol id="fl-es" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#AA151B"/>
+      <rect y="4" width="24" height="8" fill="#F1BF00"/>
+    </symbol>
+    <symbol id="fl-pt" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#DA291C"/>
+      <rect width="9.6" height="16" fill="#046A38"/>
+      <circle cx="9.6" cy="8" r="3.4" fill="#FFE800" stroke="#046A38" stroke-width="1"/>
+    </symbol>
+    <symbol id="fl-fr" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <rect width="8" height="16" fill="#002395"/>
+      <rect x="16" width="8" height="16" fill="#ED2939"/>
+    </symbol>
+    <symbol id="fl-de" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#FFCE00"/>
+      <rect width="24" height="10.7" fill="#DD0000"/>
+      <rect width="24" height="5.3"/>
+    </symbol>
+    <symbol id="fl-ru" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#D52B1E"/>
+      <rect width="24" height="10.7" fill="#0039A6"/>
+      <rect width="24" height="5.3" fill="#fff"/>
+    </symbol>
+    <symbol id="fl-tr" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#E30A17"/>
+      <circle cx="9.4" cy="8" r="3.9" fill="#fff"/>
+      <circle cx="10.9" cy="8" r="3.1" fill="#E30A17"/>
+      <path d="m15.1 8 1.35.44-.83 1.15V8.2l.83 1.15z" fill="#fff"/>
+      <path d="m14.6 6.2.72 1.98 2.1.06-1.67 1.28.6 2.02-1.75-1.18-1.75 1.18.6-2.02-1.67-1.28 2.1-.06z" fill="#fff"/>
+    </symbol>
+    <symbol id="fl-id" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <rect width="24" height="8" fill="#CE1126"/>
+    </symbol>
+    <symbol id="fl-vi" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#DA251D"/>
+      <path d="m12 3.6 1.32 4.06h4.27l-3.46 2.51 1.33 4.06L12 11.72l-3.46 2.51 1.33-4.06-3.46-2.51h4.27z" fill="#FFFF00"/>
+    </symbol>
+    <symbol id="fl-ar" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#165D31"/>
+      <path d="M5.6 6.4h12.8" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M5.6 10.4h11.2" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M16.8 10.4c.9 0 1.6.5 1.6 1.2" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="fl-ja" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <circle cx="12" cy="8" r="4.8" fill="#BC002D"/>
+    </symbol>
+  </defs>
+</svg><dialog class="am" data-auth-modal aria-labelledby="am-h-signin">
+  <div class="am-panel" data-am-panel data-view="signin">
+
+        <div class="am-grab" aria-hidden="true"></div>
+
+        <div class="am-body" data-am-body>
+
+            <div class="am-hd">
+                <div class="am-seg" role="tablist" aria-label="Account">
+          <span class="am-seg-pill" aria-hidden="true"></span>
+          <button class="am-seg-b" type="button" role="tab" id="am-tab-signin"
+                  aria-selected="true" aria-controls="am-view-signin"
+                  data-am-go="signin">Sign in</button>
+          <button class="am-seg-b" type="button" role="tab" id="am-tab-signup"
+                  aria-selected="false" aria-controls="am-view-signup" tabindex="-1"
+                  data-am-go="signup">Create account</button>
+        </div>
+
+        <button class="am-x" type="button" data-am-close aria-label="Close">
+          <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor"
+                  stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+            <div class="am-alert" role="alert" data-am-alert hidden>
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" aria-hidden="true" focusable="false">
+          <circle cx="10" cy="10" r="7.6"/><path d="M10 6.2v4.4M10 13.4v.1"/>
+        </svg>
+        <span data-am-alert-t></span>
+      </div>
+
+      <div class="am-views" data-am-views>
+
+        <!-- ── sign in ──────────────────────────────────────────────────── -->
+        <form class="am-view" id="am-view-signin" data-am-view="signin"
+              role="tabpanel" aria-labelledby="am-tab-signin"
+              method="post" action="/api/v1/auth" novalidate>
+          <input type="hidden" name="action" value="signin">
+
+          <h2 class="am-h" id="am-h-signin">Welcome back</h2>
+          <p class="am-sub">Your inboxes and your domains, in one place.</p>
+
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-si-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-si-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-si-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-si-email-e" data-am-err hidden></p>
+    </div>
+                  <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-si-pass">Password</label>
+                <button class="am-link" type="button" data-am-go="reset">Forgot?</button>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-si-pass" name="password"
+               type="password"
+                              autocomplete="current-password"
+               placeholder="••••••••"
+               aria-describedby="am-si-pass-e"
+                                             data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+      
+      <p class="am-err" id="am-si-pass-e" data-am-err hidden></p>
+    </div>
+    
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Sign in</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+        <!-- ── create an account ───────────────────────────────────────── -->
+        <form class="am-view" id="am-view-signup" data-am-view="signup"
+              role="tabpanel" aria-labelledby="am-tab-signup"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <input type="hidden" name="action" value="signup">
+
+          <h2 class="am-h" id="am-h-signup">Create your account</h2>
+                              <p class="am-sub" data-am-sub>It stays free. The address is only so you can find your inboxes again.</p>
+          <p class="am-sub" data-am-sub="save" hidden>Create a free account to keep this inbox — and every inbox you open from now on.</p>
+                    <ul class="am-perks">
+            <li>Every inbox you open, saved</li>
+            <li>A free API key</li>
+            <li>No card, no trial</li>
+          </ul>
+          
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-su-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-su-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-su-email-e" data-am-err hidden></p>
+    </div>
+                  <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-pass">Password</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-su-pass" name="password"
+               type="password"
+                              autocomplete="new-password"
+               placeholder="••••••••"
+               aria-describedby="am-su-pass-e"
+                                             data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+                  <div class="am-str" data-am-str data-strength="0" hidden>
+        <div class="am-str-bars" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <span class="am-str-t" data-am-str-t></span>
+      </div>
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+            <p class="am-hint">At least 10 characters. Length beats punctuation.</p>
+      
+      <p class="am-err" id="am-su-pass-e" data-am-err hidden></p>
+    </div>
+    
+                        <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-pass2">Confirm password</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-su-pass2" name="password2"
+               type="password"
+                              autocomplete="new-password"
+               placeholder="••••••••"
+               aria-describedby="am-su-pass2-e"
+                              data-am-match="am-su-pass" data-am-skip               data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+      
+      <p class="am-err" id="am-su-pass2-e" data-am-err hidden></p>
+    </div>
+    
+                              <div class="am-cf" data-am-cf data-sitekey="0x4AAAAAAEfWgqSU6xDxtH5m"></div>
+          
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Create my account</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    
+          <p class="am-note">
+            By creating an account you agree to the <a href="/legal/terms">Terms</a> and the <a href="/legal/privacy">Privacy Policy</a>.          </p>
+        </form>
+
+        <!-- ── reset a password ────────────────────────────────────────── -->
+        <form class="am-view" id="am-view-reset" data-am-view="reset"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <input type="hidden" name="action" value="reset">
+
+          <button class="am-back" type="button" data-am-go="signin">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor"
+                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to sign in          </button>
+
+          <h2 class="am-h" id="am-h-reset">Reset your password</h2>
+          <p class="am-sub">Give us the address you signed up with and we will send a link to choose a new password.</p>
+
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-rs-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-rs-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-rs-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-rs-email-e" data-am-err hidden></p>
+    </div>
+    
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Send the link</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+        <!-- ── the link is on its way ──────────────────────────────────── -->
+                <div class="am-view am-view-done" id="am-view-sent" data-am-view="sent" hidden>
+          <span class="am-done-ic" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.4"
+                 stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="m9 16.6 4.6 4.6L23 11"/>
+            </svg>
+          </span>
+          <h2 class="am-h" id="am-h-sent">Check your inbox</h2>
+          <p class="am-sub">If an account exists for that address, a link to choose a new password is on its way. It is valid for one hour.</p>
+          <button class="btn btn-ghost am-go" type="button" data-am-go="signin">Back to sign in</button>
+        </div>
+
+        <!-- ── le second facteur (01/10/2026) ──────────────────────────── -->
+                <form class="am-view" id="am-view-mfa" data-am-view="mfa"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <button class="am-back" type="button" data-am-go="signin">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor"
+                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to sign in          </button>
+
+          <h2 class="am-h" id="am-h-mfa">Two-factor authentication</h2>
+          <p class="am-sub">Type the six digits your authenticator app shows — or one of your recovery codes.</p>
+
+          <div class="am-f">
+            <div class="am-f-top">
+              <label class="am-l" for="am-mfa-code">Code</label>
+            </div>
+            <div class="am-in">
+              <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>              <input class="am-i am-i-code" id="am-mfa-code" name="code" type="text"
+                     inputmode="numeric" autocomplete="one-time-code" spellcheck="false"
+                     autocapitalize="off" maxlength="24" placeholder="123 456"
+                     aria-describedby="am-mfa-code-e" data-am-in data-am-code required>
+            </div>
+            <p class="am-err" id="am-mfa-code-e" data-am-err hidden></p>
+          </div>
+
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Verify</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+      </div>
+    </div>
+
+  </div>
+</dialog>
+<nav class="tb" data-tb aria-label="Main">
+  <a class="tb-i" href="/" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.8 10.4 12 3.8l8.2 6.6v8.7a1.4 1.4 0 0 1-1.4 1.4h-4.3v-5.8h-5v5.8H5.2a1.4 1.4 0 0 1-1.4-1.4z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+    <span class="tb-n">Home</span>
+  </a>
+  <a class="tb-i is-on" aria-current="true" href="/guides" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 6.6C10.3 5.2 7.9 4.6 4.3 4.6v13.2c3.6 0 6 .6 7.7 2 1.7-1.4 4.1-2 7.7-2V4.6c-3.6 0-6 .6-7.7 2zM12 6.6v13.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+    <span class="tb-n">Guides</span>
+  </a>
+    <a class="tb-i tb-go" href="/inbox" data-sheet-open="inbox"
+     aria-haspopup="dialog">
+    <span class="tb-go-b" aria-hidden="true">
+      <svg viewBox="0 0 24 24" focusable="false"><rect x="3.2" y="5.6" width="17.6" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m4.2 7 7 5.3a1.3 1.3 0 0 0 1.6 0l7-5.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <span class="tb-n">Inbox</span>
+  </a>
+    <a class="tb-i" href="/pricing" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.8 12.4V5.2a1.4 1.4 0 0 1 1.4-1.4h7.2l7.9 7.9a1.4 1.4 0 0 1 0 2l-6.7 6.7a1.4 1.4 0 0 1-2 0z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="8.4" cy="8.4" r="1.5" fill="currentColor"/></svg>
+    <span class="tb-n">Pricing</span>
+  </a>
+    <a class="tb-i" href="#ft-map" data-sheet-open="menu" aria-haspopup="dialog">
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 7h15M4.5 12h15M4.5 17h15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <span class="tb-n">Menu</span>
+  </a>
+</nav>
+
+<dialog class="sh" data-sheet="menu" aria-labelledby="sh-menu-t">
+  <div class="sh-panel">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <header class="sh-hd">
+      <h2 class="sh-t" id="sh-menu-t">Menu</h2>
+      <form method="dialog">
+        <button class="sh-x" type="submit" aria-label="Close"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+      </form>
+    </header>
+
+    <div class="sh-body">
+            <div class="sh-auth">
+        <button class="btn btn-primary" type="button" data-auth-open="signin">Log in</button>
+        <button class="btn btn-ghost" type="button" data-auth-open="signup">Create account</button>
+      </div>
+      
+            <p class="sh-sec">Product</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/#how"><span>How it works</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/domains"><span>Connect a domain</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/extensions"><span>Browser extension</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/pricing"><span>Pricing</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/guides"><span>Guides</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/compare"><span>Comparing the APIs</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/vs"><span>Neverla Mail vs the alternatives</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Developers</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/docs/quickstart#mcp"><span>MCP for AI agents</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs"><span>Documentation</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/api"><span>API reference</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/quickstart"><span>Quickstart</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/limits"><span>Limits</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Company</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/about"><span>About</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/status"><span>Status</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Legal</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/legal/terms"><span>Terms of service</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/legal/privacy"><span>Privacy</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+      
+      <p class="sh-sec">Language</p>
+      <div class="sh-card sh-list">
+                <button class="sh-row sh-lang" type="button" data-sheet-lang>
+          <span class="sh-lang-fl" aria-hidden="true"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+          <span class="sh-lang-n">English</span>
+          <span class="sh-lang-c" aria-hidden="true">EN</span>
+          <svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>        </button>
+      </div>
+
+            <p class="sh-note">Free · No signup · Deleted after 5 days</p>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="sh sh-ibx" data-sheet="inbox" aria-labelledby="sh-ibx-t">
+  <div class="sh-panel">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <header class="sh-hd">
+      <h2 class="sh-t" id="sh-ibx-t">New address</h2>
+      <form method="dialog">
+        <button class="sh-x" type="submit" aria-label="Close"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+      </form>
+    </header>
+
+    <div class="sh-body">
+            <form class="sh-cmp" action="/inbox" method="get" data-composer data-sheet-composer novalidate>
+        <div class="sh-cmp-f">
+          <label class="sr-only" for="sh-u">Address name</label>
+          <input class="sh-cmp-u" type="text" name="u" id="sh-u" data-user
+                 placeholder="pick-any-name" maxlength="64"
+                 autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false"
+                 enterkeyhint="go" aria-describedby="sh-hint">
+          <button class="sh-cmp-dice" type="button" data-random
+                  aria-label="Random name" title="Random name">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="2" y="2" width="12" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="5.5" cy="5.5" r="1.1" fill="currentColor"/><circle cx="10.5" cy="5.5" r="1.1" fill="currentColor"/><circle cx="8" cy="8" r="1.1" fill="currentColor"/><circle cx="5.5" cy="10.5" r="1.1" fill="currentColor"/><circle cx="10.5" cy="10.5" r="1.1" fill="currentColor"/></svg>
+          </button>
+        </div>
+        <label class="sr-only" for="sh-d">Domain</label>
+        <select class="sh-cmp-d" name="d" id="sh-d" data-domain>
+                    <option value="neverla.web.id">@neverla.web.id</option>
+                    <option value="mixozia.com">@mixozia.com</option>
+                    <option value="linqmail.com">@linqmail.com</option>
+                  </select>
+        <p class="sh-hint composer-hint" id="sh-hint" data-hint hidden></p>
+        <button class="btn btn-primary btn-lg btn-block sh-cmp-go" type="submit">
+          <span>Open inbox</span>
+          <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <p class="sh-cmp-note">Public inbox — anyone with the address can read it.</p>
+      </form>
+
+                  <div class="sh-recent" data-sh-recent hidden>
+        <p class="sh-sec">Opened in this tab</p>
+        <ul class="sh-card sh-list" data-sh-recent-list></ul>
+              </div>
+    </div>
+  </div>
+</dialog>
+
+<p class="sr-only" role="status" aria-live="polite" data-live></p>
+
+</body>
+</html>

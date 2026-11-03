@@ -101,6 +101,19 @@ func handleDomains(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func handlePicker(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"free": domains,
+		"premium": map[string]interface{}{
+			"unlocked": true,
+			"count":    len(domains),
+			"shown":    len(domains),
+			"items":    []interface{}{},
+		},
+	})
+}
+
 type MessageItem struct {
 	ID        string      `json:"id"`
 	From      interface{} `json:"from"`
@@ -533,26 +546,24 @@ func handleMCP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func servePage(filename string) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, filepath.Join(pubDir, filename))
-	}
-}
-
 func main() {
 	if port == "" {
 		port = "3417"
 	}
 
 	initDB()
-	log.Printf("Neverla Mail High-Performance Go Core (REST + MCP) running on :%s...", port)
+	log.Printf("Neverla Mail Complete 70-Page GrabMail Clone Architecture running on :%s...", port)
 
 	mux := http.NewServeMux()
 
-	// REST APIs
+	// REST APIs (Multi-prefix mount)
 	mux.HandleFunc("/v1/domains", handleDomains)
 	mux.HandleFunc("/api/v1/domains", handleDomains)
 	mux.HandleFunc("/gm-api/v1/domains", handleDomains)
+
+	mux.HandleFunc("/v1/picker", handlePicker)
+	mux.HandleFunc("/api/v1/picker", handlePicker)
+	mux.HandleFunc("/gm-api/v1/picker", handlePicker)
 
 	mux.HandleFunc("/v1/mailbox", handleMailbox)
 	mux.HandleFunc("/api/v1/mailbox", handleMailbox)
@@ -567,44 +578,45 @@ func main() {
 	// MCP JSON-RPC 2.0 Server
 	mux.HandleFunc("/mcp", handleMCP)
 
-	// Static Pages (GrabMail 1:1 Mirror)
+	// Comprehensive Full-Sitemap Dynamic Routing (100% 70 GrabMail URLs)
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path == "/" {
+		cleanPath := strings.Trim(r.URL.Path, "/")
+		if cleanPath == "" {
 			http.ServeFile(w, r, filepath.Join(pubDir, "index.html"))
 			return
 		}
-		filePath := filepath.Join(pubDir, r.URL.Path)
-		if fi, err := os.Stat(filePath); err == nil && !fi.IsDir() {
-			http.ServeFile(w, r, filePath)
+
+		// 1. Direct file in public/ (e.g. assets/css/main.css, assets/img/..., favicon.svg)
+		directPath := filepath.Join(pubDir, r.URL.Path)
+		if fi, err := os.Stat(directPath); err == nil && !fi.IsDir() {
+			http.ServeFile(w, r, directPath)
 			return
 		}
+
+		// 2. Exact mapped file with double-underscore (e.g. docs/api -> docs__api.html)
+		mappedDouble := filepath.Join(pubDir, strings.ReplaceAll(cleanPath, "/", "__")+".html")
+		if fi, err := os.Stat(mappedDouble); err == nil && !fi.IsDir() {
+			http.ServeFile(w, r, mappedDouble)
+			return
+		}
+
+		// 3. Exact mapped file with single-hyphen (e.g. docs/api -> docs-api.html)
+		mappedSingle := filepath.Join(pubDir, strings.ReplaceAll(cleanPath, "/", "-")+".html")
+		if fi, err := os.Stat(mappedSingle); err == nil && !fi.IsDir() {
+			http.ServeFile(w, r, mappedSingle)
+			return
+		}
+
+		// 4. Exact direct .html (e.g. inbox -> inbox.html, domains -> domains.html)
+		directHTML := filepath.Join(pubDir, cleanPath+".html")
+		if fi, err := os.Stat(directHTML); err == nil && !fi.IsDir() {
+			http.ServeFile(w, r, directHTML)
+			return
+		}
+
+		// Fallback to index.html for SPA router compatibility
 		http.ServeFile(w, r, filepath.Join(pubDir, "index.html"))
 	})
-
-	mux.HandleFunc("/inbox", servePage("inbox.html"))
-	mux.HandleFunc("/domains", servePage("domains.html"))
-	mux.HandleFunc("/pricing", servePage("pricing.html"))
-	mux.HandleFunc("/about", servePage("about.html"))
-	mux.HandleFunc("/docs", servePage("docs.html"))
-	mux.HandleFunc("/docs/api", servePage("docs-api.html"))
-	mux.HandleFunc("/docs/quickstart", servePage("docs-quickstart.html"))
-
-	// Guides
-	mux.HandleFunc("/guides/own-domain-catch-all-inbox", servePage("guides-own-domain.html"))
-	mux.HandleFunc("/guides/temp-mail-for-ai-agents", servePage("guides-ai-agents.html"))
-	mux.HandleFunc("/guides/nodejs-temp-mail-api", servePage("guides-nodejs.html"))
-	mux.HandleFunc("/guides/python-disposable-email-api", servePage("guides-python.html"))
-
-	// Comparisons
-	mux.HandleFunc("/vs/10minutemail", servePage("vs-10minutemail.html"))
-	mux.HandleFunc("/vs/guerrilla-mail", servePage("vs-guerrilla-mail.html"))
-	mux.HandleFunc("/vs/mailtrap", servePage("vs-mailtrap.html"))
-	mux.HandleFunc("/vs/testmail-app", servePage("vs-testmail-app.html"))
-	mux.HandleFunc("/vs/yopmail", servePage("vs-yopmail.html"))
-
-	// Meta
-	mux.HandleFunc("/openapi.json", servePage("openapi.json"))
-	mux.HandleFunc("/llms.txt", servePage("llms.txt"))
 
 	server := &http.Server{
 		Addr:    ":" + port,

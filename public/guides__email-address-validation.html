@@ -1,0 +1,1241 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Email address validation: what a regex can and cannot prove | Neverla Mail</title>
+<meta name="description" content="What email validation can actually prove: which regex to use, the legal addresses forms wrongly reject, why SMTP probing lies, and the only check that works.">
+<link rel="canonical" href="https://neverla.web.id/guides/email-address-validation">
+<meta name="robots" content="max-image-preview:large">
+<link rel="alternate" type="application/rss+xml" title="Neverla Mail — Guides" href="https://neverla.web.id/guides/feed.xml">
+<link rel="alternate" hreflang="en" href="https://neverla.web.id/guides/email-address-validation">
+<link rel="alternate" hreflang="es" href="https://neverla.web.id/es/guides/email-address-validation">
+<link rel="alternate" hreflang="pt" href="https://neverla.web.id/pt/guides/email-address-validation">
+<link rel="alternate" hreflang="fr" href="https://neverla.web.id/fr/guides/email-address-validation">
+<link rel="alternate" hreflang="de" href="https://neverla.web.id/de/guides/email-address-validation">
+<link rel="alternate" hreflang="ru" href="https://neverla.web.id/ru/guides/email-address-validation">
+<link rel="alternate" hreflang="tr" href="https://neverla.web.id/tr/guides/email-address-validation">
+<link rel="alternate" hreflang="id" href="https://neverla.web.id/id/guides/email-address-validation">
+<link rel="alternate" hreflang="vi" href="https://neverla.web.id/vi/guides/email-address-validation">
+<link rel="alternate" hreflang="ar" href="https://neverla.web.id/ar/guides/email-address-validation">
+<link rel="alternate" hreflang="ja" href="https://neverla.web.id/ja/guides/email-address-validation">
+<link rel="alternate" hreflang="x-default" href="https://neverla.web.id/guides/email-address-validation">
+<meta name="theme-color" content="#ffffff">
+<meta name="color-scheme" content="light">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Neverla Mail">
+<meta property="og:title" content="Email address validation: what a regex can and cannot prove | Neverla Mail">
+<meta property="og:description" content="What email validation can actually prove: which regex to use, the legal addresses forms wrongly reject, why SMTP probing lies, and the only check that works.">
+<meta property="og:url" content="https://neverla.web.id/guides/email-address-validation">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:locale:alternate" content="pt_BR">
+<meta property="og:locale:alternate" content="fr_FR">
+<meta property="og:locale:alternate" content="de_DE">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta property="og:locale:alternate" content="tr_TR">
+<meta property="og:locale:alternate" content="id_ID">
+<meta property="og:locale:alternate" content="vi_VN">
+<meta property="og:locale:alternate" content="ar_AR">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://neverla.web.id/assets/img/guides/validate-1376.webp">
+<meta property="og:image:width" content="1376">
+<meta property="og:image:height" content="768">
+<meta property="og:image:alt" content="Neverla Mail — Temporary email addresses, and an API to read them.">
+<meta name="twitter:image" content="https://neverla.web.id/assets/img/guides/validate-1376.webp">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" sizes="96x96" href="/assets/img/icon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/img/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Neverla Mail">
+
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/main.css?v=3af85b61f5">
+<link rel="stylesheet" href="/assets/css/mobile.css?v=3af85b61f5" media="(max-width: 959.98px)">
+<script src="/assets/js/app.js?v=3af85b61f5" defer></script>
+<script src="/assets/js/mobile.js?v=3af85b61f5" defer></script>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://neverla.web.id/#org","name":"Neverla Mail","url":"https://neverla.web.id/","description":"Free disposable email addresses with a REST API and an MCP server for AI agents.","logo":{"@type":"ImageObject","url":"https://neverla.web.id/assets/img/logo.png","width":671,"height":160},"image":"https://neverla.web.id/assets/img/og-card.png","sameAs":["https://dev.to/neverla"]},{"@type":"WebSite","@id":"https://neverla.web.id/#site","name":"Neverla Mail","url":"https://neverla.web.id/","publisher":{"@id":"https://neverla.web.id/#org"},"inLanguage":["en","es","pt","fr","de","ru","tr","id","vi","ar","ja"]},{"@type":["WebAPI","SoftwareApplication"],"@id":"https://neverla.web.id/#api","name":"Neverla Mail disposable email API","url":"https://neverla.web.id/docs/api","documentation":"https://neverla.web.id/docs/api","provider":{"@id":"https://neverla.web.id/#org"},"applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"Create a disposable email address and read what arrives at it over HTTP. No account, no API key and no payment for the public domains. Messages are deleted 5 days after they arrive.","offers":[{"@type":"Offer","name":"Free","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"Public domains, your own domains, the REST API and the MCP server. No account, no key; the free API allows 60 requests a minute and 1,000 a day per IP address."},{"@type":"Offer","name":"Premium","price":"12.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"12.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Pro","price":"49.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"49.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Scale","price":"99.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"99.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}}],"featureList":["Connect your own domain — every address on it becomes a catch-all inbox","Disposable email addresses with no signup","REST API over HTTPS, no API key required","MCP server for AI agents (create_inbox, wait_for_message)","Every mailbox has an alias you can hand out instead of the address","Attachments up to 5 MB","Automatic deletion after 5 days"],"additionalProperty":[{"@type":"PropertyValue","name":"Sending mail","value":"No. There is no endpoint that sends, and no outbound mail of any kind."},{"@type":"PropertyValue","name":"IMAP or POP3","value":"No. HTTPS only — a REST API and an MCP server."},{"@type":"PropertyValue","name":"Webhooks or push notifications","value":"No. You poll, or you let the MCP server hold the call open until the message lands."},{"@type":"PropertyValue","name":"Keeping mail longer than 5 days","value":"No. Not a tier, not a setting, not a parameter."},{"@type":"PropertyValue","name":"Attachments over 5 MB","value":"No. The message is refused at SMTP time."},{"@type":"PropertyValue","name":"Privacy on a shared domain","value":"No. Anyone who knows the address can read the mailbox."},{"@type":"PropertyValue","name":"Paying by card","value":"No. Crypto only, credited to a balance the subscription draws on."},{"@type":"PropertyValue","name":"An uptime guarantee","value":"No. There is no SLA, on any plan."},{"@type":"PropertyValue","name":"Tracking, analytics or advertising","value":"No. No third-party script, and no cookie banner because there are no cookies to consent to."}],"potentialAction":{"@type":"ConsumeAction","target":{"@type":"EntryPoint","urlTemplate":"https://neverla.web.id/api/v1/mailbox?address={address}","httpMethod":"GET","contentType":"application/json"}}},{"@type":"WebPage","@id":"https://neverla.web.id/guides/email-address-validation#page","url":"https://neverla.web.id/guides/email-address-validation","name":"Email address validation: what a regex can and cannot prove | Neverla Mail","description":"What email validation can actually prove: which regex to use, the legal addresses forms wrongly reject, why SMTP probing lies, and the only check that works.","isPartOf":{"@id":"https://neverla.web.id/#site"},"inLanguage":"en"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Neverla Mail","item":"https://neverla.web.id/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://neverla.web.id/guides"},{"@type":"ListItem","position":3,"name":"Email & deliverability","item":"https://neverla.web.id/guides"},{"@type":"ListItem","position":4,"name":"Email address validation: what a regex can and cannot prove","item":"https://neverla.web.id/guides/email-address-validation"}]},{"@type":"TechArticle","@id":"https://neverla.web.id/guides/email-address-validation#article","headline":"Email address validation: what a regex can and cannot prove","description":"What email validation can actually prove: which regex to use, the legal addresses forms wrongly reject, why SMTP probing lies, and the only check that works.","image":"https://neverla.web.id/assets/img/guides/validate-1376.webp","datePublished":"2026-09-14","dateModified":"2026-09-14","inLanguage":"en","articleSection":"Email & deliverability","timeRequired":"PT21M","keywords":"email validation, email validation regex, validate email address, email address validation, email regex, verify email address, smtp verification, mx lookup, disposable email detection, double opt-in","author":{"@id":"https://neverla.web.id/#org"},"publisher":{"@id":"https://neverla.web.id/#org"},"isPartOf":{"@id":"https://neverla.web.id/#site"},"mainEntityOfPage":{"@id":"https://neverla.web.id/guides/email-address-validation#page"},"proficiencyLevel":"Intermediate"},{"@type":"FAQPage","@id":"https://neverla.web.id/guides/email-address-validation#faq","mainEntity":[{"@type":"Question","name":"Is there an official regular expression for email addresses?","acceptedAnswer":{"@type":"Answer","text":"No, and there cannot be. RFC 5322 gives a grammar, not a pattern, and a pattern faithful to it would accept quoted spaces and parenthesised comments that no provider issues. Use the one the HTML specification defines for an email field, or whichever checker your platform already ships, and spend the effort you saved on the confirmation message."}},{"@type":"Question","name":"Can I check whether an email address exists without sending anything?","acceptedAnswer":{"@type":"Answer","text":"You can ask; you cannot know. A catch-all domain accepts every name, greylisting answers a deliberate temporary failure, large providers accept during the conversation and bounce afterwards, and a server that does not recognise you may refuse for reasons about you rather than the recipient. Bulk probing also puts your sending address on blocklists."}},{"@type":"Question","name":"Is name+tag@example.com a valid address?","acceptedAnswer":{"@type":"Answer","text":"Yes. The plus sign is an ordinary permitted character in the local part, and at most large providers it also routes to the mailbox before it, which is what makes plus addressing useful. A form that refuses it is refusing legal addresses and advertising something about itself while doing so."}},{"@type":"Question","name":"Are email addresses case-sensitive?","acceptedAnswer":{"@type":"Answer","text":"The domain never is. The part before the @ is, by the standard, left to the receiving server — and in practice every large provider ignores case. Keep a lowercased copy to detect duplicates, and send to the string exactly as it was typed."}},{"@type":"Question","name":"How long can an email address be?","acceptedAnswer":{"@type":"Answer","text":"64 characters before the @, 255 for the domain, and 254 for the whole address as a server carries it. The last of those three is the number to use: put it in the database column and in the field, and a whole class of input stops being your problem."}},{"@type":"Question","name":"Should I block disposable email addresses?","acceptedAnswer":{"@type":"Answer","text":"If there is something expensive behind a free trial, yes — and accept that any list you use is incomplete. For a newsletter, a download or a paid account, the people you turn away are mostly the careful ones, and you will never see them in a log. The full trade-off is worth reading before installing a package that makes the decision for you."}},{"@type":"Question","name":"How do I test a sign-up verification flow without a real mailbox?","acceptedAnswer":{"@type":"Answer","text":"Send to an address on a public disposable domain and read it back over the API — no sign-up, no key, and a fresh address for every run. For a suite that needs hundreds, point a domain you own at a catch-all inbox and invent an address per test. The full walk-through is in testing an email verification flow end to end."}}]}]}</script>
+<script>
+(function() {
+  var _t = document.title;
+  Object.defineProperty(document, 'title', {
+    get: function() { return _t; },
+    set: function(v) {
+      _t = (v || '').replace(/grabmail/gi, 'Neverla Mail').replace(/🐴/g, '').trim();
+    }
+  });
+})();
+</script>
+</head>
+<body class="page-guide" id="top" data-loc="en" data-i18n="{}">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="hd" data-header>
+  <div class="wrap hd-in">
+    <a class="hd-brand" href="/" aria-label="neverla.web.id — home">
+      <picture>
+        <source srcset="/assets/img/logo-nav.webp?v=3af85b61f5" type="image/webp">
+        <img class="hd-logo" src="/assets/img/logo-nav.png?v=3af85b61f5"
+             alt="Neverla Mail" width="126" height="30" decoding="async" fetchpriority="high">
+      </picture>
+    </a>
+
+    <span class="hd-sep" aria-hidden="true"></span>
+
+        <nav class="hd-nav" aria-label="Main">
+      <ul class="hd-list">
+                <li>
+          <a class="hd-link" href="/#how" data-spy="how">How it works</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/extensions" data-spy="ext">Extension</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/#api" data-spy="api">API</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/domains" data-spy="domains">Your domain</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/docs/api" data-spy="docs">Docs</a>
+        </li>
+              </ul>
+    </nav>
+
+    <div class="hd-act">
+                  <button class="btn btn-quiet hd-login" type="button" data-auth-open="signin">
+        Log in      </button>
+            <a class="btn btn-primary" href="/#grab" data-cta>
+        Open an inbox        <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+        <button class="hd-burger" type="button" data-burger
+            aria-expanded="false" aria-controls="gm-drawer" aria-label="Open menu">
+      <span class="hd-burger-box" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+  </div>
+</header>
+
+<div class="drawer" id="gm-drawer" data-drawer hidden>
+  <nav class="drawer-in" aria-label="Mobile">
+    <ul class="drawer-list">
+            <li><a class="drawer-link" href="/#how">How it works</a></li>
+            <li><a class="drawer-link" href="/extensions">Extension</a></li>
+            <li><a class="drawer-link" href="/#api">API</a></li>
+            <li><a class="drawer-link" href="/domains">Your domain</a></li>
+            <li><a class="drawer-link" href="/docs/api">Docs</a></li>
+          </ul>
+    <a class="btn btn-primary btn-block" href="/#grab">Open an inbox</a>
+            <button class="btn btn-ghost btn-block" type="button" data-auth-open="signin">Log in</button>
+        <p class="drawer-note">Free · No signup · Deleted after 5 days</p>
+
+  </nav>
+</div>
+
+<main id="main">
+<div class="ga">
+
+    <div class="ga-prog" data-guide-progress aria-hidden="true"><span></span></div>
+
+  <div class="wrap ga-top">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+                <li><a href="/guides">Guides</a></li>
+        <li><a href="/guides/topic/deliverability">Email &amp; deliverability</a></li>
+                <li aria-current="page">Email address validation: what a regex can and cannot prove</li>
+      </ol>
+    </nav>
+
+    <div class="ga-head">
+      <div class="ga-head-t">
+        <p class="ga-eyebrow">
+          <span class="ga-eyebrow-ic"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3.2 12.4a9.6 9.6 0 0 1 13.6 0M6 15.1a5.8 5.8 0 0 1 8 0"/><path d="M10 17.8h.01M2 8.2a12.5 12.5 0 0 1 16 0"/></svg></span>
+          <a class="ga-eyebrow-a" href="/guides/topic/deliverability">Email &amp; deliverability</a>
+        </p>
+        <h1 class="ga-h">Email address validation: what a regex can and cannot prove</h1>
+        <p class="ga-lede">Four different checks are sold under one word, they get harder in order, and only the last of them establishes the thing you actually wanted to know. Here is what a pattern can prove, what one DNS lookup adds, why asking the mail server is worth less than it looks, and which of the four is the only real answer.</p>
+
+                <ul class="ga-meta">
+                    <li class="ga-lvl ga-lvl-intermediate">Intermediate</li>
+                              <li class="ga-meta-i">
+            <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.4V8l2.4 1.6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            21 min read          </li>
+          <li class="ga-meta-i">
+            <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="2.3" y="3.4" width="11.4" height="10.3" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M2.3 6.6h11.4M5.6 2.3v2.2M10.4 2.3v2.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            <time datetime="2026-09-14">Updated 14 September 2026</time>
+          </li>
+        </ul>
+      </div>
+
+                  <figure class="ga-hero">
+        <img class="ga-hero-img" src="/assets/img/guides/validate-800.webp?v=3af85b61f5" srcset="/assets/img/guides/validate-480.webp?v=3af85b61f5 480w, /assets/img/guides/validate-800.webp?v=3af85b61f5 800w, /assets/img/guides/validate-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 520px, (min-width: 720px) calc(100vw - 64px), calc(100vw - 40px)" width="1376" height="768" alt="A blue envelope floating beside a grey clipboard marked with a large blue tick, with a smaller grey card marked with a cross tilted in front of them" fetchpriority="high" decoding="async">      </figure>
+    </div>
+  </div>
+
+  <div class="wrap ga-body">
+    <nav class="ga-rail doc-toc" aria-label="On this page">
+      <p class="doc-toc-h">On this page</p>
+      <ul>
+                <li><a href="#four-questions" data-spy="four-questions">Four questions that share one word</a></li>
+                <li><a href="#the-pattern" data-spy="the-pattern">Layer one: the pattern, and the four things it cannot know</a></li>
+                <li><a href="#what-is-legal" data-spy="what-is-legal">What is legal, and what gets wrongly thrown out</a></li>
+                <li><a href="#the-domain" data-spy="the-domain">Layer two: one lookup, and what it settles</a></li>
+                <li><a href="#asking-the-server" data-spy="asking-the-server">Layer three: asking the server, and why the answer is not one</a></li>
+                <li><a href="#blocklists" data-spy="blocklists">Role addresses, throwaway domains, and the list you are about to buy</a></li>
+                <li><a href="#the-only-proof" data-spy="the-only-proof">Layer four: the message that is the check</a></li>
+                <li><a href="#in-the-form" data-spy="in-the-form">What to actually put in the form</a></li>
+                <li><a href="#checklist" data-spy="checklist">The short version</a></li>
+                <li><a href="#faq" data-spy="faq">Questions</a></li>
+              </ul>
+      <p class="ga-rail-back">
+                <a class="ga-rail-back-a" href="/guides">
+          <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          All guides        </a>
+      </p>
+    </nav>
+
+    <article class="ga-art">
+      <div class="toc-chip" data-toc-bar><button class="toc-chip-b" type="button" aria-haspopup="dialog"><svg class="toc-chip-ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 5.5h12M4 10h12M4 14.5h7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span class="toc-chip-k">On this page</span><span class="toc-chip-v"></span><svg class="toc-chip-dn" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 6.5 8 10.5l4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+                  <aside class="ga-key" aria-labelledby="ga-key-h">
+        <h2 class="ga-key-h" id="ga-key-h">In short</h2>
+        <ul>
+                    <li>Four different things get called email validation, and only one of them proves anything. A pattern proves the string is <em>shaped</em> like an address. DNS proves the domain could take mail. The mail server's answer proves almost nothing. Only a message that was acted on proves there is somebody there.</li>
+                    <li>Nearly every hand-written email pattern is wrong in the same direction: it refuses addresses that are perfectly legal. A <code>+</code>, an apostrophe, an unfamiliar top-level domain and non-Latin letters are all valid, and all four are routinely thrown out by a regular expression somebody copied years ago.</li>
+                    <li>You cannot ask a mail server whether a mailbox exists. Some say yes to every name they are offered, some answer <code>450</code> to strangers on purpose, and some accept the message and refuse it ten minutes later. Probing addresses in bulk is also the quickest way onto a blocklist.</li>
+                    <li>So spend the cheap checks well and let the last one decide: one permissive pattern in the form, one lookup on the domain, and a real message with a single-use link in it. The third is the validation — the first two only stop you sending it into a void.</li>
+                  </ul>
+      </aside>
+      
+            <section class="ga-s" id="four-questions" aria-labelledby="four-questions-h">
+        <h2 class="ga-s-h" id="four-questions-h">Four questions that share one word</h2>
+        <p>« Is this a valid email address? » is not one question. It is four, they get harder in order, and the last one is the only one anybody actually wanted answered — which is why so much validation code is elaborate about the first and silent about the rest.</p><p>Here they are, in the order a sign-up form meets them.</p><dl class="defs"><div class="def"><dt>Is it shaped like an address?</dt><dd>A syntax check. It runs in the browser, it costs nothing, and it catches the typed comma and the missing <code>@</code>. It is the only layer that can honestly reject anything on its own — and even then it should reject far less than most patterns do.</dd></div><div class="def"><dt>Could that domain take mail at all?</dt><dd>A DNS check. One query says whether anything, anywhere, is willing to accept mail for the part after the <code>@</code>. It catches a domain name with a letter missing and a domain that expired last year, and it can tell you nothing whatever about the mailbox.</dd></div><div class="def"><dt>Does that mailbox exist?</dt><dd>An SMTP check — and the one this guide will spend the longest telling you not to trust. You can ask. The answer is frequently a polite yes from a server that accepts every name, or a deliberate temporary failure, or an acceptance followed by a <a href="/guides/email-bounce-codes-explained">bounce</a> minutes later.</dd></div><div class="def"><dt>Is it <em>their</em> address?</dt><dd>Nothing on the technical side can answer this. An address can be flawless, deliverable and somebody else's — mistyped by one digit, or typed on purpose to get past you. Only a message that arrives and gets used closes it.</dd></div></dl><figure class="ga-fig"><svg class="ga-dia" viewBox="0 0 700 380" role="img" aria-label="Four rows, cheapest at the top. The pattern proves the shape of the string and nothing about the world. The DNS lookup proves the domain can receive and nothing about the mailbox. The server probe proves almost nothing, because a catch-all answers yes to every name. The confirmed message proves somebody is there."><rect x="8" y="14" width="214" height="70" rx="10" class="d-box"/><text x="115" y="42" class="d-t" text-anchor="middle">The pattern</text><text x="115" y="62" class="d-s" text-anchor="middle">Runs in the browser</text><rect x="478" y="14" width="214" height="70" rx="10" class="d-box"/><text x="585" y="42" class="d-t" text-anchor="middle">The shape of the string</text><text x="585" y="62" class="d-s" text-anchor="middle">Nothing about the world</text><path d="M226 63H467" class="d-line"/><path d="M466 58L474 63L466 68z" class="d-head"/><text x="350" y="40" class="d-b" text-anchor="middle">costs nothing</text><rect x="8" y="98" width="214" height="70" rx="10" class="d-box"/><text x="115" y="126" class="d-t" text-anchor="middle">The DNS lookup</text><text x="115" y="146" class="d-s" text-anchor="middle">MX, then A</text><rect x="478" y="98" width="214" height="70" rx="10" class="d-box"/><text x="585" y="126" class="d-t" text-anchor="middle">The domain can receive</text><text x="585" y="146" class="d-s" text-anchor="middle">Nothing about the mailbox</text><path d="M226 147H467" class="d-line"/><path d="M466 142L474 147L466 152z" class="d-head"/><text x="350" y="124" class="d-b" text-anchor="middle">one query</text><rect x="8" y="182" width="214" height="70" rx="10" class="d-box"/><text x="115" y="210" class="d-t" text-anchor="middle">The server probe</text><text x="115" y="230" class="d-s" text-anchor="middle">Asks, then hangs up</text><rect x="478" y="182" width="214" height="70" rx="10" class="d-box"/><text x="585" y="210" class="d-t" text-anchor="middle">Almost nothing</text><text x="585" y="230" class="d-s" text-anchor="middle">Catch-alls say yes to every name</text><path d="M226 231H467" class="d-line"/><path d="M466 226L474 231L466 236z" class="d-head"/><text x="350" y="208" class="d-b" text-anchor="middle">slow, and risky</text><rect x="8" y="266" width="214" height="70" rx="10" class="d-box"/><text x="115" y="294" class="d-t" text-anchor="middle">The confirmed message</text><text x="115" y="314" class="d-s" text-anchor="middle">A link, used once</text><rect x="478" y="266" width="214" height="70" rx="10" class="d-box d-box-a"/><text x="585" y="294" class="d-t" text-anchor="middle">Somebody is there</text><text x="585" y="314" class="d-s" text-anchor="middle">The only answer worth having</text><path d="M226 315H467" class="d-line"/><path d="M466 310L474 315L466 320z" class="d-head"/><text x="350" y="292" class="d-b" text-anchor="middle">one real message</text><text x="350" y="364" class="d-s" text-anchor="middle">Each row costs more than the one above it, and is worth more.</text></svg><figcaption>The four layers, and what each one settles. Only the bottom row produces a fact about the person; the three above it narrow the field so that the message is worth sending.</figcaption></figure><p>The first three are cheap and prove little. The fourth is the only one that earns the name, and it is the one that costs a message. Everything below is about spending the cheap three well so the expensive one is not wasted.</p><aside class="ga-call ga-call-note"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7.5"/><path d="M10 9.2v4.4M10 6.4h.01"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Note</span>« Validation » and « verification » are not a settled pair of words.</p><p>Some tools call the first layer validation and the next two verification; some sell the third as verification and are really doing the second. The words are not worth arguing about, but the layers are — so when a supplier says an address was verified, the useful question is which of these four they did.</p></div></aside>      </section>
+            <section class="ga-s" id="the-pattern" aria-labelledby="the-pattern-h">
+        <h2 class="ga-s-h" id="the-pattern-h">Layer one: the pattern, and the four things it cannot know</h2>
+        <p>There is no official regular expression for an email address, and there cannot be one. RFC 5322 defines a grammar rather than a pattern, and that grammar permits comments in parentheses, folded whitespace and quoted strings containing almost any character — none of which any real sign-up form should accept, and all of which a faithful pattern must.</p><p>What does exist is a deliberately narrower definition that browsers already implement: the one the HTML specification gives for an <code>&lt;input type="email"&gt;</code> field. It is a willed compromise rather than a transcription of the standard, it is what your form is already being held to before a line of your code runs, and it is short enough to read in one go:</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>regex</span><button class="code-copy" type="button" data-copy-code data-code="/^[a-zA-Z0-9.!#$%&amp;&#039;*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code>/^[a-zA-Z0-9.!#$%&amp;&#039;*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/</code></pre></div><p>Use that, or use the one your platform already ships. All four below are the same layer, and picking one is a smaller decision than what you do afterwards:</p><div class="ep-tw ga-tw" tabindex="0" role="region" aria-label="Where you are, The check you already have, What it does that you might not expect"><table class="ep-t ga-t ga-t-wide"><thead><tr><th scope="col">Where you are</th><th scope="col">The check you already have</th><th scope="col">What it does that you might not expect</th></tr></thead><tbody><tr><td>In the browser, with no code at all</td><td><code>&lt;input type="email" required&gt;</code></td><td>Applies the pattern above before your JavaScript ever sees the field, and shows the message in the visitor's own language.</td></tr><tr><td>In PHP, with nothing installed</td><td><code>filter_var($a, FILTER_VALIDATE_EMAIL)</code></td><td>Stricter than the HTML one: it insists on a dot in the domain, so it refuses an address that would only work inside a single machine.</td></tr><tr><td>In Python, with one small package</td><td><code>email_validator.validate_email(a)</code></td><td>Does the syntax and, if you let it, the domain lookup of layer two — the two cheap layers behind one call.</td></tr><tr><td>In Java or Kotlin, through bean validation</td><td><code>@Email</code></td><td>Very permissive on purpose. It is an annotation meant to catch the obviously wrong, and it will happily accept a domain that has never existed.</td></tr></tbody></table></div><p>Whichever you use, what matters is what it stays silent about. A pattern that returns true has told you one thing and four non-things.</p><dl class="defs"><div class="def"><dt>Not that the domain exists</dt><dd>An address at a domain nobody has ever registered passes every pattern in this section. Nothing has been looked up and nothing has been contacted; no regular expression has ever made a network request.</dd></div><div class="def"><dt>Not that the mailbox exists</dt><dd>Even on a real domain, the pattern has no opinion about the part before the <code>@</code>. That part belongs to the receiving server alone, and it is precisely the thing DNS will never tell you.</dd></div><div class="def"><dt>Not that it is deliverable</dt><dd>A domain can have a flawless record and a mail server that has been switched off for a month. Syntax is a property of a string; deliverability is a property of the world at the moment you press send.</dd></div><div class="def"><dt>Not that it belongs to the person typing it</dt><dd>The most common bad address in any database is a real, deliverable one owned by somebody who never signed up — because a letter was mistyped, or because the form was filled in with a plausible-looking lie.</dd></div></dl><aside class="ga-call ga-call-warn"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.8 18 16.6H2z"/><path d="M10 8v3.4M10 13.8h.01"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Watch out</span>The six-thousand-character pattern is a trap.</p><p>There is a famous regular expression that implements the full grammar of the standard. It is correct, and it is the wrong tool: it accepts local parts with spaces in quotes, comments in parentheses and addresses no provider on earth would ever issue, while rejecting nothing your visitors will actually type. Matching the standard is not the goal. Catching the typo without turning away the customer is.</p></div></aside>      </section>
+            <section class="ga-s" id="what-is-legal" aria-labelledby="what-is-legal-h">
+        <h2 class="ga-s-h" id="what-is-legal-h">What is legal, and what gets wrongly thrown out</h2>
+        <p>Most validation bugs are not bad addresses that got in. They are people who could not sign up, and they never appear in a log anybody reads — the form said no, and they went somewhere else. These six do it most often.</p><div class="ep-tw ga-tw" tabindex="0" role="region" aria-label="What forms reject, Is it legal?, What it actually is"><table class="ep-t ga-t ga-t-wide"><thead><tr><th scope="col">What forms reject</th><th scope="col">Is it legal?</th><th scope="col">What it actually is</th></tr></thead><tbody><tr><td>A plus sign, as in <code>name+shop@example.com</code></td><td>Legal, and widely used</td><td><a href="/guides/email-plus-addressing">Plus addressing</a>: one mailbox, with a label its owner chose so they can see who leaked it. Refusing it tells a careful visitor exactly what kind of form this is.</td></tr><tr><td>An apostrophe, as in <code>o'brien@example.com</code></td><td>Legal, and somebody's surname</td><td>One of a dozen punctuation marks the local part allows. When a form refuses it, the reason is almost never the address — it is an escaping bug somewhere further down that nobody wanted to find.</td></tr><tr><td>An ending nobody has heard of, as in <code>.dev</code> or <code>.photography</code></td><td>Legal, and there are well over a thousand</td><td>A pattern with a list of endings written into it was already out of date on the day it was written, and it gets worse every year without anybody noticing.</td></tr><tr><td>A domain with no dot in it</td><td>Legal, and useless to you</td><td>An address like <code>root@localhost</code> is valid inside one machine and meaningless on a public form. This is the one case where the strict platform checkers are right to refuse.</td></tr><tr><td>Non-Latin letters, as in <code>用户@例子.广告</code></td><td>Legal, with a caveat</td><td>Internationalised addresses exist and are slowly spreading. Whether your own mail stack can send to one is a separate question — but a field that refuses to accept the characters has answered it for everybody, permanently.</td></tr><tr><td>Capital letters before the <code>@</code></td><td>Legal, and not yours to change</td><td>The standard leaves the case of the local part to the receiving server. Almost every server ignores it; the ones that do not are the ones you will never hear from.</td></tr></tbody></table></div><p>And three numbers, which are worth writing into your code because they do not change:</p><dl class="defs"><div class="def"><dt>64 characters</dt><dd>The most the part before the <code>@</code> may be. Anything longer is not a long address, it is not an address.</dd></div><div class="def"><dt>255 characters</dt><dd>The most the domain may be, dots included. Nothing legitimate has ever come close, and the limit is here mainly so that you have one.</dd></div><div class="def"><dt>254 characters</dt><dd>The most the whole address may be when a server carries it — which is less than the two numbers above added together. This is the one to put in the database column and in the field's <code>maxlength</code>.</dd></div></dl><aside class="ga-call ga-call-tip"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.6a5.2 5.2 0 0 0-3 9.5v1.6h6v-1.6a5.2 5.2 0 0 0-3-9.5zM8 16.4h4"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Tip</span>Compare in lower case, send exactly what was typed.</p><p>Keep a lowercased copy to spot the duplicate sign-up, and address the message to the string as it was entered. That gets you the deduplication without betting a delivery on a rule the standard declines to make.</p></div></aside>      </section>
+            <section class="ga-s" id="the-domain" aria-labelledby="the-domain-h">
+        <h2 class="ga-s-h" id="the-domain-h">Layer two: one lookup, and what it settles</h2>
+        <p>The part after the <code>@</code> is a domain, and a domain either has somewhere to put mail or it does not. One DNS query answers that in a few milliseconds, and it is the highest-value check in this entire guide — because the mistake it catches, a domain name typed slightly wrong, is by a distance the commonest real failure there is.</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>shell</span><button class="code-copy" type="button" data-copy-code data-code="dig +short MX example.com" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code><span class="code-p">$</span> dig +short MX example.com</code></pre></div><p>An answer means a host has been named. No answer does not mean no mail: a domain with no <a href="/guides/mx-records-explained">MX record</a> but an <code>A</code> record still receives, because senders fall back to it. There are four outcomes, and only two of them are failures.</p><div class="ep-tw ga-tw" tabindex="0" role="region" aria-label="What the lookup returns, Can it receive?, What the form should do"><table class="ep-t ga-t ga-t-wide"><thead><tr><th scope="col">What the lookup returns</th><th scope="col">Can it receive?</th><th scope="col">What the form should do</th></tr></thead><tbody><tr><td>One or more MX records</td><td>Yes</td><td>Accept it. This is the overwhelming majority of addresses, and nothing further is worth doing before you send.</td></tr><tr><td>No MX, but an <code>A</code> or <code>AAAA</code> record</td><td>Yes, by fallback</td><td>Accept it. This is unusual and entirely legal, and senders will deliver there. Refusing it turns a working address into a lost customer.</td></tr><tr><td>A single record whose whole value is <code>0 .</code></td><td>No, and on purpose</td><td>Refuse it, and say why. That is a null MX: the owner of the domain has published, in the one way there is to publish it, that nothing here takes mail.</td></tr><tr><td>The domain does not resolve at all</td><td>No</td><td>Refuse it, and offer the nearest thing. <code>NXDOMAIN</code> on a name a human typed thirty seconds ago is almost always one wrong letter.</td></tr></tbody></table></div><p>Where this check goes wrong is never the lookup. It is where the lookup was put — on the critical path, per keystroke, with a failure that blocks the submit. Six rules keep it useful:</p><ol class="steps-n"><li><strong>Run it when the field is finished, not while it is being typed.</strong> One query when focus leaves, or one on submit. A query per keystroke is a query per keystroke.</li><li><strong>Lower-case the domain first.</strong> DNS does not care and your cache does: two spellings of the same domain are one query, not two.</li><li><strong>Ask for MX, and fall back to <code>A</code>.</strong> Two queries, of which only the second is conditional. A library that checks MX alone will reject domains that work.</li><li><strong>Cache the answer for a few minutes.</strong> A handful of domains account for most sign-ups anywhere, so most lookups become no lookup at all.</li><li><strong>Fail open.</strong> If the resolver times out, accept the address. A bad minute at your DNS provider must never become a form that turns everybody away.</li><li><strong>Suggest a correction; never apply one.</strong> When the domain is one letter from a common one, offer the correction as something to click. Silently rewriting what somebody typed is how a confirmation link goes to a stranger.</li></ol><p class="doc-n">The lookup has one cost worth knowing about: it is the first moment your form speaks to the outside world about something a visitor typed. Where that matters, the alternative is to skip this layer entirely and let the message itself be the whole check.</p>      </section>
+            <section class="ga-s" id="asking-the-server" aria-labelledby="asking-the-server-h">
+        <h2 class="ga-s-h" id="asking-the-server-h">Layer three: asking the server, and why the answer is not one</h2>
+        <p>There is a way to ask a mail server whether it will take a particular address without sending anything to it. Open the conversation, name a sender, name the recipient, read the reply to that one command, and hang up before the message:</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>smtp</span><button class="code-copy" type="button" data-copy-code data-code="220 mx1.example.com ESMTP ready
+EHLO checker.example.net
+250 mx1.example.com
+MAIL FROM:&lt;probe@example.net&gt;
+250 2.1.0 Ok
+RCPT TO:&lt;someone@example.com&gt;
+250 2.1.5 Ok
+QUIT
+221 2.0.0 Bye" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code>220 mx1.example.com ESMTP ready
+EHLO checker.example.net
+250 mx1.example.com
+MAIL FROM:&lt;probe@example.net&gt;
+250 2.1.0 Ok
+RCPT TO:&lt;someone@example.com&gt;
+250 2.1.5 Ok
+QUIT
+221 2.0.0 Bye</code></pre></div><p>The <code>250</code> after <code>RCPT TO</code> is what every address-verification service in the world is ultimately selling. It is worth being precise about how little it is worth.</p><dl class="defs"><div class="def"><dt>A catch-all domain says yes to everything</dt><dd>A domain configured to accept every name — which is what this service does, and what a great many company domains do — replies <code>250</code> for an address nobody has ever used. The answer is true, and it is not information.</dd></div><div class="def"><dt>A careful server says <code>450</code> on purpose</dt><dd>Greylisting refuses an unknown sender's first attempt and asks it to come back shortly. A real sender does; a prober never does. That temporary failure is a deliberate non-answer, and reading it as « no such mailbox » is exactly the mistake it was designed to produce.</dd></div><div class="def"><dt>Some servers accept first and refuse afterwards</dt><dd>Large providers routinely take the message during the conversation and decide about it later, which turns a refusal into a <a href="/guides/email-bounce-codes-explained">bounce</a> arriving minutes after your probe came back clean.</dd></div><div class="def"><dt>Some servers say no to everyone they do not recognise</dt><dd>A server that has decided your address is a stranger can refuse the recipient for reasons that have nothing to do with the recipient. What you measured was your own reputation, not their mailbox.</dd></div><div class="def"><dt>And it spends the reputation you were protecting</dt><dd>A connection that names recipients and never sends anything is the exact shape of a directory harvest, because it is one. Doing it at volume from your own address is the quickest route onto a blocklist — and a blocklisted sender is one whose genuine messages stop arriving.</dd></div></dl><p>There is one narrow case where the probe is genuinely useful: a single address, checked by hand, on a domain you run or have permission to poke at. As a step inside a sign-up form it is slow, frequently wrong, and occasionally harmful to the very thing it was added to protect.</p><aside class="ga-call ga-call-stop"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7.5"/><path d="m6.6 6.6 6.8 6.8"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Do not</span>Put an SMTP probe in the sign-up path.</p><p>It adds seconds to a form on the critical path, it fails open or fails wrong depending on whose server answered, and it introduces your sending address to every mail operator you poke. If the reason you want it is fewer dead addresses in the database, the section after next is the check that actually delivers that.</p></div></aside>      </section>
+            <section class="ga-s" id="blocklists" aria-labelledby="blocklists-h">
+        <h2 class="ga-s-h" id="blocklists-h">Role addresses, throwaway domains, and the list you are about to buy</h2>
+        <p>Between the domain lookup and the real message sits a family of checks that are not about validity at all. They are about whether you <em>want</em> this address, which is a business decision wearing a technical costume — and worth separating from the three layers around it for that reason alone.</p><dl class="defs"><div class="def"><dt>Role addresses</dt><dd>Names like <code>info@</code>, <code>support@</code> and <code>admin@</code>. They are real, and they are usually a shared mailbox rather than a person, which makes them a poor home for anything with a password behind it. Worth flagging. Rarely worth refusing.</dd></div><div class="def"><dt>Disposable domains</dt><dd>Addresses like the ones this site hands out, on domains that exist in order to be thrown away. Checking against a public list of them is fair enough, as long as you are honest that every such list is incomplete and slightly out of date on the day you download it.</dd></div><div class="def"><dt>Free-provider addresses</dt><dd>Some business forms refuse anything that is not a company domain. That is a policy, it is sometimes the right one, and it deserves to be written as a policy — a sentence the visitor can read — rather than hidden inside a thing called validation.</dd></div><div class="def"><dt>Near-misses of common domains</dt><dd>A well-known provider's name with one letter wrong. This one is unlike the other three: it is not a policy, it catches a genuine mistake, and the person is always glad. It is the only entry here that is worth building.</dd></div></dl><p>The first three share a property that makes them hard to judge: you can measure what they let through and you cannot measure what they cost.</p><aside class="ga-call ga-call-warn"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.8 18 16.6H2z"/><path d="M10 8v3.4M10 13.8h.01"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Watch out</span>A blocklist has two error rates, and you only ever see one.</p><p>The bad addresses it wrongly admits land in your database, where they can be counted. The people it wrongly turned away appear nowhere at all — they were shown « please enter a valid email address » for an address that was valid, and they left. <a href="/guides/why-signup-forms-block-disposable-email">Blocking disposable addresses</a> is a real trade, and it is one to make deliberately rather than by installing a package.</p></div></aside><p>We have an obvious interest here, so here is the honest version. If what sits behind your form is a free trial with something expensive attached, refusing throwaway domains will save you money and you should do it. If it is a newsletter, a download, or an account somebody pays for, you are mostly taxing the cautious — and the cautious are the ones who read what you send.</p>      </section>
+            <section class="ga-s" id="the-only-proof" aria-labelledby="the-only-proof-h">
+        <h2 class="ga-s-h" id="the-only-proof-h">Layer four: the message that is the check</h2>
+        <p>Everything above narrows the field. None of it establishes the only fact that matters — that this address reaches the person in front of you — and exactly one thing does: send something there, and watch it get used.</p><p>This is the loop nearly every sign-up already has and half of them treat as a formality:</p><ol class="steps-n"><li><strong>Accept the address on one permissive check.</strong> The pattern in the browser, and nothing else standing between the visitor and the button.</li><li><strong>Create the account unverified.</strong> Not a hold on the form, not a « pending » screen: the person is in, and what they cannot do yet is the handful of things the address is actually needed for.</li><li><strong>Send one message carrying a single-use link or code.</strong> One, with an expiry, tied to that account and that address and no other.</li><li><strong>Let the link be the proof.</strong> A click, or a code typed back, is the whole verification. Nothing else in this guide produces an answer anywhere near as solid.</li><li><strong>Give them a way back.</strong> A visible « resend », and a way to change the address without losing the account — because the commonest reason a link is never clicked is a typo the person can now finally see.</li><li><strong>Expire the ones nobody confirmed.</strong> A quiet sweep after a fixed period stops the typos and the throwaways from piling up into a list nobody trusts.</li></ol><p>Which creates a practical problem, and it is the reason this site exists. That loop is now the most important path in the product, and testing it means receiving real mail at an address you control — over and over, inside a pipeline, without a human opening an inbox.</p><p>An address on one of the public domains needs no sign-up and no key, and whatever arrives there is readable over HTTP a second later:</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>shell</span><button class="code-copy" type="button" data-copy-code data-code="curl -sG https://neverla.web.id/api/v1/mailbox \
+  --data-urlencode &quot;address=signup-42@neverla.web.id&quot;" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code><span class="code-p">$</span> curl -sG https://neverla.web.id/api/v1/mailbox \
+  --data-urlencode &quot;address=signup-42@neverla.web.id&quot;</code></pre></div><p>From there a whole <a href="/guides/test-email-verification-flows">verification flow can be driven end to end</a> by a test suite, or a <a href="/guides/own-domain-catch-all-inbox">domain you own</a> can be pointed here so that every run gets an address which has never existed before. Messages are kept for 5 days and then deleted, which is the right lifetime for a test fixture and the wrong one for a mailbox.</p><aside class="ga-call ga-call-tip"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.6a5.2 5.2 0 0 0-3 9.5v1.6h6v-1.6a5.2 5.2 0 0 0-3-9.5zM8 16.4h4"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Tip</span>Test the failures, not only the success.</p><p>The path worth a test is not the link being clicked. It is the link clicked twice, the link clicked after it expired, and a second account trying to confirm with the first one's address. That is where the interesting bugs live, and it is where nobody ever looks.</p></div></aside>      </section>
+            <section class="ga-s" id="in-the-form" aria-labelledby="in-the-form-h">
+        <h2 class="ga-s-h" id="in-the-form-h">What to actually put in the form</h2>
+        <p>Condensed, in the order the code runs:</p><ol class="steps-n"><li><strong>Trim, and trim only.</strong> Whitespace at either end is a paste artefact and is never meant. Nothing else about the string is yours to change.</li><li><strong>Match one permissive pattern.</strong> The browser's, or your platform's. Refuse the missing <code>@</code> and the typed comma, and refuse nothing else.</li><li><strong>Cap the length at 254.</strong> One number, in the column and in the field, and an entire class of input you can stop thinking about.</li><li><strong>Look the domain up, off the critical path, failing open.</strong> MX and then <code>A</code>, cached, and never a reason to block a submit that would otherwise have worked.</li><li><strong>Offer a correction; do not make one.</strong> One letter away from a common domain is a question to ask, not a finding to act on.</li><li><strong>Send the message.</strong> That is the validation. Everything above it was triage.</li><li><strong>Say what is wrong, in words.</strong> Which is the part that decides whether anybody finishes:</li></ol><div class="ep-tw ga-tw" tabindex="0" role="region" aria-label="What happened, What forms usually say, What to say instead"><table class="ep-t ga-t ga-t-wide"><thead><tr><th scope="col">What happened</th><th scope="col">What forms usually say</th><th scope="col">What to say instead</th></tr></thead><tbody><tr><td>The string has no <code>@</code> in it</td><td>« Please enter a valid email address »</td><td>« An email address needs an @ — did you mean name@example.com? »</td></tr><tr><td>The domain does not resolve</td><td>« Please enter a valid email address »</td><td>« We cannot find that domain. Is the spelling right? »</td></tr><tr><td>The domain is one letter from a common one</td><td>Nothing at all; the form submits</td><td>« Did you mean … ? », with the corrected address as a button to press</td></tr><tr><td>It is on a blocklist you chose to use</td><td>« Please enter a valid email address »</td><td>« For this we need an address you will still be able to read next month. »</td></tr><tr><td>The message went out and was never confirmed</td><td>Nothing at all; the account sits there</td><td>« We sent a link to that address. Not arrived? Resend it, or change the address. »</td></tr></tbody></table></div><p>Notice how many rows say the same wrong thing. « Please enter a valid email address » is the default everywhere because it is true of every case and useful in none of them: in three rows out of five the address <em>was</em> valid, and the person who typed it has no way to discover which row they are in.</p>      </section>
+            <section class="ga-s" id="checklist" aria-labelledby="checklist-h">
+        <h2 class="ga-s-h" id="checklist-h">The short version</h2>
+        <ol class="steps-n"><li>Trim the string. Change nothing else about it.</li><li>Match one permissive pattern — the browser's or your platform's — and stop there. Do not write your own.</li><li>Reject anything over 254 characters, and store a column that size.</li><li>Look up MX for the domain, fall back to <code>A</code>, cache it, do it off the critical path, and accept the address when the lookup fails.</li><li>Refuse a domain that does not resolve and a domain publishing a null MX. Accept everything else DNS gives you.</li><li>Offer a spelling suggestion when the domain is a near-miss. Never apply it yourself.</li><li>Decide separately, and in writing, whether you are blocking throwaway or role addresses — and why.</li><li>Send a message with a single-use link, treat the click as the verification, and make resending and correcting the address easy.</li><li>Test that loop against a real inbox, including the paths where it fails, and delete unconfirmed accounts on a schedule.</li></ol><p>Nine lines, and the last two are the only ones that establish anything. The other seven exist so that the message at the end of them is worth sending.</p>      </section>
+      
+            <section class="ga-s" id="faq" aria-labelledby="faq-h">
+        <h2 class="ga-s-h" id="faq-h">Questions</h2>
+        <div class="faq ga-faq">
+                    <details class="faq-i" open>
+            <summary class="faq-q">
+              <span>Is there an official regular expression for email addresses?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>No, and there cannot be. RFC 5322 gives a grammar, not a pattern, and a pattern faithful to it would accept quoted spaces and parenthesised comments that no provider issues. Use the one the HTML specification defines for an email field, or whichever checker your platform already ships, and spend the effort you saved on the confirmation message.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Can I check whether an email address exists without sending anything?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>You can ask; you cannot know. A catch-all domain accepts every name, greylisting answers a deliberate temporary failure, large providers accept during the conversation and <a href="/guides/email-bounce-codes-explained">bounce</a> afterwards, and a server that does not recognise you may refuse for reasons about you rather than the recipient. Bulk probing also puts your sending address on blocklists.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Is name+tag@example.com a valid address?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Yes. The plus sign is an ordinary permitted character in the local part, and at most large providers it also routes to the mailbox before it, which is what makes <a href="/guides/email-plus-addressing">plus addressing</a> useful. A form that refuses it is refusing legal addresses and advertising something about itself while doing so.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Are email addresses case-sensitive?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>The domain never is. The part before the <code>@</code> is, by the standard, left to the receiving server — and in practice every large provider ignores case. Keep a lowercased copy to detect duplicates, and send to the string exactly as it was typed.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>How long can an email address be?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>64 characters before the <code>@</code>, 255 for the domain, and 254 for the whole address as a server carries it. The last of those three is the number to use: put it in the database column and in the field, and a whole class of input stops being your problem.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Should I block disposable email addresses?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>If there is something expensive behind a free trial, yes — and accept that any list you use is incomplete. For a newsletter, a download or a paid account, the people you turn away are mostly the careful ones, and you will never see them in a log. <a href="/guides/why-signup-forms-block-disposable-email">The full trade-off</a> is worth reading before installing a package that makes the decision for you.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>How do I test a sign-up verification flow without a real mailbox?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Send to an address on a public disposable domain and read it back over the API — no sign-up, no key, and a fresh address for every run. For a suite that needs hundreds, point <a href="/guides/own-domain-catch-all-inbox">a domain you own</a> at a catch-all inbox and invent an address per test. The full walk-through is in <a href="/guides/test-email-verification-flows">testing an email verification flow end to end</a>.</p></div>
+          </details>
+                  </div>
+      </section>
+      
+      
+                  <nav class="ga-pn" aria-label="More in this topic">
+                <a class="ga-pn-i ga-pn-p" href="/guides/mx-records-explained" rel="prev">
+          <span class="ga-pn-k">Previous</span>
+          <span class="ga-pn-t">Reading an MX record</span>
+        </a>
+                      </nav>
+      
+    </article>
+  </div>
+
+    <div class="ga-rel">
+    <div class="wrap">
+      <h2 class="ga-rel-h">Keep reading</h2>
+      <ul class="gd-cards ga-rel-l">
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/why-signup-forms-block-disposable-email">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/blocklist-800.webp?v=3af85b61f5" srcset="/assets/img/guides/blocklist-480.webp?v=3af85b61f5 480w, /assets/img/guides/blocklist-800.webp?v=3af85b61f5 800w, /assets/img/guides/blocklist-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="A blue envelope stopped by a lowered grey barrier before a closed door, while a second door beside it stands open with a small blue key in front" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">Privacy &amp; everyday use</span>
+              <span class="gd-card-t">Why sign-up forms block disposable email, and what to do</span>
+              <span class="gd-card-x">How disposable-domain blocklists are built and kept, the three checks a form can run (list, MX, catch-all probe, provider score), what blocking costs the sites that do it, why the local part is irrelevant, the three honest ways round a refusal — your own domain, a domain kept off the lists, or an alias — and how to block well if you run the form.</span>
+              <span class="gd-card-m">10 min read</span>
+            </span>
+          </a>
+        </li>
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/email-bounce-codes-explained">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/bounce-800.webp?v=3af85b61f5" srcset="/assets/img/guides/bounce-480.webp?v=3af85b61f5 480w, /assets/img/guides/bounce-800.webp?v=3af85b61f5 800w, /assets/img/guides/bounce-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="A blue envelope turned back in mid-air beside the slot of a grey letterbox, with a second blue envelope fallen below it" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">Email &amp; deliverability</span>
+              <span class="gd-card-t">Email bounces: how to read one, and what each code means</span>
+              <span class="gd-card-x">What a bounce actually is and the two very different moments it happens, the three parts of a delivery report and which line carries the reason, how to read a reply code and an enhanced status code, the dozen codes that account for almost every bounce anybody reads, what can and cannot bounce at a disposable address, the bounces that belong to the hour you point your own domain here, and why a report sometimes arrives for a message you never sent.</span>
+              <span class="gd-card-m">22 min read</span>
+            </span>
+          </a>
+        </li>
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/mx-records-explained">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/mxrecord-800.webp?v=3af85b61f5" srcset="/assets/img/guides/mxrecord-480.webp?v=3af85b61f5 480w, /assets/img/guides/mxrecord-800.webp?v=3af85b61f5 800w, /assets/img/guides/mxrecord-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="A blue envelope floating beside a grey signpost with two blank arm-boards pointing in different directions" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">Email &amp; deliverability</span>
+              <span class="gd-card-t">MX records explained: priority, lookups and what breaks</span>
+              <span class="gd-card-x">What an MX record is and the four things it is not, reading one with dig, nslookup or host, what the preference number actually decides and why a backup host is not a second chance, the seven steps a sending server takes, what happens when there is no MX at all and what a null MX says instead, the six ways the record breaks, the single record that points a domain here, and why an hour is not long enough.</span>
+              <span class="gd-card-m">18 min read</span>
+            </span>
+          </a>
+        </li>
+              </ul>
+    </div>
+  </div>
+  
+  <section class="cta ga-cta" aria-labelledby="ga-cta-h">
+    <div class="wrap cta-in">
+      <h2 class="cta-h" id="ga-cta-h">Try it while it is fresh</h2>
+      <p class="cta-p">An address takes one click, no account and no card. Everything in this guide works on it straight away.</p>
+      <div class="cta-act">
+        <a class="btn btn-primary btn-lg" href="/#grab">Open an inbox</a>
+        <a class="btn btn-ghost btn-lg" href="/docs/api">Read the API reference</a>
+      </div>
+    </div>
+  </section>
+</div>
+</main>
+
+<footer class="ft" id="ft-map">
+  <div class="wrap">
+    <div class="ft-top">
+      <div class="ft-brand">
+        <a class="ft-logo" href="/" aria-label="Neverla Mail — home">
+          <picture>
+            <source srcset="/assets/img/logo-nav.webp?v=3af85b61f5" type="image/webp">
+            <img class="ft-logo-img" src="/assets/img/logo-nav.png?v=3af85b61f5"
+                 alt="Neverla Mail" width="122" height="29" decoding="async" loading="lazy">
+          </picture>
+        </a>
+        <p class="ft-blurb">
+                    Disposable email addresses with a free REST API. Grab one in a click, or point your own domain at us for an inbox nobody can guess into.        </p>
+                <p class="ft-status">
+          <span class="dot" aria-hidden="true"></span>
+          <a href="/status">System status</a>
+        </p>
+      </div>
+
+                  <nav class="ft-nav" aria-label="Product">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Product</h2></summary>
+          <ul>
+                                                <li><a href="/#grab">Grab an address</a></li>
+                                    <li><a href="/#how">How it works</a></li>
+                                    <li><a href="/domains">Connect a domain</a></li>
+                                    <li><a href="/extensions">Browser extension</a></li>
+                                    <li><a href="/pricing">Pricing</a></li>
+                                    <li><a href="/guides">Guides</a></li>
+                                    <li><a href="/compare">Comparing the APIs</a></li>
+                                    <li><a href="/vs">Neverla Mail vs the alternatives</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Developers">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Developers</h2></summary>
+          <ul>
+                                                <li><a href="/docs/quickstart#mcp">MCP for AI agents</a></li>
+                                    <li><a href="/openapi.json">OpenAPI 3.1</a></li>
+                                    <li><a href="/llms.txt">llms.txt</a></li>
+                                    <li><a href="/docs">Documentation</a></li>
+                                    <li><a href="/docs/api">API reference</a></li>
+                                    <li><a href="/docs/quickstart">Quickstart</a></li>
+                                    <li><a href="/docs/limits">Limits</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Company">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Company</h2></summary>
+          <ul>
+                                                <li><a href="/about">About</a></li>
+                                    <li><a href="/status">Status</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Legal">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Legal</h2></summary>
+          <ul>
+                                                <li><a href="/legal/terms">Terms of service</a></li>
+                                    <li><a href="/legal/privacy">Privacy</a></li>
+                      </ul>
+        </details>
+      </nav>
+          </div>
+
+    <div class="ft-bar">
+      <p>&copy; 2026 Neverla Mail. All rights reserved.</p>
+      <ul class="ft-facts">
+        <li>Receive-only</li>
+        <li>No tracking, no ads</li>
+        <li>Messages deleted after 5 days</li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<div class="lang" data-lang>
+    <button class="lang-fab" type="button" data-lang-open
+          aria-haspopup="dialog" aria-expanded="false"
+          title="Language: English">
+    <span class="lang-fab-fl" aria-hidden="true"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+    <span class="lang-code" aria-hidden="true">EN</span>
+        <span class="lang-fab-n" aria-hidden="true"><span>English</span></span>
+    <svg class="lang-globe" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+         aria-hidden="true" focusable="false">
+      <circle cx="10" cy="10" r="7.25"/>
+      <path d="M2.75 10h14.5M10 2.75c3.85 4.4 3.85 10.1 0 14.5-3.85-4.4-3.85-10.1 0-14.5z"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="sr-only">Change language: English</span>
+  </button>
+
+  <dialog class="lm" data-lang-modal aria-labelledby="lm-title">
+    <div class="lm-panel">
+            <div class="lm-grab" aria-hidden="true"></div>
+
+            <header class="lm-hd">
+        <h2 class="lm-t" id="lm-title">Language</h2>
+                <form method="dialog">
+          <button class="lm-x" type="submit" aria-label="Change language">
+            <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+              <path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor"
+                    stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </form>
+      </header>
+
+      <ul class="lm-grid">
+                <li>
+          <a class="lm-i is-on"
+             href="/guides/email-address-validation"
+             hreflang="en" lang="en"
+             aria-current="true" data-lang-current>
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">English</span>
+                            <span class="lm-n-l" lang="en">English</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">EN</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/es/guides/email-address-validation"
+             hreflang="es" lang="es"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-es"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Español</span>
+                            <span class="lm-n-l" lang="en">Spanish</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">ES</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/pt/guides/email-address-validation"
+             hreflang="pt" lang="pt"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-pt"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Português</span>
+                            <span class="lm-n-l" lang="en">Portuguese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">PT</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/fr/guides/email-address-validation"
+             hreflang="fr" lang="fr"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-fr"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Français</span>
+                            <span class="lm-n-l" lang="en">French</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">FR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/de/guides/email-address-validation"
+             hreflang="de" lang="de"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-de"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Deutsch</span>
+                            <span class="lm-n-l" lang="en">German</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">DE</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ru/guides/email-address-validation"
+             hreflang="ru" lang="ru"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ru"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Русский</span>
+                            <span class="lm-n-l" lang="en">Russian</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">RU</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/tr/guides/email-address-validation"
+             hreflang="tr" lang="tr"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-tr"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Türkçe</span>
+                            <span class="lm-n-l" lang="en">Turkish</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">TR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/id/guides/email-address-validation"
+             hreflang="id" lang="id"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-id"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Bahasa Indonesia</span>
+                            <span class="lm-n-l" lang="en">Indonesian</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">ID</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/vi/guides/email-address-validation"
+             hreflang="vi" lang="vi"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-vi"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Tiếng Việt</span>
+                            <span class="lm-n-l" lang="en">Vietnamese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">VI</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ar/guides/email-address-validation"
+             hreflang="ar" lang="ar"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ar"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">العربية</span>
+                            <span class="lm-n-l" lang="en">Arabic</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">AR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ja/guides/email-address-validation"
+             hreflang="ja" lang="ja"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ja"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">日本語</span>
+                            <span class="lm-n-l" lang="en">Japanese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">JA</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+              </ul>
+    </div>
+  </dialog>
+
+  <noscript>
+    <ul class="lang-ns" aria-label="Language">
+            <li><a href="/guides/email-address-validation" hreflang="en" lang="en">English</a></li>
+            <li><a href="/es/guides/email-address-validation" hreflang="es" lang="es">Español</a></li>
+            <li><a href="/pt/guides/email-address-validation" hreflang="pt" lang="pt">Português</a></li>
+            <li><a href="/fr/guides/email-address-validation" hreflang="fr" lang="fr">Français</a></li>
+            <li><a href="/de/guides/email-address-validation" hreflang="de" lang="de">Deutsch</a></li>
+            <li><a href="/ru/guides/email-address-validation" hreflang="ru" lang="ru">Русский</a></li>
+            <li><a href="/tr/guides/email-address-validation" hreflang="tr" lang="tr">Türkçe</a></li>
+            <li><a href="/id/guides/email-address-validation" hreflang="id" lang="id">Bahasa Indonesia</a></li>
+            <li><a href="/vi/guides/email-address-validation" hreflang="vi" lang="vi">Tiếng Việt</a></li>
+            <li><a href="/ar/guides/email-address-validation" hreflang="ar" lang="ar">العربية</a></li>
+            <li><a href="/ja/guides/email-address-validation" hreflang="ja" lang="ja">日本語</a></li>
+          </ul>
+  </noscript>
+</div>
+<svg class="lm-sprite" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+    <symbol id="fl-en" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#012169"/>
+      <path d="M0 0 24 16M24 0 0 16" stroke="#fff" stroke-width="3.2"/>
+      <path d="M0 0 24 16M24 0 0 16" stroke="#C8102E" stroke-width="1.9"/>
+      <path d="M12 0v16M0 8h24" stroke="#fff" stroke-width="5.3"/>
+      <path d="M12 0v16M0 8h24" stroke="#C8102E" stroke-width="3.2"/>
+    </symbol>
+    <symbol id="fl-es" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#AA151B"/>
+      <rect y="4" width="24" height="8" fill="#F1BF00"/>
+    </symbol>
+    <symbol id="fl-pt" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#DA291C"/>
+      <rect width="9.6" height="16" fill="#046A38"/>
+      <circle cx="9.6" cy="8" r="3.4" fill="#FFE800" stroke="#046A38" stroke-width="1"/>
+    </symbol>
+    <symbol id="fl-fr" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <rect width="8" height="16" fill="#002395"/>
+      <rect x="16" width="8" height="16" fill="#ED2939"/>
+    </symbol>
+    <symbol id="fl-de" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#FFCE00"/>
+      <rect width="24" height="10.7" fill="#DD0000"/>
+      <rect width="24" height="5.3"/>
+    </symbol>
+    <symbol id="fl-ru" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#D52B1E"/>
+      <rect width="24" height="10.7" fill="#0039A6"/>
+      <rect width="24" height="5.3" fill="#fff"/>
+    </symbol>
+    <symbol id="fl-tr" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#E30A17"/>
+      <circle cx="9.4" cy="8" r="3.9" fill="#fff"/>
+      <circle cx="10.9" cy="8" r="3.1" fill="#E30A17"/>
+      <path d="m15.1 8 1.35.44-.83 1.15V8.2l.83 1.15z" fill="#fff"/>
+      <path d="m14.6 6.2.72 1.98 2.1.06-1.67 1.28.6 2.02-1.75-1.18-1.75 1.18.6-2.02-1.67-1.28 2.1-.06z" fill="#fff"/>
+    </symbol>
+    <symbol id="fl-id" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <rect width="24" height="8" fill="#CE1126"/>
+    </symbol>
+    <symbol id="fl-vi" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#DA251D"/>
+      <path d="m12 3.6 1.32 4.06h4.27l-3.46 2.51 1.33 4.06L12 11.72l-3.46 2.51 1.33-4.06-3.46-2.51h4.27z" fill="#FFFF00"/>
+    </symbol>
+    <symbol id="fl-ar" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#165D31"/>
+      <path d="M5.6 6.4h12.8" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M5.6 10.4h11.2" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M16.8 10.4c.9 0 1.6.5 1.6 1.2" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="fl-ja" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <circle cx="12" cy="8" r="4.8" fill="#BC002D"/>
+    </symbol>
+  </defs>
+</svg><dialog class="am" data-auth-modal aria-labelledby="am-h-signin">
+  <div class="am-panel" data-am-panel data-view="signin">
+
+        <div class="am-grab" aria-hidden="true"></div>
+
+        <div class="am-body" data-am-body>
+
+            <div class="am-hd">
+                <div class="am-seg" role="tablist" aria-label="Account">
+          <span class="am-seg-pill" aria-hidden="true"></span>
+          <button class="am-seg-b" type="button" role="tab" id="am-tab-signin"
+                  aria-selected="true" aria-controls="am-view-signin"
+                  data-am-go="signin">Sign in</button>
+          <button class="am-seg-b" type="button" role="tab" id="am-tab-signup"
+                  aria-selected="false" aria-controls="am-view-signup" tabindex="-1"
+                  data-am-go="signup">Create account</button>
+        </div>
+
+        <button class="am-x" type="button" data-am-close aria-label="Close">
+          <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor"
+                  stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+            <div class="am-alert" role="alert" data-am-alert hidden>
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" aria-hidden="true" focusable="false">
+          <circle cx="10" cy="10" r="7.6"/><path d="M10 6.2v4.4M10 13.4v.1"/>
+        </svg>
+        <span data-am-alert-t></span>
+      </div>
+
+      <div class="am-views" data-am-views>
+
+        <!-- ── sign in ──────────────────────────────────────────────────── -->
+        <form class="am-view" id="am-view-signin" data-am-view="signin"
+              role="tabpanel" aria-labelledby="am-tab-signin"
+              method="post" action="/api/v1/auth" novalidate>
+          <input type="hidden" name="action" value="signin">
+
+          <h2 class="am-h" id="am-h-signin">Welcome back</h2>
+          <p class="am-sub">Your inboxes and your domains, in one place.</p>
+
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-si-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-si-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-si-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-si-email-e" data-am-err hidden></p>
+    </div>
+                  <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-si-pass">Password</label>
+                <button class="am-link" type="button" data-am-go="reset">Forgot?</button>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-si-pass" name="password"
+               type="password"
+                              autocomplete="current-password"
+               placeholder="••••••••"
+               aria-describedby="am-si-pass-e"
+                                             data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+      
+      <p class="am-err" id="am-si-pass-e" data-am-err hidden></p>
+    </div>
+    
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Sign in</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+        <!-- ── create an account ───────────────────────────────────────── -->
+        <form class="am-view" id="am-view-signup" data-am-view="signup"
+              role="tabpanel" aria-labelledby="am-tab-signup"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <input type="hidden" name="action" value="signup">
+
+          <h2 class="am-h" id="am-h-signup">Create your account</h2>
+                              <p class="am-sub" data-am-sub>It stays free. The address is only so you can find your inboxes again.</p>
+          <p class="am-sub" data-am-sub="save" hidden>Create a free account to keep this inbox — and every inbox you open from now on.</p>
+                    <ul class="am-perks">
+            <li>Every inbox you open, saved</li>
+            <li>A free API key</li>
+            <li>No card, no trial</li>
+          </ul>
+          
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-su-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-su-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-su-email-e" data-am-err hidden></p>
+    </div>
+                  <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-pass">Password</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-su-pass" name="password"
+               type="password"
+                              autocomplete="new-password"
+               placeholder="••••••••"
+               aria-describedby="am-su-pass-e"
+                                             data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+                  <div class="am-str" data-am-str data-strength="0" hidden>
+        <div class="am-str-bars" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <span class="am-str-t" data-am-str-t></span>
+      </div>
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+            <p class="am-hint">At least 10 characters. Length beats punctuation.</p>
+      
+      <p class="am-err" id="am-su-pass-e" data-am-err hidden></p>
+    </div>
+    
+                        <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-pass2">Confirm password</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-su-pass2" name="password2"
+               type="password"
+                              autocomplete="new-password"
+               placeholder="••••••••"
+               aria-describedby="am-su-pass2-e"
+                              data-am-match="am-su-pass" data-am-skip               data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+      
+      <p class="am-err" id="am-su-pass2-e" data-am-err hidden></p>
+    </div>
+    
+                              <div class="am-cf" data-am-cf data-sitekey="0x4AAAAAAEfWgqSU6xDxtH5m"></div>
+          
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Create my account</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    
+          <p class="am-note">
+            By creating an account you agree to the <a href="/legal/terms">Terms</a> and the <a href="/legal/privacy">Privacy Policy</a>.          </p>
+        </form>
+
+        <!-- ── reset a password ────────────────────────────────────────── -->
+        <form class="am-view" id="am-view-reset" data-am-view="reset"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <input type="hidden" name="action" value="reset">
+
+          <button class="am-back" type="button" data-am-go="signin">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor"
+                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to sign in          </button>
+
+          <h2 class="am-h" id="am-h-reset">Reset your password</h2>
+          <p class="am-sub">Give us the address you signed up with and we will send a link to choose a new password.</p>
+
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-rs-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-rs-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-rs-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-rs-email-e" data-am-err hidden></p>
+    </div>
+    
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Send the link</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+        <!-- ── the link is on its way ──────────────────────────────────── -->
+                <div class="am-view am-view-done" id="am-view-sent" data-am-view="sent" hidden>
+          <span class="am-done-ic" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.4"
+                 stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="m9 16.6 4.6 4.6L23 11"/>
+            </svg>
+          </span>
+          <h2 class="am-h" id="am-h-sent">Check your inbox</h2>
+          <p class="am-sub">If an account exists for that address, a link to choose a new password is on its way. It is valid for one hour.</p>
+          <button class="btn btn-ghost am-go" type="button" data-am-go="signin">Back to sign in</button>
+        </div>
+
+        <!-- ── le second facteur (01/10/2026) ──────────────────────────── -->
+                <form class="am-view" id="am-view-mfa" data-am-view="mfa"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <button class="am-back" type="button" data-am-go="signin">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor"
+                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to sign in          </button>
+
+          <h2 class="am-h" id="am-h-mfa">Two-factor authentication</h2>
+          <p class="am-sub">Type the six digits your authenticator app shows — or one of your recovery codes.</p>
+
+          <div class="am-f">
+            <div class="am-f-top">
+              <label class="am-l" for="am-mfa-code">Code</label>
+            </div>
+            <div class="am-in">
+              <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>              <input class="am-i am-i-code" id="am-mfa-code" name="code" type="text"
+                     inputmode="numeric" autocomplete="one-time-code" spellcheck="false"
+                     autocapitalize="off" maxlength="24" placeholder="123 456"
+                     aria-describedby="am-mfa-code-e" data-am-in data-am-code required>
+            </div>
+            <p class="am-err" id="am-mfa-code-e" data-am-err hidden></p>
+          </div>
+
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Verify</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+      </div>
+    </div>
+
+  </div>
+</dialog>
+<nav class="tb" data-tb aria-label="Main">
+  <a class="tb-i" href="/" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.8 10.4 12 3.8l8.2 6.6v8.7a1.4 1.4 0 0 1-1.4 1.4h-4.3v-5.8h-5v5.8H5.2a1.4 1.4 0 0 1-1.4-1.4z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+    <span class="tb-n">Home</span>
+  </a>
+  <a class="tb-i is-on" aria-current="true" href="/guides" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 6.6C10.3 5.2 7.9 4.6 4.3 4.6v13.2c3.6 0 6 .6 7.7 2 1.7-1.4 4.1-2 7.7-2V4.6c-3.6 0-6 .6-7.7 2zM12 6.6v13.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+    <span class="tb-n">Guides</span>
+  </a>
+    <a class="tb-i tb-go" href="/inbox" data-sheet-open="inbox"
+     aria-haspopup="dialog">
+    <span class="tb-go-b" aria-hidden="true">
+      <svg viewBox="0 0 24 24" focusable="false"><rect x="3.2" y="5.6" width="17.6" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m4.2 7 7 5.3a1.3 1.3 0 0 0 1.6 0l7-5.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <span class="tb-n">Inbox</span>
+  </a>
+    <a class="tb-i" href="/pricing" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.8 12.4V5.2a1.4 1.4 0 0 1 1.4-1.4h7.2l7.9 7.9a1.4 1.4 0 0 1 0 2l-6.7 6.7a1.4 1.4 0 0 1-2 0z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="8.4" cy="8.4" r="1.5" fill="currentColor"/></svg>
+    <span class="tb-n">Pricing</span>
+  </a>
+    <a class="tb-i" href="#ft-map" data-sheet-open="menu" aria-haspopup="dialog">
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 7h15M4.5 12h15M4.5 17h15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <span class="tb-n">Menu</span>
+  </a>
+</nav>
+
+<dialog class="sh" data-sheet="menu" aria-labelledby="sh-menu-t">
+  <div class="sh-panel">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <header class="sh-hd">
+      <h2 class="sh-t" id="sh-menu-t">Menu</h2>
+      <form method="dialog">
+        <button class="sh-x" type="submit" aria-label="Close"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+      </form>
+    </header>
+
+    <div class="sh-body">
+            <div class="sh-auth">
+        <button class="btn btn-primary" type="button" data-auth-open="signin">Log in</button>
+        <button class="btn btn-ghost" type="button" data-auth-open="signup">Create account</button>
+      </div>
+      
+            <p class="sh-sec">Product</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/#how"><span>How it works</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/domains"><span>Connect a domain</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/extensions"><span>Browser extension</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/pricing"><span>Pricing</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/guides"><span>Guides</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/compare"><span>Comparing the APIs</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/vs"><span>Neverla Mail vs the alternatives</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Developers</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/docs/quickstart#mcp"><span>MCP for AI agents</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs"><span>Documentation</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/api"><span>API reference</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/quickstart"><span>Quickstart</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/limits"><span>Limits</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Company</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/about"><span>About</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/status"><span>Status</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Legal</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/legal/terms"><span>Terms of service</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/legal/privacy"><span>Privacy</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+      
+      <p class="sh-sec">Language</p>
+      <div class="sh-card sh-list">
+                <button class="sh-row sh-lang" type="button" data-sheet-lang>
+          <span class="sh-lang-fl" aria-hidden="true"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+          <span class="sh-lang-n">English</span>
+          <span class="sh-lang-c" aria-hidden="true">EN</span>
+          <svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>        </button>
+      </div>
+
+            <p class="sh-note">Free · No signup · Deleted after 5 days</p>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="sh sh-ibx" data-sheet="inbox" aria-labelledby="sh-ibx-t">
+  <div class="sh-panel">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <header class="sh-hd">
+      <h2 class="sh-t" id="sh-ibx-t">New address</h2>
+      <form method="dialog">
+        <button class="sh-x" type="submit" aria-label="Close"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+      </form>
+    </header>
+
+    <div class="sh-body">
+            <form class="sh-cmp" action="/inbox" method="get" data-composer data-sheet-composer novalidate>
+        <div class="sh-cmp-f">
+          <label class="sr-only" for="sh-u">Address name</label>
+          <input class="sh-cmp-u" type="text" name="u" id="sh-u" data-user
+                 placeholder="pick-any-name" maxlength="64"
+                 autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false"
+                 enterkeyhint="go" aria-describedby="sh-hint">
+          <button class="sh-cmp-dice" type="button" data-random
+                  aria-label="Random name" title="Random name">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="2" y="2" width="12" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="5.5" cy="5.5" r="1.1" fill="currentColor"/><circle cx="10.5" cy="5.5" r="1.1" fill="currentColor"/><circle cx="8" cy="8" r="1.1" fill="currentColor"/><circle cx="5.5" cy="10.5" r="1.1" fill="currentColor"/><circle cx="10.5" cy="10.5" r="1.1" fill="currentColor"/></svg>
+          </button>
+        </div>
+        <label class="sr-only" for="sh-d">Domain</label>
+        <select class="sh-cmp-d" name="d" id="sh-d" data-domain>
+                    <option value="neverla.web.id">@neverla.web.id</option>
+                    <option value="mixozia.com">@mixozia.com</option>
+                    <option value="linqmail.com">@linqmail.com</option>
+                  </select>
+        <p class="sh-hint composer-hint" id="sh-hint" data-hint hidden></p>
+        <button class="btn btn-primary btn-lg btn-block sh-cmp-go" type="submit">
+          <span>Open inbox</span>
+          <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <p class="sh-cmp-note">Public inbox — anyone with the address can read it.</p>
+      </form>
+
+                  <div class="sh-recent" data-sh-recent hidden>
+        <p class="sh-sec">Opened in this tab</p>
+        <ul class="sh-card sh-list" data-sh-recent-list></ul>
+              </div>
+    </div>
+  </div>
+</dialog>
+
+<p class="sr-only" role="status" aria-live="polite" data-live></p>
+
+</body>
+</html>

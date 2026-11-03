@@ -1,0 +1,1243 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How to stop spam email: what works, and what makes it worse | Neverla Mail</title>
+<meta name="description" content="Which spam controls work: mark as spam against block against delete, when unsubscribing is safe, what opening it gives away, and the one fix that lasts.">
+<link rel="canonical" href="https://neverla.web.id/guides/how-to-stop-spam-email">
+<meta name="robots" content="max-image-preview:large">
+<link rel="alternate" type="application/rss+xml" title="Neverla Mail — Guides" href="https://neverla.web.id/guides/feed.xml">
+<link rel="alternate" hreflang="en" href="https://neverla.web.id/guides/how-to-stop-spam-email">
+<link rel="alternate" hreflang="es" href="https://neverla.web.id/es/guides/how-to-stop-spam-email">
+<link rel="alternate" hreflang="pt" href="https://neverla.web.id/pt/guides/how-to-stop-spam-email">
+<link rel="alternate" hreflang="fr" href="https://neverla.web.id/fr/guides/how-to-stop-spam-email">
+<link rel="alternate" hreflang="de" href="https://neverla.web.id/de/guides/how-to-stop-spam-email">
+<link rel="alternate" hreflang="ru" href="https://neverla.web.id/ru/guides/how-to-stop-spam-email">
+<link rel="alternate" hreflang="tr" href="https://neverla.web.id/tr/guides/how-to-stop-spam-email">
+<link rel="alternate" hreflang="id" href="https://neverla.web.id/id/guides/how-to-stop-spam-email">
+<link rel="alternate" hreflang="vi" href="https://neverla.web.id/vi/guides/how-to-stop-spam-email">
+<link rel="alternate" hreflang="ar" href="https://neverla.web.id/ar/guides/how-to-stop-spam-email">
+<link rel="alternate" hreflang="ja" href="https://neverla.web.id/ja/guides/how-to-stop-spam-email">
+<link rel="alternate" hreflang="x-default" href="https://neverla.web.id/guides/how-to-stop-spam-email">
+<meta name="theme-color" content="#ffffff">
+<meta name="color-scheme" content="light">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Neverla Mail">
+<meta property="og:title" content="How to stop spam email: what works, and what makes it worse | Neverla Mail">
+<meta property="og:description" content="Which spam controls work: mark as spam against block against delete, when unsubscribing is safe, what opening it gives away, and the one fix that lasts.">
+<meta property="og:url" content="https://neverla.web.id/guides/how-to-stop-spam-email">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:locale:alternate" content="pt_BR">
+<meta property="og:locale:alternate" content="fr_FR">
+<meta property="og:locale:alternate" content="de_DE">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta property="og:locale:alternate" content="tr_TR">
+<meta property="og:locale:alternate" content="id_ID">
+<meta property="og:locale:alternate" content="vi_VN">
+<meta property="og:locale:alternate" content="ar_AR">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://neverla.web.id/assets/img/guides/spam-1376.webp">
+<meta property="og:image:width" content="1376">
+<meta property="og:image:height" content="768">
+<meta property="og:image:alt" content="Neverla Mail — Temporary email addresses, and an API to read them.">
+<meta name="twitter:image" content="https://neverla.web.id/assets/img/guides/spam-1376.webp">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" sizes="96x96" href="/assets/img/icon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/img/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Neverla Mail">
+
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/main.css?v=3af85b61f5">
+<link rel="stylesheet" href="/assets/css/mobile.css?v=3af85b61f5" media="(max-width: 959.98px)">
+<script src="/assets/js/app.js?v=3af85b61f5" defer></script>
+<script src="/assets/js/mobile.js?v=3af85b61f5" defer></script>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://neverla.web.id/#org","name":"Neverla Mail","url":"https://neverla.web.id/","description":"Free disposable email addresses with a REST API and an MCP server for AI agents.","logo":{"@type":"ImageObject","url":"https://neverla.web.id/assets/img/logo.png","width":671,"height":160},"image":"https://neverla.web.id/assets/img/og-card.png","sameAs":["https://dev.to/neverla"]},{"@type":"WebSite","@id":"https://neverla.web.id/#site","name":"Neverla Mail","url":"https://neverla.web.id/","publisher":{"@id":"https://neverla.web.id/#org"},"inLanguage":["en","es","pt","fr","de","ru","tr","id","vi","ar","ja"]},{"@type":["WebAPI","SoftwareApplication"],"@id":"https://neverla.web.id/#api","name":"Neverla Mail disposable email API","url":"https://neverla.web.id/docs/api","documentation":"https://neverla.web.id/docs/api","provider":{"@id":"https://neverla.web.id/#org"},"applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"Create a disposable email address and read what arrives at it over HTTP. No account, no API key and no payment for the public domains. Messages are deleted 5 days after they arrive.","offers":[{"@type":"Offer","name":"Free","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"Public domains, your own domains, the REST API and the MCP server. No account, no key; the free API allows 60 requests a minute and 1,000 a day per IP address."},{"@type":"Offer","name":"Premium","price":"12.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"12.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Pro","price":"49.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"49.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Scale","price":"99.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"99.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}}],"featureList":["Connect your own domain — every address on it becomes a catch-all inbox","Disposable email addresses with no signup","REST API over HTTPS, no API key required","MCP server for AI agents (create_inbox, wait_for_message)","Every mailbox has an alias you can hand out instead of the address","Attachments up to 5 MB","Automatic deletion after 5 days"],"additionalProperty":[{"@type":"PropertyValue","name":"Sending mail","value":"No. There is no endpoint that sends, and no outbound mail of any kind."},{"@type":"PropertyValue","name":"IMAP or POP3","value":"No. HTTPS only — a REST API and an MCP server."},{"@type":"PropertyValue","name":"Webhooks or push notifications","value":"No. You poll, or you let the MCP server hold the call open until the message lands."},{"@type":"PropertyValue","name":"Keeping mail longer than 5 days","value":"No. Not a tier, not a setting, not a parameter."},{"@type":"PropertyValue","name":"Attachments over 5 MB","value":"No. The message is refused at SMTP time."},{"@type":"PropertyValue","name":"Privacy on a shared domain","value":"No. Anyone who knows the address can read the mailbox."},{"@type":"PropertyValue","name":"Paying by card","value":"No. Crypto only, credited to a balance the subscription draws on."},{"@type":"PropertyValue","name":"An uptime guarantee","value":"No. There is no SLA, on any plan."},{"@type":"PropertyValue","name":"Tracking, analytics or advertising","value":"No. No third-party script, and no cookie banner because there are no cookies to consent to."}],"potentialAction":{"@type":"ConsumeAction","target":{"@type":"EntryPoint","urlTemplate":"https://neverla.web.id/api/v1/mailbox?address={address}","httpMethod":"GET","contentType":"application/json"}}},{"@type":"WebPage","@id":"https://neverla.web.id/guides/how-to-stop-spam-email#page","url":"https://neverla.web.id/guides/how-to-stop-spam-email","name":"How to stop spam email: what works, and what makes it worse | Neverla Mail","description":"Which spam controls work: mark as spam against block against delete, when unsubscribing is safe, what opening it gives away, and the one fix that lasts.","isPartOf":{"@id":"https://neverla.web.id/#site"},"inLanguage":"en"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Neverla Mail","item":"https://neverla.web.id/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://neverla.web.id/guides"},{"@type":"ListItem","position":3,"name":"Privacy & everyday use","item":"https://neverla.web.id/guides"},{"@type":"ListItem","position":4,"name":"How to stop spam email: what works, and what makes it worse","item":"https://neverla.web.id/guides/how-to-stop-spam-email"}]},{"@type":"TechArticle","@id":"https://neverla.web.id/guides/how-to-stop-spam-email#article","headline":"How to stop spam email: what works, and what makes it worse","description":"Which spam controls work: mark as spam against block against delete, when unsubscribing is safe, what opening it gives away, and the one fix that lasts.","image":"https://neverla.web.id/assets/img/guides/spam-1376.webp","datePublished":"2026-09-07","dateModified":"2026-09-07","inLanguage":"en","articleSection":"Privacy & everyday use","timeRequired":"PT17M","keywords":"stop spam email, how to stop spam emails, unsubscribe from spam, list-unsubscribe, mark as spam, block sender, spam filter, email privacy, data breach, disposable email","author":{"@id":"https://neverla.web.id/#org"},"publisher":{"@id":"https://neverla.web.id/#org"},"isPartOf":{"@id":"https://neverla.web.id/#site"},"mainEntityOfPage":{"@id":"https://neverla.web.id/guides/how-to-stop-spam-email#page"},"proficiencyLevel":"Beginner"},{"@type":"FAQPage","@id":"https://neverla.web.id/guides/how-to-stop-spam-email#faq","mainEntity":[{"@type":"Question","name":"Does unsubscribing from spam make it worse?","acceptedAnswer":{"@type":"Answer","text":"From real spam, yes: the link identifies you, and an address that opts out is an address confirmed live. From a company you actually signed up with, no — the large providers now require a one-click unsubscribe acted on within two days, and a sender who ignores that stops being delivered. The whole skill is telling the two apart, which dmarc=pass on the brand's own domain does in about ten seconds."}},{"@type":"Question","name":"Is it better to mark as spam or to block the sender?","acceptedAnswer":{"@type":"Answer","text":"Mark as spam, almost always. Blocking writes a rule in your account against an address the sender changes for free; reporting trains a filter you share with millions of people and pushes that sender's complaint rate towards the threshold at which their mail stops arriving for anybody. Blocking is for one persistent person, not for a campaign."}},{"@type":"Question","name":"How did they get my email address if I never gave it to anyone?","acceptedAnswer":{"@type":"Answer","text":"Usually it was guessed rather than leaked. A directory attack sends to a dictionary of common names at a domain and keeps whatever does not bounce, which is why info@ and john@ receive mail nobody ever subscribed. The other two routes are somebody else's breached contact list, and a domain that accepts every name including ones you never issued."}},{"@type":"Question","name":"Does deleting spam train my spam filter?","acceptedAnswer":{"@type":"Answer","text":"No. Deleting removes the message and teaches the filter nothing, which is why the next one lands in the inbox as well. Reporting it is what trains it — and moving a wrongly caught message back out of the spam folder trains it too, in the other direction, which is just as useful."}},{"@type":"Question","name":"Can I find out who sold my email address?","acceptedAnswer":{"@type":"Answer","text":"Only if you planned for it. If every service got an address that only it has, the answer is sitting in the To: line of the spam. If they all got the same address there is nothing to compare and nothing to attribute — the case for a catch-all domain is mostly this one."}},{"@type":"Question","name":"Do disposable addresses stop spam?","acceptedAnswer":{"@type":"Answer","text":"They stop it reaching you, which is not the same as stopping it. Mail sent to a throwaway address arrives, is deleted after 5 days and never touches the mailbox you read. That makes it the right tool for a sign-up you do not need to keep, and the wrong tool for anything you might have to recover."}},{"@type":"Question","name":"My address turned up in a data breach — should I change it?","acceptedAnswer":{"@type":"Answer","text":"Change what depends on it rather than the address itself. Move the recovery address on your important accounts, change any password you reused elsewhere, and turn on two-factor authentication where it is offered. The address is public from that day on and cannot be made private again, so the useful work is limiting what it still unlocks."}}]}]}</script>
+<script>
+(function() {
+  var _t = document.title;
+  Object.defineProperty(document, 'title', {
+    get: function() { return _t; },
+    set: function(v) {
+      _t = (v || '').replace(/grabmail/gi, 'Neverla Mail').replace(/🐴/g, '').trim();
+    }
+  });
+})();
+</script>
+</head>
+<body class="page-guide" id="top" data-loc="en" data-i18n="{}">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="hd" data-header>
+  <div class="wrap hd-in">
+    <a class="hd-brand" href="/" aria-label="neverla.web.id — home">
+      <picture>
+        <source srcset="/assets/img/logo-nav.webp?v=3af85b61f5" type="image/webp">
+        <img class="hd-logo" src="/assets/img/logo-nav.png?v=3af85b61f5"
+             alt="Neverla Mail" width="126" height="30" decoding="async" fetchpriority="high">
+      </picture>
+    </a>
+
+    <span class="hd-sep" aria-hidden="true"></span>
+
+        <nav class="hd-nav" aria-label="Main">
+      <ul class="hd-list">
+                <li>
+          <a class="hd-link" href="/#how" data-spy="how">How it works</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/extensions" data-spy="ext">Extension</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/#api" data-spy="api">API</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/domains" data-spy="domains">Your domain</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/docs/api" data-spy="docs">Docs</a>
+        </li>
+              </ul>
+    </nav>
+
+    <div class="hd-act">
+                  <button class="btn btn-quiet hd-login" type="button" data-auth-open="signin">
+        Log in      </button>
+            <a class="btn btn-primary" href="/#grab" data-cta>
+        Open an inbox        <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+        <button class="hd-burger" type="button" data-burger
+            aria-expanded="false" aria-controls="gm-drawer" aria-label="Open menu">
+      <span class="hd-burger-box" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+  </div>
+</header>
+
+<div class="drawer" id="gm-drawer" data-drawer hidden>
+  <nav class="drawer-in" aria-label="Mobile">
+    <ul class="drawer-list">
+            <li><a class="drawer-link" href="/#how">How it works</a></li>
+            <li><a class="drawer-link" href="/extensions">Extension</a></li>
+            <li><a class="drawer-link" href="/#api">API</a></li>
+            <li><a class="drawer-link" href="/domains">Your domain</a></li>
+            <li><a class="drawer-link" href="/docs/api">Docs</a></li>
+          </ul>
+    <a class="btn btn-primary btn-block" href="/#grab">Open an inbox</a>
+            <button class="btn btn-ghost btn-block" type="button" data-auth-open="signin">Log in</button>
+        <p class="drawer-note">Free · No signup · Deleted after 5 days</p>
+
+  </nav>
+</div>
+
+<main id="main">
+<div class="ga">
+
+    <div class="ga-prog" data-guide-progress aria-hidden="true"><span></span></div>
+
+  <div class="wrap ga-top">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+                <li><a href="/guides">Guides</a></li>
+        <li><a href="/guides/topic/privacy">Privacy &amp; everyday use</a></li>
+                <li aria-current="page">How to stop spam email: what works, and what makes it worse</li>
+      </ol>
+    </nav>
+
+    <div class="ga-head">
+      <div class="ga-head-t">
+        <p class="ga-eyebrow">
+          <span class="ga-eyebrow-ic"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.5 3.5 5v5c0 4 2.8 6.7 6.5 7.5 3.7-.8 6.5-3.5 6.5-7.5V5z"/><path d="m7.2 10 2 2 3.6-3.8"/></svg></span>
+          <a class="ga-eyebrow-a" href="/guides/topic/privacy">Privacy &amp; everyday use</a>
+        </p>
+        <h1 class="ga-h">How to stop spam email: what works, and what makes it worse</h1>
+        <p class="ga-lede">Most advice on this is a list of buttons. The useful version is shorter and less comfortable: one button trains a filter, one teaches it nothing at all, one link tells a stranger your address is read by a human — and none of them can un-give an address you have already handed over. Here is what each control really does, how to tell in ten seconds whether unsubscribing is safe, and the one fix that keeps working.</p>
+
+                <ul class="ga-meta">
+                    <li class="ga-lvl ga-lvl-beginner">Beginner</li>
+                              <li class="ga-meta-i">
+            <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.4V8l2.4 1.6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            17 min read          </li>
+          <li class="ga-meta-i">
+            <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="2.3" y="3.4" width="11.4" height="10.3" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M2.3 6.6h11.4M5.6 2.3v2.2M10.4 2.3v2.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            <time datetime="2026-09-07">Updated 7 September 2026</time>
+          </li>
+        </ul>
+      </div>
+
+                  <figure class="ga-hero">
+        <img class="ga-hero-img" src="/assets/img/guides/spam-800.webp?v=3af85b61f5" srcset="/assets/img/guides/spam-480.webp?v=3af85b61f5 480w, /assets/img/guides/spam-800.webp?v=3af85b61f5 800w, /assets/img/guides/spam-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 520px, (min-width: 720px) calc(100vw - 64px), calc(100vw - 40px)" width="1376" height="768" alt="A grey funnel with blue envelopes tumbling towards its mouth and two caught on the rim, and a single blue envelope that has passed through lying flat below the spout" fetchpriority="high" decoding="async">      </figure>
+    </div>
+  </div>
+
+  <div class="wrap ga-body">
+    <nav class="ga-rail doc-toc" aria-label="On this page">
+      <p class="doc-toc-h">On this page</p>
+      <ul>
+                <li><a href="#where-it-came-from" data-spy="where-it-came-from">Where the spam actually came from</a></li>
+                <li><a href="#the-unsubscribe-link" data-spy="the-unsubscribe-link">The unsubscribe link: when it works, and when it confirms you exist</a></li>
+                <li><a href="#spam-block-or-delete" data-spy="spam-block-or-delete">Mark as spam, block or delete: what your provider learns from each</a></li>
+                <li><a href="#ten-seconds-in-the-header" data-spy="ten-seconds-in-the-header">Ten seconds in the header, before you decide anything</a></li>
+                <li><a href="#what-opening-it-gives-away" data-spy="what-opening-it-gives-away">What opening it gives away, before you touch anything</a></li>
+                <li><a href="#a-different-address-per-service" data-spy="a-different-address-per-service">The only fix that scales: a different address per service</a></li>
+                <li><a href="#the-address-already-out-there" data-spy="the-address-already-out-there">The address that is already out there</a></li>
+                <li><a href="#checklist" data-spy="checklist">The short version</a></li>
+                <li><a href="#faq" data-spy="faq">Questions</a></li>
+              </ul>
+      <p class="ga-rail-back">
+                <a class="ga-rail-back-a" href="/guides">
+          <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          All guides        </a>
+      </p>
+    </nav>
+
+    <article class="ga-art">
+      <div class="toc-chip" data-toc-bar><button class="toc-chip-b" type="button" aria-haspopup="dialog"><svg class="toc-chip-ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 5.5h12M4 10h12M4 14.5h7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span class="toc-chip-k">On this page</span><span class="toc-chip-v"></span><svg class="toc-chip-dn" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 6.5 8 10.5l4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+                  <aside class="ga-key" aria-labelledby="ga-key-h">
+        <h2 class="ga-key-h" id="ga-key-h">In short</h2>
+        <ul>
+                    <li>Unsubscribing is safe from a sender you can prove is who it says it is, and only then. The proof is one line: <code>dmarc=pass</code> on the domain in <code>From:</code> — not on some other domain that also happens to belong to whoever sent it.</li>
+                    <li>Use the <em>Unsubscribe</em> button your mail app draws beside the sender's name, not the link inside the message. Your provider makes that request from a header; you make the other one, from your own browser.</li>
+                    <li><em>Mark as spam</em> trains a filter that millions of people share. <em>Delete</em> trains nothing whatever, and <em>block sender</em> blocks a string the sender rewrites for free.</li>
+                    <li>None of it un-gives an address. The only fix that keeps working is <a href="/guides/disposable-address-for-signups">handing a different address to each service</a>, so that a leak names its own source and can be cut on its own.</li>
+                  </ul>
+      </aside>
+      
+            <section class="ga-s" id="where-it-came-from" aria-labelledby="where-it-came-from-h">
+        <h2 class="ga-s-h" id="where-it-came-from-h">Where the spam actually came from</h2>
+        <p>There are four ways an address ends up on a list, and they leave different fingerprints. Which one it was matters more than it sounds, because the remedy is different in each case — and three of the four cannot be undone after the fact, which is the entire argument of the last half of this guide.</p><div class="ep-tw ga-tw" tabindex="0" role="region" aria-label="How it got out, What it looks like in the inbox, How to confirm it, What actually stops it"><table class="ep-t ga-t ga-t-wide"><thead><tr><th scope="col">How it got out</th><th scope="col">What it looks like in the inbox</th><th scope="col">How to confirm it</th><th scope="col">What actually stops it</th></tr></thead><tbody><tr><td>A service you signed up to was breached</td><td>A burst of unrelated spam beginning within weeks of the news, addressed to the exact spelling you used at that one service</td><td>Search the address in a breach index such as Have I Been Pwned, which catalogues the public dumps</td><td>Nothing, afterwards. A dump is copied the day it appears. Only a different address per service limits how far the next one reaches</td></tr><tr><td>The service sold it, or “shared it with partners”</td><td>Offers from an industry next door to the one you signed up to, arriving at one of your addresses and none of the others</td><td>Only if that service got an address nobody else has — a <a href="/guides/email-plus-addressing">plus tag</a> if it survived, a separate address if it did not</td><td>Cutting that one address. Anything else is a complaint you have no evidence for</td></tr><tr><td>It was published somewhere public</td><td>Mail to an address you never subscribed with: the one on your site, in your domain's registration record, or in a commit you pushed</td><td>Search for the address itself. If a browser can find it, so can a crawler that does nothing else all day</td><td>Taking it down helps slowly; the copies already made never expire. Replace it with an address you are willing to retire</td></tr><tr><td>Nobody leaked it — it was guessed</td><td>Mail to names you have never used at a domain of your own: <code>info@</code>, <code>sales@</code>, <code>john@</code></td><td>Read the part before the <code>@</code>. A directory attack tries a dictionary of common names against a domain and keeps whatever does not bounce</td><td>Not using a guessable address as your public one, and never treating <a href="/guides/own-domain-catch-all-inbox">a catch-all inbox</a> as a private one</td></tr></tbody></table></div><p>Three of those four rows end in the same admission: once an address is on a list, it is on the list. There is no authority to appeal to, no central opt-out that a spammer honours, and no button anywhere that recalls it. What you can still change is what you hand over next — which is why this guide ends where it does rather than with a longer list of filters.</p><aside class="ga-call ga-call-note"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7.5"/><path d="M10 9.2v4.4M10 6.4h.01"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Note</span>Spam at an address you never gave anybody</p><p>Ordinary, and rarely a mystery. Either it was guessed, as in the fourth row; or it was sitting in somebody else's contacts when their account was breached; or your domain accepts everything and the name was invented. None of the three requires you to have made a mistake.</p></div></aside>      </section>
+            <section class="ga-s" id="the-unsubscribe-link" aria-labelledby="the-unsubscribe-link-h">
+        <h2 class="ga-s-h" id="the-unsubscribe-link-h">The unsubscribe link: when it works, and when it confirms you exist</h2>
+        <p>Unsubscribing from a company you really did sign up with works, and works quickly — because since 2024 the large mailbox providers have made it a condition of delivery rather than a courtesy. A sender pushing bulk mail at Gmail, Yahoo Mail or Outlook.com has to offer a one-click unsubscribe, act on it within two days, authenticate its mail and keep complaints under about a third of a percent. A sender who ignores that stops arriving at all. From your side of the wire, compliance looks like this:</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>the header of a message you can safely unsubscribe from</span><button class="code-copy" type="button" data-copy-code data-code="From: &quot;Example Shop&quot; &lt;news@example.com&gt;
+List-Unsubscribe: &lt;https://example.com/u/8f21c4&gt;,
+        &lt;mailto:unsubscribe@example.com?subject=unsub-8f21c4&gt;
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+Authentication-Results: mx.example.org;
+        spf=pass smtp.mailfrom=mail.example.com;
+        dkim=pass header.d=example.com;
+        dmarc=pass header.from=example.com" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code>From: &quot;Example Shop&quot; &lt;news@example.com&gt;
+List-Unsubscribe: &lt;https://example.com/u/8f21c4&gt;,
+        &lt;mailto:unsubscribe@example.com?subject=unsub-8f21c4&gt;
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+Authentication-Results: mx.example.org;
+        spf=pass smtp.mailfrom=mail.example.com;
+        dkim=pass header.d=example.com;
+        dmarc=pass header.from=example.com</code></pre></div><p>Two of those lines are the mechanism. <code>List-Unsubscribe</code> declares where to opt out, in a header rather than in the prose; <code>List-Unsubscribe-Post</code> says the sender will accept a single POST as the entire conversation, with no page to load and no form to fill in. That pair is what your mail app reads to draw an <em>Unsubscribe</em> link beside the sender's name — and it is a different request from the one in the body of the message.</p><figure class="ga-fig"><svg class="ga-dia" viewBox="0 0 700 238" role="img" aria-label="The unsubscribe link inside a message is fetched by your own browser and confirms that your address is read by a human; the unsubscribe button beside the sender&#039;s name is fetched by your mail provider and reveals nothing about you."><rect x="8" y="26" width="214" height="70" rx="10" class="d-box"/><text x="115" y="54" class="d-t" text-anchor="middle">Your browser</text><text x="115" y="74" class="d-s" text-anchor="middle">opens the link in the body</text><rect x="478" y="26" width="214" height="70" rx="10" class="d-box"/><text x="585" y="54" class="d-t" text-anchor="middle">The sender</text><text x="585" y="74" class="d-s" text-anchor="middle">learns a human read it</text><path d="M226 75H467" class="d-line"/><path d="M466 70L474 75L466 80z" class="d-head"/><text x="350" y="52" class="d-b d-no" text-anchor="middle">The link in the message</text><rect x="8" y="136" width="214" height="70" rx="10" class="d-box d-box-a"/><text x="115" y="164" class="d-t" text-anchor="middle">Your provider</text><text x="115" y="184" class="d-s" text-anchor="middle">sends the request for you</text><rect x="478" y="136" width="214" height="70" rx="10" class="d-box"/><text x="585" y="164" class="d-t" text-anchor="middle">The sender</text><text x="585" y="184" class="d-s" text-anchor="middle">learns an address opted out</text><path d="M226 185H467" class="d-line"/><path d="M466 180L474 185L466 190z" class="d-head"/><text x="350" y="162" class="d-b d-yes" text-anchor="middle">The button beside the name</text><text x="350" y="230" class="d-s" text-anchor="middle">Two requests, and only one of them is about you.</text></svg><figcaption>The same intention, sent by two different people. The link printed in the message is fetched by you, from a URL that carries the message id — so the fetch itself reports that this address is read by a human. The button beside the sender's name is fetched by your provider, and reveals nothing except that an address opted out.</figcaption></figure><p>Which turns a decision that feels risky into one with three outcomes:</p><dl class="defs"><div class="def"><dt>There is an unsubscribe button beside the sender's name</dt><dd>Use it. Your provider makes the request, the sender learns only that one address opted out, and Gmail and Outlook.com both record the click as a signal about that sender.</dd></div><div class="def"><dt>There is no button, but you are certain you have an account there</dt><dd>Open the message with remote images off, check in <a href="/guides/email-headers-explained">the header</a> that <code>dmarc=pass</code> names the brand's own domain, and then use the link. The certainty is doing the work here, not the link.</dd></div><div class="def"><dt>You never signed up, or the header does not check out</dt><dd>Click nothing in it. Report it as spam and close it. The link is a tracking URL, it is unique to you, and following it is exactly how a list that guessed your address confirms the guess.</dd></div></dl><p class="doc-n">The <code>mailto:</code> form in the same header exists for the same purpose and is safe in the same cases — it sends a bare message and takes no browser with it. It is also the form nothing has implemented well in twenty years, so treat it as a fallback rather than a plan.</p><aside class="ga-call ga-call-stop"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7.5"/><path d="m6.6 6.6 6.8 6.8"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Do not</span>unsubscribe from a message you never signed up for.</p><p>For an actual spammer the unsubscribe link is not a promise, it is a measurement. Nothing obliges them to honour it, the URL identifies you precisely, and an address that opts out is an address confirmed live, read, and worth more on the next list than it was on this one.</p></div></aside>      </section>
+            <section class="ga-s" id="spam-block-or-delete" aria-labelledby="spam-block-or-delete-h">
+        <h2 class="ga-s-h" id="spam-block-or-delete-h">Mark as spam, block or delete: what your provider learns from each</h2>
+        <p>Four controls sit within a centimetre of one another in every mail app, and they do four unrelated things. Only one of them makes next month quieter.</p><dl class="defs"><div class="def"><dt>Mark as spam / Report spam</dt><dd>The only one that trains anything. Your own filter learns from it at once, and the report is pooled with everybody else's: a sender whose complaint rate crosses roughly a third of a percent starts landing in the spam folder for people who never complained at all. It is the most effective button on this page.</dd></div><div class="def"><dt>Block sender</dt><dd>A rule inside your account only, matched against an address or a domain the sender chose and can change in a second. Useful against one persistent human, useless against a campaign — which is why the same offer returns from <code>news-2@</code> the following week.</dd></div><div class="def"><dt>Delete</dt><dd>Teaches nothing at all. The message is gone and the filter is exactly as wrong as it was a moment ago, so the next one lands in the inbox too. This is the most common mistake in this article.</dd></div><div class="def"><dt>Move it to a folder, or filter it away</dt><dd>Hides the problem from you and from the filter in one movement. Worth doing for mail you asked for and do not want to see; actively counterproductive as a way of dealing with mail you never asked for.</dd></div><div class="def"><dt>Report phishing</dt><dd>A different pipeline from spam at both Google and Microsoft, with people and takedown requests at the end of it. Use it when a message is impersonating somebody — a bank, a colleague, a delivery firm — rather than merely selling something.</dd></div></dl><p>There is a fifth control, and it counts as much as the first: moving a message <em>out</em> of the spam folder is also training. A newsletter you rescue teaches the filter that this sender is wanted, in your account and in the aggregate. It is why a filter you have used honestly for a year is better than one you have never touched.</p><aside class="ga-call ga-call-warn"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.8 18 16.6H2z"/><path d="M10 8v3.4M10 13.8h.01"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Watch out</span>Blocking an address is blocking a string</p><p>The <code>From:</code> line costs the sender nothing to rewrite, and a list holding your address feeds hundreds of sending domains at once. Blocking silences one correspondent, not one campaign — a distinction that becomes obvious the third time the same offer arrives under a new name.</p></div></aside>      </section>
+            <section class="ga-s" id="ten-seconds-in-the-header" aria-labelledby="ten-seconds-in-the-header-h">
+        <h2 class="ga-s-h" id="ten-seconds-in-the-header-h">Ten seconds in the header, before you decide anything</h2>
+        <p>Everything above turns on a single question — is this sender who it says it is — and the answer is three lines of text that every mail app can show you. Here is the same shop as before, except that it is not:</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>a message impersonating the sender above</span><button class="code-copy" type="button" data-copy-code data-code="From: &quot;Example Shop&quot; &lt;news@examp1e-shop.net&gt;
+Return-Path: &lt;b7f2@mailer-4471.example.net&gt;
+Authentication-Results: mx.example.org;
+        spf=pass smtp.mailfrom=mailer-4471.example.net;
+        dkim=none;
+        dmarc=none" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code>From: &quot;Example Shop&quot; &lt;news@examp1e-shop.net&gt;
+Return-Path: &lt;b7f2@mailer-4471.example.net&gt;
+Authentication-Results: mx.example.org;
+        spf=pass smtp.mailfrom=mailer-4471.example.net;
+        dkim=none;
+        dmarc=none</code></pre></div><p>Nothing there is a forgery in the technical sense. <code>spf=pass</code> is perfectly true: the sender really does control <code>mailer-4471.example.net</code> and really did authorise itself to send from it. What is missing is any statement at all about <code>example.com</code>, whose name is in the display line and whose brand the message is wearing. Four things to look at, in this order:</p><ol class="steps-n"><li><strong>The address, not the name.</strong> <code>Example Shop</code> is free text that a sender types. The part in angle brackets is the claim — and here it reads <code>examp1e-shop.net</code>, with a digit standing in for a letter.</li><li><strong><code>dmarc=</code>, and whose domain it names.</strong> <code>dmarc=pass header.from=example.com</code> means the brand's own domain vouched for this message. <code>dmarc=none</code> means nobody did. A pass on a domain other than the one in <code>From:</code> proves only that a stranger owns a domain.</li><li><strong><code>Return-Path:</code> against <code>From:</code>.</strong> Real bulk senders route bounces through their own sending infrastructure, so the two rarely match exactly. What should match is the organisation: <code>mail.example.com</code> under <code>example.com</code> is normal, <code>mailer-4471.example.net</code> under it is not.</li><li><strong>Whether there is a <code>List-Unsubscribe</code> at all.</strong> Its absence from something claiming to be a marketing message is itself the answer — a real bulk sender cannot afford to leave it out any more.</li></ol><aside class="ga-call ga-call-tip"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.6a5.2 5.2 0 0 0-3 9.5v1.6h6v-1.6a5.2 5.2 0 0 0-3-9.5zM8 16.4h4"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Tip</span>Judge the header, not the design.</p><p>The logo, the typography and the footer with a postal address in it are the cheapest part of a message to copy, and a convincing one costs an afternoon. The <code>Authentication-Results</code> line is written by your own provider after the message arrived, which is precisely why it is the one line the sender could not write. <a href="/guides/email-headers-explained">Reading an email header</a> covers where to open it in the app you already use.</p></div></aside>      </section>
+            <section class="ga-s" id="what-opening-it-gives-away" aria-labelledby="what-opening-it-gives-away-h">
+        <h2 class="ga-s-h" id="what-opening-it-gives-away-h">What opening it gives away, before you touch anything</h2>
+        <p>A message you never asked for is a question about you, and answering it costs the sender nothing and you something. Four things leave the moment you open one with images on:</p><ul class="doc-l"><li><strong>That the address is live and read by a person.</strong> The single most valuable fact about any address on a list, and the one that decides whether it gets sold on.</li><li><strong>When you read it, and how often.</strong> The pixel is requested every time the message is displayed, not once.</li><li><strong>Roughly where you are, and what you read on.</strong> The request carries an IP address and a user agent like any other.</li><li><strong>Which of their messages you opened.</strong> The URL is unique per recipient, so the answer is per-address rather than in aggregate.</li></ul><p>Every mainstream provider now proxies remote images, which blunts the location half of that but not the confirmation half: the request still happens, and it still says that an address opened the message. Blocking images until you ask for them is a setting in every mail app and the best default on this page. <a href="/guides/email-tracking-pixels">Email tracking pixels</a> covers the mechanism, and what blocking them does and does not buy. Here they are blocked by the policy the message is served under rather than by editing it, so there is nothing to switch on.</p>      </section>
+            <section class="ga-s" id="a-different-address-per-service" aria-labelledby="a-different-address-per-service-h">
+        <h2 class="ga-s-h" id="a-different-address-per-service-h">The only fix that scales: a different address per service</h2>
+        <p>Every control above is a way of reacting to mail that has already arrived at an address the sender already has. The one approach that reduces the volume rather than sorting it is to make the address itself expendable — so that a leak names the service that leaked it and can be cut without touching anything else. There are four ways to do that, and they differ in ways worth knowing before you pick one:</p><div class="ep-tw ga-tw" tabindex="0" role="region" aria-label="What you hand over, Hides your real address?, Survives being sold on?, Can you cut just this one?, What it costs you"><table class="ep-t ga-t ga-t-wide"><thead><tr><th scope="col">What you hand over</th><th scope="col">Hides your real address?</th><th scope="col">Survives being sold on?</th><th scope="col">Can you cut just this one?</th><th scope="col">What it costs you</th></tr></thead><tbody><tr><td><a href="/guides/email-plus-addressing">A plus tag</a> on your own address</td><td>No — your address is inside it, in plain sight</td><td>No. Deleting everything between the <code>+</code> and the <code>@</code> is one line of code, and the party most likely to run it is the one selling the list</td><td>Only by filtering, which still delivers</td><td>Nothing, and about ten seconds</td></tr><tr><td>A relay alias that forwards to you</td><td>Yes, for as long as it lasts</td><td>Yes — the buyer gets the alias and not you</td><td>Yes, and instantly</td><td>A subscription, and a third party in the path of your mail</td></tr><tr><td>An address on <a href="/guides/own-domain-catch-all-inbox">a domain you own</a></td><td>Yes, and it does not look disposable to a sign-up form</td><td>Yes</td><td>Yes, one address at a time</td><td>A domain, one MX record, and <a href="/guides/spf-dmarc-for-a-receive-only-domain">the DNS that stops it being spoofed</a></td></tr><tr><td><a href="/guides/disposable-address-for-signups">A disposable address</a> you never read again</td><td>Yes, completely</td><td>Yes — there is nothing behind it to sell</td><td>It cuts itself: the mail is deleted after 5 days</td><td>You cannot recover the account later, and <a href="/guides/why-signup-forms-block-disposable-email">some forms refuse the domain</a></td></tr></tbody></table></div><p>The choice is not between them once and for all; it is made per sign-up, and the question that settles it is the one from <a href="/guides/burner-email-vs-alias-vs-temp-mail">burner, alias or temp mail</a>: would you mind losing this account? For a shop you will buy from once, a disposable address is both the right answer and the cheapest. For your bank it is a catastrophe. For the two hundred sign-ups in between, an address on a domain you own is the one that keeps working.</p><p class="doc-n">A plus tag is on this list because it is what people reach for first, not because it belongs above the others. It sorts mail beautifully and hides nothing at all.</p><aside class="ga-call ga-call-tip"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.6a5.2 5.2 0 0 0-3 9.5v1.6h6v-1.6a5.2 5.2 0 0 0-3-9.5zM8 16.4h4"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Tip</span>Name the address after the service.</p><p>Whichever mechanism you pick, put the service's name into the address you give it — <code>shop@</code> rather than <code>me4@</code>. It costs nothing at sign-up time, and it turns the next unexplained burst of spam from a mystery into one line you can read off the <code>To:</code> field.</p></div></aside>      </section>
+            <section class="ga-s" id="the-address-already-out-there" aria-labelledby="the-address-already-out-there-h">
+        <h2 class="ga-s-h" id="the-address-already-out-there-h">The address that is already out there</h2>
+        <p>An address that is on the lists is on them for good, and starting again from a blank one is worth less than it feels: a new address collects the same lists in about the same time, unless what you hand over changes as well. So the useful move is not a fresh start but a triage, in this order:</p><ol class="steps-n"><li><strong>Stop making it worse.</strong> Do not publish it in plain text on a page, do not use it as the public contact for a domain, and give the next form something else.</li><li><strong>Move what you cannot afford to lose.</strong> Banking, government, your domain registrar, and above all the recovery address on your other accounts. That is a short list, and it is the whole reason to do any of this.</li><li><strong>Change the recovery address first, the login address second.</strong> In that order, every time. Doing it the other way round is how people lock themselves out of the account they were trying to protect.</li><li><strong>Leave the rest alone.</strong> Two hundred shopping accounts do not need migrating. Let them keep the old address, and let the old address become the one you skim rather than the one you live in.</li><li><strong>Then let the filter work.</strong> Report rather than delete, rescue whatever was wrongly caught, and give it a month. A filter you have trained honestly beats any rule you can write by hand.</li></ol><p>The point of a triage is that it ends. There is no version of this where the old address becomes clean again; there is a version where it stops mattering, and it takes an afternoon.</p><aside class="ga-call ga-call-warn"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.8 18 16.6H2z"/><path d="M10 8v3.4M10 13.8h.01"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Watch out</span>Changing your address on a breached site does not remove you from the breach</p><p>The dump is a copy, made once and already distributed. Updating the account is worth doing so that the service holds current data, but it neither withdraws the old row nor stops mail to the old address. Treat a breached address as public from the day the news breaks.</p></div></aside>      </section>
+            <section class="ga-s" id="checklist" aria-labelledby="checklist-h">
+        <h2 class="ga-s-h" id="checklist-h">The short version</h2>
+        <ol class="steps-n"><li>Prefer the <em>Unsubscribe</em> button your mail app puts beside the sender's name to the link inside the message.</li><li>Unsubscribe only from senders you can prove: <code>dmarc=pass</code> on the domain that is in <code>From:</code>.</li><li>Click nothing at all in a message you never signed up for. The link is the measurement.</li><li>Report as spam rather than deleting. Deleting teaches your filter nothing.</li><li>Rescue wrongly filtered mail as well — that is training too, in the other direction.</li><li>Turn remote images off by default, in every mail app you use.</li><li>Give the next sign-up an address that exists only for it: a tag if that is all you have, an address on your own domain if you can, a disposable one if you never want to hear from them again.</li></ol><p>The first six make this month quieter. The seventh is the only one that makes next year quieter.</p>      </section>
+      
+            <section class="ga-s" id="faq" aria-labelledby="faq-h">
+        <h2 class="ga-s-h" id="faq-h">Questions</h2>
+        <div class="faq ga-faq">
+                    <details class="faq-i" open>
+            <summary class="faq-q">
+              <span>Does unsubscribing from spam make it worse?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>From real spam, yes: the link identifies you, and an address that opts out is an address confirmed live. From a company you actually signed up with, no — the large providers now require a one-click unsubscribe acted on within two days, and a sender who ignores that stops being delivered. The whole skill is telling the two apart, which <code>dmarc=pass</code> on the brand's own domain does in about ten seconds.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Is it better to mark as spam or to block the sender?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Mark as spam, almost always. Blocking writes a rule in your account against an address the sender changes for free; reporting trains a filter you share with millions of people and pushes that sender's complaint rate towards the threshold at which their mail stops arriving for anybody. Blocking is for one persistent person, not for a campaign.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>How did they get my email address if I never gave it to anyone?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Usually it was guessed rather than leaked. A directory attack sends to a dictionary of common names at a domain and keeps whatever does not bounce, which is why <code>info@</code> and <code>john@</code> receive mail nobody ever subscribed. The other two routes are somebody else's breached contact list, and a domain that accepts every name including ones you never issued.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Does deleting spam train my spam filter?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>No. Deleting removes the message and teaches the filter nothing, which is why the next one lands in the inbox as well. Reporting it is what trains it — and moving a wrongly caught message back out of the spam folder trains it too, in the other direction, which is just as useful.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Can I find out who sold my email address?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Only if you planned for it. If every service got an address that only it has, the answer is sitting in the <code>To:</code> line of the spam. If they all got the same address there is nothing to compare and nothing to attribute — the case for <a href="/guides/own-domain-catch-all-inbox">a catch-all domain</a> is mostly this one.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Do disposable addresses stop spam?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>They stop it reaching you, which is not the same as stopping it. Mail sent to <a href="/guides/disposable-address-for-signups">a throwaway address</a> arrives, is deleted after 5 days and never touches the mailbox you read. That makes it the right tool for a sign-up you do not need to keep, and the wrong tool for anything you might have to recover.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>My address turned up in a data breach — should I change it?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Change what depends on it rather than the address itself. Move the recovery address on your important accounts, change any password you reused elsewhere, and turn on two-factor authentication where it is offered. The address is public from that day on and cannot be made private again, so the useful work is limiting what it still unlocks.</p></div>
+          </details>
+                  </div>
+      </section>
+      
+      
+                  <nav class="ga-pn" aria-label="More in this topic">
+                <a class="ga-pn-i ga-pn-p" href="/guides/email-plus-addressing" rel="prev">
+          <span class="ga-pn-k">Previous</span>
+          <span class="ga-pn-t">Plus addressing and its limits</span>
+        </a>
+                      </nav>
+      
+    </article>
+  </div>
+
+    <div class="ga-rel">
+    <div class="wrap">
+      <h2 class="ga-rel-h">Keep reading</h2>
+      <ul class="gd-cards ga-rel-l">
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/email-plus-addressing">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/plustag-800.webp?v=3af85b61f5" srcset="/assets/img/guides/plustag-480.webp?v=3af85b61f5 480w, /assets/img/guides/plustag-800.webp?v=3af85b61f5 800w, /assets/img/guides/plustag-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="A blue envelope with a small grey tag hanging from its corner, a pair of scissors and a cut length of string in front of it, and a second blue envelope standing plain with no tag at all" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">Privacy &amp; everyday use</span>
+              <span class="gd-card-t">Plus addressing: what you+tag@ hides, and what it doesn’t</span>
+              <span class="gd-card-x">What subaddressing is and where it is written down, a provider-by-provider table of who accepts a plus tag and what else they accept, the three jobs it does well, the four it cannot do, why sign-up forms reject the character, and a side-by-side of the alternatives that change the address instead of decorating it.</span>
+              <span class="gd-card-m">13 min read</span>
+            </span>
+          </a>
+        </li>
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/email-tracking-pixels">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/tracking-800.webp?v=3af85b61f5" srcset="/assets/img/guides/tracking-480.webp?v=3af85b61f5 480w, /assets/img/guides/tracking-800.webp?v=3af85b61f5 800w, /assets/img/guides/tracking-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="A small blue cube resting on a grey envelope, with the cord leading away from it cut and curling loose in mid-air" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">Privacy &amp; everyday use</span>
+              <span class="gd-card-t">Email tracking pixels: what the sender learns when you open</span>
+              <span class="gd-card-x">How a tracking pixel actually works, what a single request tells the sender, why remote images are blocked here by policy rather than by editing the message, and the louder signal that blocking them leaves untouched.</span>
+              <span class="gd-card-m">10 min read</span>
+            </span>
+          </a>
+        </li>
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/email-headers-explained">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/headers-800.webp?v=3af85b61f5" srcset="/assets/img/guides/headers-480.webp?v=3af85b61f5 480w, /assets/img/guides/headers-800.webp?v=3af85b61f5 800w, /assets/img/guides/headers-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="A blue envelope with a long grey paper tape unrolling from behind it, marked with dashes instead of words, under a grey magnifying glass" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">Email &amp; deliverability</span>
+              <span class="gd-card-t">Email headers: how to read one, and what it proves</span>
+              <span class="gd-card-x">What the header block is and how it differs from the SMTP envelope, where to open the raw source in the mail app you already use, how to read the Received chain from the bottom up, the four fields that all claim to be the sender, what a pass or a fail in Authentication-Results really means, the five things a header can never tell you, and what is left to check when the message landed at a disposable address.</span>
+              <span class="gd-card-m">21 min read</span>
+            </span>
+          </a>
+        </li>
+              </ul>
+    </div>
+  </div>
+  
+  <section class="cta ga-cta" aria-labelledby="ga-cta-h">
+    <div class="wrap cta-in">
+      <h2 class="cta-h" id="ga-cta-h">Try it while it is fresh</h2>
+      <p class="cta-p">An address takes one click, no account and no card. Everything in this guide works on it straight away.</p>
+      <div class="cta-act">
+        <a class="btn btn-primary btn-lg" href="/#grab">Open an inbox</a>
+        <a class="btn btn-ghost btn-lg" href="/docs/api">Read the API reference</a>
+      </div>
+    </div>
+  </section>
+</div>
+</main>
+
+<footer class="ft" id="ft-map">
+  <div class="wrap">
+    <div class="ft-top">
+      <div class="ft-brand">
+        <a class="ft-logo" href="/" aria-label="Neverla Mail — home">
+          <picture>
+            <source srcset="/assets/img/logo-nav.webp?v=3af85b61f5" type="image/webp">
+            <img class="ft-logo-img" src="/assets/img/logo-nav.png?v=3af85b61f5"
+                 alt="Neverla Mail" width="122" height="29" decoding="async" loading="lazy">
+          </picture>
+        </a>
+        <p class="ft-blurb">
+                    Disposable email addresses with a free REST API. Grab one in a click, or point your own domain at us for an inbox nobody can guess into.        </p>
+                <p class="ft-status">
+          <span class="dot" aria-hidden="true"></span>
+          <a href="/status">System status</a>
+        </p>
+      </div>
+
+                  <nav class="ft-nav" aria-label="Product">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Product</h2></summary>
+          <ul>
+                                                <li><a href="/#grab">Grab an address</a></li>
+                                    <li><a href="/#how">How it works</a></li>
+                                    <li><a href="/domains">Connect a domain</a></li>
+                                    <li><a href="/extensions">Browser extension</a></li>
+                                    <li><a href="/pricing">Pricing</a></li>
+                                    <li><a href="/guides">Guides</a></li>
+                                    <li><a href="/compare">Comparing the APIs</a></li>
+                                    <li><a href="/vs">Neverla Mail vs the alternatives</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Developers">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Developers</h2></summary>
+          <ul>
+                                                <li><a href="/docs/quickstart#mcp">MCP for AI agents</a></li>
+                                    <li><a href="/openapi.json">OpenAPI 3.1</a></li>
+                                    <li><a href="/llms.txt">llms.txt</a></li>
+                                    <li><a href="/docs">Documentation</a></li>
+                                    <li><a href="/docs/api">API reference</a></li>
+                                    <li><a href="/docs/quickstart">Quickstart</a></li>
+                                    <li><a href="/docs/limits">Limits</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Company">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Company</h2></summary>
+          <ul>
+                                                <li><a href="/about">About</a></li>
+                                    <li><a href="/status">Status</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Legal">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Legal</h2></summary>
+          <ul>
+                                                <li><a href="/legal/terms">Terms of service</a></li>
+                                    <li><a href="/legal/privacy">Privacy</a></li>
+                      </ul>
+        </details>
+      </nav>
+          </div>
+
+    <div class="ft-bar">
+      <p>&copy; 2026 Neverla Mail. All rights reserved.</p>
+      <ul class="ft-facts">
+        <li>Receive-only</li>
+        <li>No tracking, no ads</li>
+        <li>Messages deleted after 5 days</li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<div class="lang" data-lang>
+    <button class="lang-fab" type="button" data-lang-open
+          aria-haspopup="dialog" aria-expanded="false"
+          title="Language: English">
+    <span class="lang-fab-fl" aria-hidden="true"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+    <span class="lang-code" aria-hidden="true">EN</span>
+        <span class="lang-fab-n" aria-hidden="true"><span>English</span></span>
+    <svg class="lang-globe" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+         aria-hidden="true" focusable="false">
+      <circle cx="10" cy="10" r="7.25"/>
+      <path d="M2.75 10h14.5M10 2.75c3.85 4.4 3.85 10.1 0 14.5-3.85-4.4-3.85-10.1 0-14.5z"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="sr-only">Change language: English</span>
+  </button>
+
+  <dialog class="lm" data-lang-modal aria-labelledby="lm-title">
+    <div class="lm-panel">
+            <div class="lm-grab" aria-hidden="true"></div>
+
+            <header class="lm-hd">
+        <h2 class="lm-t" id="lm-title">Language</h2>
+                <form method="dialog">
+          <button class="lm-x" type="submit" aria-label="Change language">
+            <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+              <path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor"
+                    stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </form>
+      </header>
+
+      <ul class="lm-grid">
+                <li>
+          <a class="lm-i is-on"
+             href="/guides/how-to-stop-spam-email"
+             hreflang="en" lang="en"
+             aria-current="true" data-lang-current>
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">English</span>
+                            <span class="lm-n-l" lang="en">English</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">EN</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/es/guides/how-to-stop-spam-email"
+             hreflang="es" lang="es"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-es"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Español</span>
+                            <span class="lm-n-l" lang="en">Spanish</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">ES</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/pt/guides/how-to-stop-spam-email"
+             hreflang="pt" lang="pt"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-pt"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Português</span>
+                            <span class="lm-n-l" lang="en">Portuguese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">PT</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/fr/guides/how-to-stop-spam-email"
+             hreflang="fr" lang="fr"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-fr"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Français</span>
+                            <span class="lm-n-l" lang="en">French</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">FR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/de/guides/how-to-stop-spam-email"
+             hreflang="de" lang="de"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-de"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Deutsch</span>
+                            <span class="lm-n-l" lang="en">German</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">DE</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ru/guides/how-to-stop-spam-email"
+             hreflang="ru" lang="ru"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ru"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Русский</span>
+                            <span class="lm-n-l" lang="en">Russian</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">RU</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/tr/guides/how-to-stop-spam-email"
+             hreflang="tr" lang="tr"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-tr"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Türkçe</span>
+                            <span class="lm-n-l" lang="en">Turkish</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">TR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/id/guides/how-to-stop-spam-email"
+             hreflang="id" lang="id"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-id"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Bahasa Indonesia</span>
+                            <span class="lm-n-l" lang="en">Indonesian</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">ID</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/vi/guides/how-to-stop-spam-email"
+             hreflang="vi" lang="vi"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-vi"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Tiếng Việt</span>
+                            <span class="lm-n-l" lang="en">Vietnamese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">VI</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ar/guides/how-to-stop-spam-email"
+             hreflang="ar" lang="ar"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ar"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">العربية</span>
+                            <span class="lm-n-l" lang="en">Arabic</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">AR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ja/guides/how-to-stop-spam-email"
+             hreflang="ja" lang="ja"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ja"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">日本語</span>
+                            <span class="lm-n-l" lang="en">Japanese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">JA</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+              </ul>
+    </div>
+  </dialog>
+
+  <noscript>
+    <ul class="lang-ns" aria-label="Language">
+            <li><a href="/guides/how-to-stop-spam-email" hreflang="en" lang="en">English</a></li>
+            <li><a href="/es/guides/how-to-stop-spam-email" hreflang="es" lang="es">Español</a></li>
+            <li><a href="/pt/guides/how-to-stop-spam-email" hreflang="pt" lang="pt">Português</a></li>
+            <li><a href="/fr/guides/how-to-stop-spam-email" hreflang="fr" lang="fr">Français</a></li>
+            <li><a href="/de/guides/how-to-stop-spam-email" hreflang="de" lang="de">Deutsch</a></li>
+            <li><a href="/ru/guides/how-to-stop-spam-email" hreflang="ru" lang="ru">Русский</a></li>
+            <li><a href="/tr/guides/how-to-stop-spam-email" hreflang="tr" lang="tr">Türkçe</a></li>
+            <li><a href="/id/guides/how-to-stop-spam-email" hreflang="id" lang="id">Bahasa Indonesia</a></li>
+            <li><a href="/vi/guides/how-to-stop-spam-email" hreflang="vi" lang="vi">Tiếng Việt</a></li>
+            <li><a href="/ar/guides/how-to-stop-spam-email" hreflang="ar" lang="ar">العربية</a></li>
+            <li><a href="/ja/guides/how-to-stop-spam-email" hreflang="ja" lang="ja">日本語</a></li>
+          </ul>
+  </noscript>
+</div>
+<svg class="lm-sprite" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+    <symbol id="fl-en" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#012169"/>
+      <path d="M0 0 24 16M24 0 0 16" stroke="#fff" stroke-width="3.2"/>
+      <path d="M0 0 24 16M24 0 0 16" stroke="#C8102E" stroke-width="1.9"/>
+      <path d="M12 0v16M0 8h24" stroke="#fff" stroke-width="5.3"/>
+      <path d="M12 0v16M0 8h24" stroke="#C8102E" stroke-width="3.2"/>
+    </symbol>
+    <symbol id="fl-es" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#AA151B"/>
+      <rect y="4" width="24" height="8" fill="#F1BF00"/>
+    </symbol>
+    <symbol id="fl-pt" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#DA291C"/>
+      <rect width="9.6" height="16" fill="#046A38"/>
+      <circle cx="9.6" cy="8" r="3.4" fill="#FFE800" stroke="#046A38" stroke-width="1"/>
+    </symbol>
+    <symbol id="fl-fr" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <rect width="8" height="16" fill="#002395"/>
+      <rect x="16" width="8" height="16" fill="#ED2939"/>
+    </symbol>
+    <symbol id="fl-de" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#FFCE00"/>
+      <rect width="24" height="10.7" fill="#DD0000"/>
+      <rect width="24" height="5.3"/>
+    </symbol>
+    <symbol id="fl-ru" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#D52B1E"/>
+      <rect width="24" height="10.7" fill="#0039A6"/>
+      <rect width="24" height="5.3" fill="#fff"/>
+    </symbol>
+    <symbol id="fl-tr" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#E30A17"/>
+      <circle cx="9.4" cy="8" r="3.9" fill="#fff"/>
+      <circle cx="10.9" cy="8" r="3.1" fill="#E30A17"/>
+      <path d="m15.1 8 1.35.44-.83 1.15V8.2l.83 1.15z" fill="#fff"/>
+      <path d="m14.6 6.2.72 1.98 2.1.06-1.67 1.28.6 2.02-1.75-1.18-1.75 1.18.6-2.02-1.67-1.28 2.1-.06z" fill="#fff"/>
+    </symbol>
+    <symbol id="fl-id" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <rect width="24" height="8" fill="#CE1126"/>
+    </symbol>
+    <symbol id="fl-vi" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#DA251D"/>
+      <path d="m12 3.6 1.32 4.06h4.27l-3.46 2.51 1.33 4.06L12 11.72l-3.46 2.51 1.33-4.06-3.46-2.51h4.27z" fill="#FFFF00"/>
+    </symbol>
+    <symbol id="fl-ar" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#165D31"/>
+      <path d="M5.6 6.4h12.8" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M5.6 10.4h11.2" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M16.8 10.4c.9 0 1.6.5 1.6 1.2" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="fl-ja" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <circle cx="12" cy="8" r="4.8" fill="#BC002D"/>
+    </symbol>
+  </defs>
+</svg><dialog class="am" data-auth-modal aria-labelledby="am-h-signin">
+  <div class="am-panel" data-am-panel data-view="signin">
+
+        <div class="am-grab" aria-hidden="true"></div>
+
+        <div class="am-body" data-am-body>
+
+            <div class="am-hd">
+                <div class="am-seg" role="tablist" aria-label="Account">
+          <span class="am-seg-pill" aria-hidden="true"></span>
+          <button class="am-seg-b" type="button" role="tab" id="am-tab-signin"
+                  aria-selected="true" aria-controls="am-view-signin"
+                  data-am-go="signin">Sign in</button>
+          <button class="am-seg-b" type="button" role="tab" id="am-tab-signup"
+                  aria-selected="false" aria-controls="am-view-signup" tabindex="-1"
+                  data-am-go="signup">Create account</button>
+        </div>
+
+        <button class="am-x" type="button" data-am-close aria-label="Close">
+          <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor"
+                  stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+            <div class="am-alert" role="alert" data-am-alert hidden>
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" aria-hidden="true" focusable="false">
+          <circle cx="10" cy="10" r="7.6"/><path d="M10 6.2v4.4M10 13.4v.1"/>
+        </svg>
+        <span data-am-alert-t></span>
+      </div>
+
+      <div class="am-views" data-am-views>
+
+        <!-- ── sign in ──────────────────────────────────────────────────── -->
+        <form class="am-view" id="am-view-signin" data-am-view="signin"
+              role="tabpanel" aria-labelledby="am-tab-signin"
+              method="post" action="/api/v1/auth" novalidate>
+          <input type="hidden" name="action" value="signin">
+
+          <h2 class="am-h" id="am-h-signin">Welcome back</h2>
+          <p class="am-sub">Your inboxes and your domains, in one place.</p>
+
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-si-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-si-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-si-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-si-email-e" data-am-err hidden></p>
+    </div>
+                  <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-si-pass">Password</label>
+                <button class="am-link" type="button" data-am-go="reset">Forgot?</button>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-si-pass" name="password"
+               type="password"
+                              autocomplete="current-password"
+               placeholder="••••••••"
+               aria-describedby="am-si-pass-e"
+                                             data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+      
+      <p class="am-err" id="am-si-pass-e" data-am-err hidden></p>
+    </div>
+    
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Sign in</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+        <!-- ── create an account ───────────────────────────────────────── -->
+        <form class="am-view" id="am-view-signup" data-am-view="signup"
+              role="tabpanel" aria-labelledby="am-tab-signup"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <input type="hidden" name="action" value="signup">
+
+          <h2 class="am-h" id="am-h-signup">Create your account</h2>
+                              <p class="am-sub" data-am-sub>It stays free. The address is only so you can find your inboxes again.</p>
+          <p class="am-sub" data-am-sub="save" hidden>Create a free account to keep this inbox — and every inbox you open from now on.</p>
+                    <ul class="am-perks">
+            <li>Every inbox you open, saved</li>
+            <li>A free API key</li>
+            <li>No card, no trial</li>
+          </ul>
+          
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-su-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-su-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-su-email-e" data-am-err hidden></p>
+    </div>
+                  <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-pass">Password</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-su-pass" name="password"
+               type="password"
+                              autocomplete="new-password"
+               placeholder="••••••••"
+               aria-describedby="am-su-pass-e"
+                                             data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+                  <div class="am-str" data-am-str data-strength="0" hidden>
+        <div class="am-str-bars" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <span class="am-str-t" data-am-str-t></span>
+      </div>
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+            <p class="am-hint">At least 10 characters. Length beats punctuation.</p>
+      
+      <p class="am-err" id="am-su-pass-e" data-am-err hidden></p>
+    </div>
+    
+                        <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-pass2">Confirm password</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-su-pass2" name="password2"
+               type="password"
+                              autocomplete="new-password"
+               placeholder="••••••••"
+               aria-describedby="am-su-pass2-e"
+                              data-am-match="am-su-pass" data-am-skip               data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+      
+      <p class="am-err" id="am-su-pass2-e" data-am-err hidden></p>
+    </div>
+    
+                              <div class="am-cf" data-am-cf data-sitekey="0x4AAAAAAEfWgqSU6xDxtH5m"></div>
+          
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Create my account</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    
+          <p class="am-note">
+            By creating an account you agree to the <a href="/legal/terms">Terms</a> and the <a href="/legal/privacy">Privacy Policy</a>.          </p>
+        </form>
+
+        <!-- ── reset a password ────────────────────────────────────────── -->
+        <form class="am-view" id="am-view-reset" data-am-view="reset"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <input type="hidden" name="action" value="reset">
+
+          <button class="am-back" type="button" data-am-go="signin">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor"
+                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to sign in          </button>
+
+          <h2 class="am-h" id="am-h-reset">Reset your password</h2>
+          <p class="am-sub">Give us the address you signed up with and we will send a link to choose a new password.</p>
+
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-rs-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-rs-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-rs-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-rs-email-e" data-am-err hidden></p>
+    </div>
+    
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Send the link</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+        <!-- ── the link is on its way ──────────────────────────────────── -->
+                <div class="am-view am-view-done" id="am-view-sent" data-am-view="sent" hidden>
+          <span class="am-done-ic" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.4"
+                 stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="m9 16.6 4.6 4.6L23 11"/>
+            </svg>
+          </span>
+          <h2 class="am-h" id="am-h-sent">Check your inbox</h2>
+          <p class="am-sub">If an account exists for that address, a link to choose a new password is on its way. It is valid for one hour.</p>
+          <button class="btn btn-ghost am-go" type="button" data-am-go="signin">Back to sign in</button>
+        </div>
+
+        <!-- ── le second facteur (01/10/2026) ──────────────────────────── -->
+                <form class="am-view" id="am-view-mfa" data-am-view="mfa"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <button class="am-back" type="button" data-am-go="signin">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor"
+                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to sign in          </button>
+
+          <h2 class="am-h" id="am-h-mfa">Two-factor authentication</h2>
+          <p class="am-sub">Type the six digits your authenticator app shows — or one of your recovery codes.</p>
+
+          <div class="am-f">
+            <div class="am-f-top">
+              <label class="am-l" for="am-mfa-code">Code</label>
+            </div>
+            <div class="am-in">
+              <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>              <input class="am-i am-i-code" id="am-mfa-code" name="code" type="text"
+                     inputmode="numeric" autocomplete="one-time-code" spellcheck="false"
+                     autocapitalize="off" maxlength="24" placeholder="123 456"
+                     aria-describedby="am-mfa-code-e" data-am-in data-am-code required>
+            </div>
+            <p class="am-err" id="am-mfa-code-e" data-am-err hidden></p>
+          </div>
+
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Verify</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+      </div>
+    </div>
+
+  </div>
+</dialog>
+<nav class="tb" data-tb aria-label="Main">
+  <a class="tb-i" href="/" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.8 10.4 12 3.8l8.2 6.6v8.7a1.4 1.4 0 0 1-1.4 1.4h-4.3v-5.8h-5v5.8H5.2a1.4 1.4 0 0 1-1.4-1.4z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+    <span class="tb-n">Home</span>
+  </a>
+  <a class="tb-i is-on" aria-current="true" href="/guides" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 6.6C10.3 5.2 7.9 4.6 4.3 4.6v13.2c3.6 0 6 .6 7.7 2 1.7-1.4 4.1-2 7.7-2V4.6c-3.6 0-6 .6-7.7 2zM12 6.6v13.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+    <span class="tb-n">Guides</span>
+  </a>
+    <a class="tb-i tb-go" href="/inbox" data-sheet-open="inbox"
+     aria-haspopup="dialog">
+    <span class="tb-go-b" aria-hidden="true">
+      <svg viewBox="0 0 24 24" focusable="false"><rect x="3.2" y="5.6" width="17.6" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m4.2 7 7 5.3a1.3 1.3 0 0 0 1.6 0l7-5.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <span class="tb-n">Inbox</span>
+  </a>
+    <a class="tb-i" href="/pricing" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.8 12.4V5.2a1.4 1.4 0 0 1 1.4-1.4h7.2l7.9 7.9a1.4 1.4 0 0 1 0 2l-6.7 6.7a1.4 1.4 0 0 1-2 0z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="8.4" cy="8.4" r="1.5" fill="currentColor"/></svg>
+    <span class="tb-n">Pricing</span>
+  </a>
+    <a class="tb-i" href="#ft-map" data-sheet-open="menu" aria-haspopup="dialog">
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 7h15M4.5 12h15M4.5 17h15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <span class="tb-n">Menu</span>
+  </a>
+</nav>
+
+<dialog class="sh" data-sheet="menu" aria-labelledby="sh-menu-t">
+  <div class="sh-panel">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <header class="sh-hd">
+      <h2 class="sh-t" id="sh-menu-t">Menu</h2>
+      <form method="dialog">
+        <button class="sh-x" type="submit" aria-label="Close"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+      </form>
+    </header>
+
+    <div class="sh-body">
+            <div class="sh-auth">
+        <button class="btn btn-primary" type="button" data-auth-open="signin">Log in</button>
+        <button class="btn btn-ghost" type="button" data-auth-open="signup">Create account</button>
+      </div>
+      
+            <p class="sh-sec">Product</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/#how"><span>How it works</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/domains"><span>Connect a domain</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/extensions"><span>Browser extension</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/pricing"><span>Pricing</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/guides"><span>Guides</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/compare"><span>Comparing the APIs</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/vs"><span>Neverla Mail vs the alternatives</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Developers</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/docs/quickstart#mcp"><span>MCP for AI agents</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs"><span>Documentation</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/api"><span>API reference</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/quickstart"><span>Quickstart</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/limits"><span>Limits</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Company</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/about"><span>About</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/status"><span>Status</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Legal</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/legal/terms"><span>Terms of service</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/legal/privacy"><span>Privacy</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+      
+      <p class="sh-sec">Language</p>
+      <div class="sh-card sh-list">
+                <button class="sh-row sh-lang" type="button" data-sheet-lang>
+          <span class="sh-lang-fl" aria-hidden="true"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+          <span class="sh-lang-n">English</span>
+          <span class="sh-lang-c" aria-hidden="true">EN</span>
+          <svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>        </button>
+      </div>
+
+            <p class="sh-note">Free · No signup · Deleted after 5 days</p>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="sh sh-ibx" data-sheet="inbox" aria-labelledby="sh-ibx-t">
+  <div class="sh-panel">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <header class="sh-hd">
+      <h2 class="sh-t" id="sh-ibx-t">New address</h2>
+      <form method="dialog">
+        <button class="sh-x" type="submit" aria-label="Close"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+      </form>
+    </header>
+
+    <div class="sh-body">
+            <form class="sh-cmp" action="/inbox" method="get" data-composer data-sheet-composer novalidate>
+        <div class="sh-cmp-f">
+          <label class="sr-only" for="sh-u">Address name</label>
+          <input class="sh-cmp-u" type="text" name="u" id="sh-u" data-user
+                 placeholder="pick-any-name" maxlength="64"
+                 autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false"
+                 enterkeyhint="go" aria-describedby="sh-hint">
+          <button class="sh-cmp-dice" type="button" data-random
+                  aria-label="Random name" title="Random name">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="2" y="2" width="12" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="5.5" cy="5.5" r="1.1" fill="currentColor"/><circle cx="10.5" cy="5.5" r="1.1" fill="currentColor"/><circle cx="8" cy="8" r="1.1" fill="currentColor"/><circle cx="5.5" cy="10.5" r="1.1" fill="currentColor"/><circle cx="10.5" cy="10.5" r="1.1" fill="currentColor"/></svg>
+          </button>
+        </div>
+        <label class="sr-only" for="sh-d">Domain</label>
+        <select class="sh-cmp-d" name="d" id="sh-d" data-domain>
+                    <option value="neverla.web.id">@neverla.web.id</option>
+                    <option value="mixozia.com">@mixozia.com</option>
+                    <option value="linqmail.com">@linqmail.com</option>
+                  </select>
+        <p class="sh-hint composer-hint" id="sh-hint" data-hint hidden></p>
+        <button class="btn btn-primary btn-lg btn-block sh-cmp-go" type="submit">
+          <span>Open inbox</span>
+          <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <p class="sh-cmp-note">Public inbox — anyone with the address can read it.</p>
+      </form>
+
+                  <div class="sh-recent" data-sh-recent hidden>
+        <p class="sh-sec">Opened in this tab</p>
+        <ul class="sh-card sh-list" data-sh-recent-list></ul>
+              </div>
+    </div>
+  </div>
+</dialog>
+
+<p class="sr-only" role="status" aria-live="polite" data-live></p>
+
+</body>
+</html>

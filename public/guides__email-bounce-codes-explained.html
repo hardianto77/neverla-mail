@@ -1,0 +1,1277 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Email bounces: how to read one, and what each code means | Neverla Mail</title>
+<meta name="description" content="How to read an email bounce: where the real reason hides, what 550 and 5.1.1 mean, hard against soft bounces, and which failures are worth sending again.">
+<link rel="canonical" href="https://neverla.web.id/guides/email-bounce-codes-explained">
+<meta name="robots" content="max-image-preview:large">
+<link rel="alternate" type="application/rss+xml" title="Neverla Mail — Guides" href="https://neverla.web.id/guides/feed.xml">
+<link rel="alternate" hreflang="en" href="https://neverla.web.id/guides/email-bounce-codes-explained">
+<link rel="alternate" hreflang="es" href="https://neverla.web.id/es/guides/email-bounce-codes-explained">
+<link rel="alternate" hreflang="pt" href="https://neverla.web.id/pt/guides/email-bounce-codes-explained">
+<link rel="alternate" hreflang="fr" href="https://neverla.web.id/fr/guides/email-bounce-codes-explained">
+<link rel="alternate" hreflang="de" href="https://neverla.web.id/de/guides/email-bounce-codes-explained">
+<link rel="alternate" hreflang="ru" href="https://neverla.web.id/ru/guides/email-bounce-codes-explained">
+<link rel="alternate" hreflang="tr" href="https://neverla.web.id/tr/guides/email-bounce-codes-explained">
+<link rel="alternate" hreflang="id" href="https://neverla.web.id/id/guides/email-bounce-codes-explained">
+<link rel="alternate" hreflang="vi" href="https://neverla.web.id/vi/guides/email-bounce-codes-explained">
+<link rel="alternate" hreflang="ar" href="https://neverla.web.id/ar/guides/email-bounce-codes-explained">
+<link rel="alternate" hreflang="ja" href="https://neverla.web.id/ja/guides/email-bounce-codes-explained">
+<link rel="alternate" hreflang="x-default" href="https://neverla.web.id/guides/email-bounce-codes-explained">
+<meta name="theme-color" content="#ffffff">
+<meta name="color-scheme" content="light">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Neverla Mail">
+<meta property="og:title" content="Email bounces: how to read one, and what each code means | Neverla Mail">
+<meta property="og:description" content="How to read an email bounce: where the real reason hides, what 550 and 5.1.1 mean, hard against soft bounces, and which failures are worth sending again.">
+<meta property="og:url" content="https://neverla.web.id/guides/email-bounce-codes-explained">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:locale:alternate" content="pt_BR">
+<meta property="og:locale:alternate" content="fr_FR">
+<meta property="og:locale:alternate" content="de_DE">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta property="og:locale:alternate" content="tr_TR">
+<meta property="og:locale:alternate" content="id_ID">
+<meta property="og:locale:alternate" content="vi_VN">
+<meta property="og:locale:alternate" content="ar_AR">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://neverla.web.id/assets/img/guides/bounce-1376.webp">
+<meta property="og:image:width" content="1376">
+<meta property="og:image:height" content="768">
+<meta property="og:image:alt" content="Neverla Mail — Temporary email addresses, and an API to read them.">
+<meta name="twitter:image" content="https://neverla.web.id/assets/img/guides/bounce-1376.webp">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" sizes="96x96" href="/assets/img/icon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/img/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Neverla Mail">
+
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/main.css?v=3af85b61f5">
+<link rel="stylesheet" href="/assets/css/mobile.css?v=3af85b61f5" media="(max-width: 959.98px)">
+<script src="/assets/js/app.js?v=3af85b61f5" defer></script>
+<script src="/assets/js/mobile.js?v=3af85b61f5" defer></script>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://neverla.web.id/#org","name":"Neverla Mail","url":"https://neverla.web.id/","description":"Free disposable email addresses with a REST API and an MCP server for AI agents.","logo":{"@type":"ImageObject","url":"https://neverla.web.id/assets/img/logo.png","width":671,"height":160},"image":"https://neverla.web.id/assets/img/og-card.png","sameAs":["https://dev.to/neverla"]},{"@type":"WebSite","@id":"https://neverla.web.id/#site","name":"Neverla Mail","url":"https://neverla.web.id/","publisher":{"@id":"https://neverla.web.id/#org"},"inLanguage":["en","es","pt","fr","de","ru","tr","id","vi","ar","ja"]},{"@type":["WebAPI","SoftwareApplication"],"@id":"https://neverla.web.id/#api","name":"Neverla Mail disposable email API","url":"https://neverla.web.id/docs/api","documentation":"https://neverla.web.id/docs/api","provider":{"@id":"https://neverla.web.id/#org"},"applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"Create a disposable email address and read what arrives at it over HTTP. No account, no API key and no payment for the public domains. Messages are deleted 5 days after they arrive.","offers":[{"@type":"Offer","name":"Free","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"Public domains, your own domains, the REST API and the MCP server. No account, no key; the free API allows 60 requests a minute and 1,000 a day per IP address."},{"@type":"Offer","name":"Premium","price":"12.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"12.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Pro","price":"49.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"49.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Scale","price":"99.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"99.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}}],"featureList":["Connect your own domain — every address on it becomes a catch-all inbox","Disposable email addresses with no signup","REST API over HTTPS, no API key required","MCP server for AI agents (create_inbox, wait_for_message)","Every mailbox has an alias you can hand out instead of the address","Attachments up to 5 MB","Automatic deletion after 5 days"],"additionalProperty":[{"@type":"PropertyValue","name":"Sending mail","value":"No. There is no endpoint that sends, and no outbound mail of any kind."},{"@type":"PropertyValue","name":"IMAP or POP3","value":"No. HTTPS only — a REST API and an MCP server."},{"@type":"PropertyValue","name":"Webhooks or push notifications","value":"No. You poll, or you let the MCP server hold the call open until the message lands."},{"@type":"PropertyValue","name":"Keeping mail longer than 5 days","value":"No. Not a tier, not a setting, not a parameter."},{"@type":"PropertyValue","name":"Attachments over 5 MB","value":"No. The message is refused at SMTP time."},{"@type":"PropertyValue","name":"Privacy on a shared domain","value":"No. Anyone who knows the address can read the mailbox."},{"@type":"PropertyValue","name":"Paying by card","value":"No. Crypto only, credited to a balance the subscription draws on."},{"@type":"PropertyValue","name":"An uptime guarantee","value":"No. There is no SLA, on any plan."},{"@type":"PropertyValue","name":"Tracking, analytics or advertising","value":"No. No third-party script, and no cookie banner because there are no cookies to consent to."}],"potentialAction":{"@type":"ConsumeAction","target":{"@type":"EntryPoint","urlTemplate":"https://neverla.web.id/api/v1/mailbox?address={address}","httpMethod":"GET","contentType":"application/json"}}},{"@type":"WebPage","@id":"https://neverla.web.id/guides/email-bounce-codes-explained#page","url":"https://neverla.web.id/guides/email-bounce-codes-explained","name":"Email bounces: how to read one, and what each code means | Neverla Mail","description":"How to read an email bounce: where the real reason hides, what 550 and 5.1.1 mean, hard against soft bounces, and which failures are worth sending again.","isPartOf":{"@id":"https://neverla.web.id/#site"},"inLanguage":"en"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Neverla Mail","item":"https://neverla.web.id/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://neverla.web.id/guides"},{"@type":"ListItem","position":3,"name":"Email & deliverability","item":"https://neverla.web.id/guides"},{"@type":"ListItem","position":4,"name":"Email bounces: how to read one, and what each code means","item":"https://neverla.web.id/guides/email-bounce-codes-explained"}]},{"@type":"TechArticle","@id":"https://neverla.web.id/guides/email-bounce-codes-explained#article","headline":"Email bounces: how to read one, and what each code means","description":"How to read an email bounce: where the real reason hides, what 550 and 5.1.1 mean, hard against soft bounces, and which failures are worth sending again.","image":"https://neverla.web.id/assets/img/guides/bounce-1376.webp","datePublished":"2026-09-09","dateModified":"2026-09-09","inLanguage":"en","articleSection":"Email & deliverability","timeRequired":"PT22M","keywords":"email bounce, bounce message, delivery status notification, 550 5.1.1, hard bounce vs soft bounce, mailer-daemon, undelivered mail returned to sender, smtp error codes, enhanced status codes, backscatter","author":{"@id":"https://neverla.web.id/#org"},"publisher":{"@id":"https://neverla.web.id/#org"},"isPartOf":{"@id":"https://neverla.web.id/#site"},"mainEntityOfPage":{"@id":"https://neverla.web.id/guides/email-bounce-codes-explained#page"},"proficiencyLevel":"Beginner"},{"@type":"FAQPage","@id":"https://neverla.web.id/guides/email-bounce-codes-explained#faq","mainEntity":[{"@type":"Question","name":"What does a 550 5.1.1 bounce mean?","acceptedAnswer":{"@type":"Answer","text":"That the domain accepts mail but has no such mailbox at it: the name in front of the @ does not exist there. It is permanent — the 5 means nothing will be retried — so sending the same message again produces exactly the same answer. Check the spelling first, then check that it is the address you were actually given; there is nothing on the sending side that fixes a name which does not exist on the receiving one."}},{"@type":"Question","name":"Hard bounce or soft bounce — which is which?","acceptedAnswer":{"@type":"Answer","text":"A hard bounce is a code beginning with 5: permanent, never retried, and the reason bulk senders remove an address from a list on the very first one. A soft bounce begins with 4: temporary, retried automatically for a few days, and usually delivered in the end. Neither term appears in any specification — they are the sending industry's shorthand for that first digit, which does."}},{"@type":"Question","name":"Can I reply to a bounce message?","acceptedAnswer":{"@type":"Answer","text":"No. A delivery report is sent with an empty envelope sender, so there is no address behind MAILER-DAEMON to reply to. RFC 5321 requires it, so that a report which cannot itself be delivered does not bounce in turn for ever. If you need a human, the report names the server that wrote it, and that domain's postmaster address is the one worth trying."}},{"@type":"Question","name":"Why did I get a bounce for a message I never sent?","acceptedAnswer":{"@type":"Answer","text":"Because somebody wrote your address into the envelope of their own mail, a receiving server accepted it before discovering it was undeliverable, and then sent the failure report to the sender it had been handed. It is called backscatter, it needs no access at all to your mailbox, and it says nothing whatever about your account being compromised. Look at the returned copy in the third part of the report: if you did not write it, there is nothing to do."}},{"@type":"Question","name":"Does mail to a temporary address ever bounce?","acceptedAnswer":{"@type":"Answer","text":"Hardly ever. The server accepts every name on its public domains, so the commonest bounce of all — “user unknown” — cannot happen: anything@neverla.web.id is valid before anybody types it. The one real refusal is a message over 5 MB, turned away during the SMTP conversation with a 552 5.3.4 and reported to the sender by their own system. Expiry after 5 days is not a bounce, because the message was delivered first and deleted afterwards."}},{"@type":"Question","name":"How long does a server keep trying before it gives up?","acceptedAnswer":{"@type":"Answer","text":"A few days, typically: four or five is the common default and some providers give up sooner. A temporary failure usually produces a delayed warning after a few hours, which is not a bounce and needs nothing done about it; the real bounce only arrives when the queue lifetime runs out, generally as a 4.4.7. The useful reason is in those earlier warnings rather than in the final report."}},{"@type":"Question","name":"My message vanished and there was no bounce at all. What happened?","acceptedAnswer":{"@type":"Answer","text":"Delivery succeeded, in the only sense the protocol cares about: some server took responsibility and answered 250. What happened afterwards — filed as spam, sorted into a folder nobody opens, or accepted and quietly discarded — produces no report of any kind. Silence is not a failure, and it is the one case a bounce cannot help with; mail that never arrives is the guide that can."}}]}]}</script>
+<script>
+(function() {
+  var _t = document.title;
+  Object.defineProperty(document, 'title', {
+    get: function() { return _t; },
+    set: function(v) {
+      _t = (v || '').replace(/grabmail/gi, 'Neverla Mail').replace(/🐴/g, '').trim();
+    }
+  });
+})();
+</script>
+</head>
+<body class="page-guide" id="top" data-loc="en" data-i18n="{}">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="hd" data-header>
+  <div class="wrap hd-in">
+    <a class="hd-brand" href="/" aria-label="neverla.web.id — home">
+      <picture>
+        <source srcset="/assets/img/logo-nav.webp?v=3af85b61f5" type="image/webp">
+        <img class="hd-logo" src="/assets/img/logo-nav.png?v=3af85b61f5"
+             alt="Neverla Mail" width="126" height="30" decoding="async" fetchpriority="high">
+      </picture>
+    </a>
+
+    <span class="hd-sep" aria-hidden="true"></span>
+
+        <nav class="hd-nav" aria-label="Main">
+      <ul class="hd-list">
+                <li>
+          <a class="hd-link" href="/#how" data-spy="how">How it works</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/extensions" data-spy="ext">Extension</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/#api" data-spy="api">API</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/domains" data-spy="domains">Your domain</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/docs/api" data-spy="docs">Docs</a>
+        </li>
+              </ul>
+    </nav>
+
+    <div class="hd-act">
+                  <button class="btn btn-quiet hd-login" type="button" data-auth-open="signin">
+        Log in      </button>
+            <a class="btn btn-primary" href="/#grab" data-cta>
+        Open an inbox        <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+        <button class="hd-burger" type="button" data-burger
+            aria-expanded="false" aria-controls="gm-drawer" aria-label="Open menu">
+      <span class="hd-burger-box" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+  </div>
+</header>
+
+<div class="drawer" id="gm-drawer" data-drawer hidden>
+  <nav class="drawer-in" aria-label="Mobile">
+    <ul class="drawer-list">
+            <li><a class="drawer-link" href="/#how">How it works</a></li>
+            <li><a class="drawer-link" href="/extensions">Extension</a></li>
+            <li><a class="drawer-link" href="/#api">API</a></li>
+            <li><a class="drawer-link" href="/domains">Your domain</a></li>
+            <li><a class="drawer-link" href="/docs/api">Docs</a></li>
+          </ul>
+    <a class="btn btn-primary btn-block" href="/#grab">Open an inbox</a>
+            <button class="btn btn-ghost btn-block" type="button" data-auth-open="signin">Log in</button>
+        <p class="drawer-note">Free · No signup · Deleted after 5 days</p>
+
+  </nav>
+</div>
+
+<main id="main">
+<div class="ga">
+
+    <div class="ga-prog" data-guide-progress aria-hidden="true"><span></span></div>
+
+  <div class="wrap ga-top">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+                <li><a href="/guides">Guides</a></li>
+        <li><a href="/guides/topic/deliverability">Email &amp; deliverability</a></li>
+                <li aria-current="page">Email bounces: how to read one, and what each code means</li>
+      </ol>
+    </nav>
+
+    <div class="ga-head">
+      <div class="ga-head-t">
+        <p class="ga-eyebrow">
+          <span class="ga-eyebrow-ic"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3.2 12.4a9.6 9.6 0 0 1 13.6 0M6 15.1a5.8 5.8 0 0 1 8 0"/><path d="M10 17.8h.01M2 8.2a12.5 12.5 0 0 1 16 0"/></svg></span>
+          <a class="ga-eyebrow-a" href="/guides/topic/deliverability">Email &amp; deliverability</a>
+        </p>
+        <h1 class="ga-h">Email bounces: how to read one, and what each code means</h1>
+        <p class="ga-lede">A bounce is not your message coming back. It is a new message, written by a machine, about one that is already gone — and the apology at the top of it was written by the server nearest you rather than by the one that refused. The reason sits further down: two numbers and a line of free text. Here is where to find them, what each number decides, and which failures are worth sending again.</p>
+
+                <ul class="ga-meta">
+                    <li class="ga-lvl ga-lvl-beginner">Beginner</li>
+                              <li class="ga-meta-i">
+            <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.4V8l2.4 1.6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            22 min read          </li>
+          <li class="ga-meta-i">
+            <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="2.3" y="3.4" width="11.4" height="10.3" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M2.3 6.6h11.4M5.6 2.3v2.2M10.4 2.3v2.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            <time datetime="2026-09-09">Updated 9 September 2026</time>
+          </li>
+        </ul>
+      </div>
+
+                  <figure class="ga-hero">
+        <img class="ga-hero-img" src="/assets/img/guides/bounce-800.webp?v=3af85b61f5" srcset="/assets/img/guides/bounce-480.webp?v=3af85b61f5 480w, /assets/img/guides/bounce-800.webp?v=3af85b61f5 800w, /assets/img/guides/bounce-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 520px, (min-width: 720px) calc(100vw - 64px), calc(100vw - 40px)" width="1376" height="768" alt="A blue envelope turned back in mid-air beside the slot of a grey letterbox, with a second blue envelope fallen below it" fetchpriority="high" decoding="async">      </figure>
+    </div>
+  </div>
+
+  <div class="wrap ga-body">
+    <nav class="ga-rail doc-toc" aria-label="On this page">
+      <p class="doc-toc-h">On this page</p>
+      <ul>
+                <li><a href="#what-a-bounce-is" data-spy="what-a-bounce-is">What a bounce is, and the two moments it happens</a></li>
+                <li><a href="#reading-the-report" data-spy="reading-the-report">Where the reason actually is</a></li>
+                <li><a href="#the-two-numbers" data-spy="the-two-numbers">The two numbers, and the digit that decides</a></li>
+                <li><a href="#codes-you-will-meet" data-spy="codes-you-will-meet">The codes you will actually meet</a></li>
+                <li><a href="#a-temporary-address" data-spy="a-temporary-address">What can and cannot bounce at a temporary address</a></li>
+                <li><a href="#on-your-own-domain" data-spy="on-your-own-domain">Bounces on a domain you have just pointed here</a></li>
+                <li><a href="#a-bounce-you-did-not-send" data-spy="a-bounce-you-did-not-send">A bounce for a message you never sent</a></li>
+                <li><a href="#checklist" data-spy="checklist">The order to read one in</a></li>
+                <li><a href="#faq" data-spy="faq">Questions</a></li>
+              </ul>
+      <p class="ga-rail-back">
+                <a class="ga-rail-back-a" href="/guides">
+          <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          All guides        </a>
+      </p>
+    </nav>
+
+    <article class="ga-art">
+      <div class="toc-chip" data-toc-bar><button class="toc-chip-b" type="button" aria-haspopup="dialog"><svg class="toc-chip-ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 5.5h12M4 10h12M4 14.5h7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span class="toc-chip-k">On this page</span><span class="toc-chip-v"></span><svg class="toc-chip-dn" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 6.5 8 10.5l4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+                  <aside class="ga-key" aria-labelledby="ga-key-h">
+        <h2 class="ga-key-h" id="ga-key-h">In short</h2>
+        <ul>
+                    <li>A bounce is a <strong>new message</strong>, not a returned one. Nothing travels back: the last server that still had your mail writes a fresh report about it and posts that to you, which is why one can turn up days later.</li>
+                    <li>Two numbers carry the verdict — the reply code (<code>550</code>) and the enhanced status code (<code>5.1.1</code>) — and the first digit is the whole of it. A <code>4</code> is retried automatically; a <code>5</code> never is.</li>
+                    <li>The friendly sentence at the top was written by <em>your</em> side about a failure it is only relaying. The actual reason came from the far end and is quoted word for word on the <code>Diagnostic-Code:</code> line.</li>
+                    <li>Almost nothing bounces at a <a href="/guides/what-is-temp-mail">temporary address</a>: the server accepts every name on its domains, so “user unknown” cannot happen. Over 5 MB is the one refusal, and it happens <a href="/guides/attachments-on-a-disposable-address">inside the conversation</a> rather than afterwards.</li>
+                  </ul>
+      </aside>
+      
+            <section class="ga-s" id="what-a-bounce-is" aria-labelledby="what-a-bounce-is-h">
+        <h2 class="ga-s-h" id="what-a-bounce-is-h">What a bounce is, and the two moments it happens</h2>
+        <p>The word is borrowed from paper and it is the wrong picture. Nothing travels back. A message is handed from server to server, and the last one that still holds it and cannot get rid of it writes a <em>new</em> message — addressed to you, about the old one — and sends that instead. Everything you can learn is in that report, and the report is only as good as the machine that wrote it.</p><p>It can be produced at two very different moments, and telling those apart is most of the diagnosis. Two other outcomes look like failures from where you are standing and are not:</p><div class="ep-tw ga-tw" tabindex="0" role="region" aria-label="What happened, What you see, and when, What it tells you"><table class="ep-t ga-t ga-t-wide"><thead><tr><th scope="col">What happened</th><th scope="col">What you see, and when</th><th scope="col">What it tells you</th></tr></thead><tbody><tr><td><strong>Refused during the conversation.</strong> The receiving server said no while your server was still connected to it.</td><td>An error in your own mail app, in the same second. No bounce message is ever created.</td><td>The most trustworthy kind. The refusal came straight from the machine responsible for the address, with nothing in between to soften it.</td></tr><tr><td><strong>Accepted, then it failed.</strong> Somebody answered <code>250</code>, took responsibility for the message, and could not finish the job.</td><td>A new message from <code>MAILER-DAEMON</code>, minutes or days later. This is a bounce in the ordinary sense.</td><td>Read <code>Reporting-MTA:</code> before anything else: whoever wrote the report is where the message stopped, and that is not always the far end.</td></tr><tr><td><strong>Accepted and filed as spam.</strong> Delivery succeeded.</td><td>Nothing at all — there is no report, because nothing failed.</td><td>Silence is not a failure. <a href="/guides/verification-email-not-arriving">Mail that never arrives</a> is a different problem with a different first check.</td></tr><tr><td><strong>Accepted and quietly dropped.</strong> Taken in and discarded without a word.</td><td>Nothing, ever.</td><td>The worst behaviour a mail server has, and the reason a well-run one refuses at the door instead. From your side it is indistinguishable from the row above.</td></tr></tbody></table></div><figure class="ga-fig"><svg class="ga-dia" viewBox="0 0 700 238" role="img" aria-label="Two ways a delivery failure reaches you. Above: the message is refused during the SMTP conversation and your own mail app shows an error at once, with no bounce message created. Below: the message is accepted and fails later, and a separate report arrives from MAILER-DAEMON minutes or days afterwards."><rect x="8" y="26" width="214" height="70" rx="10" class="d-box d-box-a"/><text x="115" y="54" class="d-t" text-anchor="middle">Refused at the door</text><text x="115" y="74" class="d-s" text-anchor="middle">during the conversation</text><rect x="478" y="26" width="214" height="70" rx="10" class="d-box"/><text x="585" y="54" class="d-t" text-anchor="middle">Your app shows an error</text><text x="585" y="74" class="d-s" text-anchor="middle">in the same second</text><path d="M226 75H467" class="d-line"/><path d="M466 70L474 75L466 80z" class="d-head"/><text x="350" y="52" class="d-b" text-anchor="middle">no bounce message exists</text><rect x="8" y="136" width="214" height="70" rx="10" class="d-box"/><text x="115" y="164" class="d-t" text-anchor="middle">Accepted, then it fails</text><text x="115" y="184" class="d-s" text-anchor="middle">somewhere further along</text><rect x="478" y="136" width="214" height="70" rx="10" class="d-box d-box-a"/><text x="585" y="164" class="d-t" text-anchor="middle">A new message arrives</text><text x="585" y="184" class="d-s" text-anchor="middle">from MAILER-DAEMON</text><path d="M226 185H467" class="d-line"/><path d="M466 180L474 185L466 190z" class="d-head"/><text x="350" y="162" class="d-b" text-anchor="middle">minutes, or several days</text><text x="350" y="230" class="d-s" text-anchor="middle">Only the lower one is a bounce message. The upper one is an error — and it is the more reliable of the two, because nothing relayed it.</text></svg><figcaption>The same failure, reported two ways. Refused at the door, your own server tells you inside the second; accepted and then failed, a machine somewhere along the line writes to you about it later.</figcaption></figure><p>So “it bounced” names two things. One is an error your own software showed you and one is a letter a stranger's machine wrote you, and only the second has a report in it to read. The rest of this guide is about that report.</p><aside class="ga-call ga-call-note"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7.5"/><path d="M10 9.2v4.4M10 6.4h.01"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Note</span>A bounce is sent from nobody, on purpose.</p><p>Its envelope sender is empty — a literal <code>&lt;&gt;</code> in the SMTP conversation, which is why the <code>Return-Path:</code> of a delivery report is blank. RFC 5321 requires it, so that a report which cannot itself be delivered has nowhere to go and the loop stops after one step. It is also why replying to <code>MAILER-DAEMON</code> reaches nobody at all.</p></div></aside>      </section>
+            <section class="ga-s" id="reading-the-report" aria-labelledby="reading-the-report-h">
+        <h2 class="ga-s-h" id="reading-the-report-h">Where the reason actually is</h2>
+        <p>A delivery report is a message in three parts and the shape has been fixed since RFC 3464. The first part is the apology, written for a human by the machine nearest you. The second is the machine-readable block, which is the only part with facts in it. The third is your original message, or just its headers, so that you can tell which one failed.</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>a delivery report, trimmed</span><button class="code-copy" type="button" data-copy-code data-code="From: Mail Delivery System &lt;MAILER-DAEMON@mail.example.org&gt;
+To: &lt;you@example.org&gt;
+Subject: Undelivered Mail Returned to Sender
+Content-Type: multipart/report; report-type=delivery-status;
+        boundary=&quot;B7F21C4&quot;
+
+--B7F21C4
+Content-Type: text/plain; charset=us-ascii
+
+I&#039;m sorry to have to inform you that your message could not
+be delivered to one or more recipients.
+
+--B7F21C4
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; mail.example.org
+Arrival-Date: Tue,  8 Sep 2026 10:14:02 +0000
+
+Final-Recipient: rfc822; sales@example.com
+Action: failed
+Status: 5.1.1
+Remote-MTA: dns; mx.example.com
+Diagnostic-Code: smtp; 550 5.1.1 &lt;sales@example.com&gt;: Recipient
+        address rejected: User unknown in virtual mailbox table
+
+--B7F21C4
+Content-Type: text/rfc822-headers" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code>From: Mail Delivery System &lt;MAILER-DAEMON@mail.example.org&gt;
+To: &lt;you@example.org&gt;
+Subject: Undelivered Mail Returned to Sender
+Content-Type: multipart/report; report-type=delivery-status;
+        boundary=&quot;B7F21C4&quot;
+
+--B7F21C4
+Content-Type: text/plain; charset=us-ascii
+
+I&#039;m sorry to have to inform you that your message could not
+be delivered to one or more recipients.
+
+--B7F21C4
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; mail.example.org
+Arrival-Date: Tue,  8 Sep 2026 10:14:02 +0000
+
+Final-Recipient: rfc822; sales@example.com
+Action: failed
+Status: 5.1.1
+Remote-MTA: dns; mx.example.com
+Diagnostic-Code: smtp; 550 5.1.1 &lt;sales@example.com&gt;: Recipient
+        address rejected: User unknown in virtual mailbox table
+
+--B7F21C4
+Content-Type: text/rfc822-headers</code></pre></div><p>Read the middle part in this order:</p><dl class="defs"><div class="def"><dt><code>Final-Recipient:</code></dt><dd>Which address failed. One report can carry a block per recipient, so on a message sent to several people this is how you tell which one it is about — and the others may well have arrived.</dd></div><div class="def"><dt><code>Action:</code></dt><dd><code>failed</code> is a bounce. <code>delayed</code> is a warning that a server is still trying and has given up on nothing; you may yet get a second report saying it worked. <code>relayed</code> and <code>delivered</code> are not failures at all and are easy to misread as one.</dd></div><div class="def"><dt><code>Status:</code></dt><dd>The enhanced status code — three numbers, meant to be read by software rather than by you. It is the part that is comparable between one provider and another, which the sentences never are.</dd></div><div class="def"><dt><code>Diagnostic-Code:</code></dt><dd>The line that matters. It is the far server's own answer, quoted word for word, carrying its reply code and whatever sentence its administrator wrote. Everything above it is a retelling; this is the original.</dd></div><div class="def"><dt><code>Remote-MTA:</code></dt><dd>Which host said it. Worth a glance whenever the failure is about routing: a hostname you do not recognise usually means the domain's mail is going somewhere you did not expect, or somewhere it only used to go.</dd></div></dl><p class="doc-n">The sentence at the very top of the report is not evidence. Your own outgoing server writes it, in whatever wording its software happens to ship with, about a failure it is only passing along. Two identical apologies can sit above two completely unrelated <code>Diagnostic-Code:</code> lines, which is why a bounce read from the top is so often read wrong.</p><aside class="ga-call ga-call-tip"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.6a5.2 5.2 0 0 0-3 9.5v1.6h6v-1.6a5.2 5.2 0 0 0-3-9.5zM8 16.4h4"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Tip</span>Open the whole report, not the part you were shown.</p><p>Mail apps display the apology and hide the rest. Ask for the raw source instead: <em>Show original</em> in Gmail, <em>View message source</em> in Outlook.com, <em>View → Message → All Headers</em> in Apple Mail. <a href="/guides/email-headers-explained">Reading an email header</a> covers the same move in more detail — a delivery report is, after all, mostly header blocks.</p></div></aside>      </section>
+            <section class="ga-s" id="the-two-numbers" aria-labelledby="the-two-numbers-h">
+        <h2 class="ga-s-h" id="the-two-numbers-h">The two numbers, and the digit that decides</h2>
+        <p>A refusal is written like this, and it is three separate things joined by spaces:</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>one diagnostic code, three separate things</span><button class="code-copy" type="button" data-copy-code data-code="550 5.1.1 &lt;sales@example.com&gt;: Recipient address rejected: User unknown" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code>550 5.1.1 &lt;sales@example.com&gt;: Recipient address rejected: User unknown</code></pre></div><p>The <code>550</code> is the reply code: three digits, defined by SMTP itself in RFC 5321, and the part the protocol needs in order to decide what to do next. The <code>5.1.1</code> is the enhanced status code from RFC 3463, added because three digits could not express enough. Everything after it is free text, written by whoever runs that server, and standardised by nothing whatever.</p><p>Both numbers begin with the same digit, and that digit is the verdict:</p><div class="ep-tw ga-tw" tabindex="0" role="region" aria-label="The verdict, What happens next"><table class="ep-t ga-t ga-t-narrow"><thead><tr><th scope="col">The verdict</th><th scope="col">What happens next</th></tr></thead><tbody><tr><td><code>2</code> — accepted. Not a failure at all; it shows up in reports for the recipients that <em>did</em> work.</td><td>Nothing. The message was delivered, and the report is telling you so.</td></tr><tr><td><code>4</code> — a temporary failure. The server is saying “not now”, which is not the same as “no”.</td><td>Your server queues the message and tries again on its own, for a few days. Most temporary failures are never seen by a human at all.</td></tr><tr><td><code>5</code> — a permanent failure. The answer will be exactly the same tomorrow.</td><td>Nothing is retried. This is the one that puts a report in your inbox.</td></tr></tbody></table></div><p>The second number is the subject — what kind of thing went wrong. It is the quickest way to place a code you have never seen before:</p><div class="ep-tw ga-tw" tabindex="0" role="region" aria-label="Subject, What that class of failure is about"><table class="ep-t ga-t ga-t-wide"><thead><tr><th scope="col">Subject</th><th scope="col">What that class of failure is about</th></tr></thead><tbody><tr><td><code>.0.</code> — other</td><td>Undefined. A server that could not classify its own failure, or did not bother to. The free text is all you have.</td></tr><tr><td><code>.1.</code> — addressing</td><td>The address itself: no such mailbox, no such domain, or a domain that has said it does not accept mail. Much the largest group.</td></tr><tr><td><code>.2.</code> — mailbox</td><td>The mailbox exists but cannot take this message: it is full, it is disabled, or the message is over a limit set on that account.</td></tr><tr><td><code>.3.</code> — mail system</td><td>The receiving system as a whole: out of space, out of capacity, or unable to handle a message this size at all.</td></tr><tr><td><code>.4.</code> — network and routing</td><td>Getting there: no route, no answer, a loop between two servers, or a message that spent too long in a queue and was given up on.</td></tr><tr><td><code>.5.</code> — protocol</td><td>The SMTP conversation itself went wrong. Rare, and almost always somebody's software bug rather than anything you did.</td></tr><tr><td><code>.6.</code> — content</td><td>The body or its encoding was unacceptable — a character set the receiver cannot convert, a conversion it refused to make. Also rare.</td></tr><tr><td><code>.7.</code> — policy and security</td><td>A rule refused it: authentication, reputation, a blocklist, an administrator's decision. In practice the second-largest group, and the one where the sentence matters more than the number.</td></tr></tbody></table></div><dl class="defs"><div class="def"><dt>Hard bounce</dt><dd>A <code>5</code>. The address is wrong, gone, or refused as a matter of policy, and sending the same message again changes nothing. Bulk senders drop an address from the list on the first one, because carrying on is what gets a sending domain throttled everywhere at once.</dd></div><div class="def"><dt>Soft bounce</dt><dd>A <code>4</code>. A full mailbox, a busy server, a temporary policy refusal. It is retried without anybody's help and usually arrives; you only hear about it if the retries run out first.</dd></div></dl><p class="doc-n">Neither term is in any specification. They are the sending industry's shorthand for that first digit, which is — and the shorthand is worth knowing because every deliverability tool you will ever be handed reports in it.</p><aside class="ga-call ga-call-warn"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.8 18 16.6H2z"/><path d="M10 8v3.4M10 13.8h.01"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Watch out</span>The digit is a promise about behaviour, not about truth.</p><p>A server that means “try later” and writes a <code>5</code> gets no retry; one that means “never” and writes a <code>4</code> gets days of pointless attempts and then a bounce anyway. Both are common. When the number and the sentence beside it disagree, believe the sentence — it is the part a person wrote on purpose.</p></div></aside>      </section>
+            <section class="ga-s" id="codes-you-will-meet" aria-labelledby="codes-you-will-meet-h">
+        <h2 class="ga-s-h" id="codes-you-will-meet-h">The codes you will actually meet</h2>
+        <p>There are dozens in the registry IANA keeps and about a dozen in ordinary life. These cover very nearly every bounce anybody reads:</p><div class="ep-tw ga-tw" tabindex="0" role="region" aria-label="The code, and its standard name, What has actually happened, What to do about it"><table class="ep-t ga-t ga-t-wide"><thead><tr><th scope="col">The code, and its standard name</th><th scope="col">What has actually happened</th><th scope="col">What to do about it</th></tr></thead><tbody><tr><td><code>5.1.1</code> — bad destination mailbox address</td><td>The domain exists and takes mail, but there is no such name at it. The most common bounce there is, by a wide margin.</td><td>Check the spelling, then check it is the address you were actually given. Nothing on your side fixes a name that does not exist on theirs.</td></tr><tr><td><code>5.1.2</code> — bad destination system address</td><td>The <em>domain</em> is the problem: it does not exist, or it publishes nothing that receives mail.</td><td>Look at the part after the <code>@</code> for a typo. If it is right, that domain does not take mail and no amount of retrying will change it.</td></tr><tr><td><code>5.1.10</code> — recipient address has null MX</td><td>The domain has deliberately published “I send mail and never receive any”, which RFC 7505 defines as a single <code>MX</code> record pointing at nothing. Common on the bare domains of large companies.</td><td>Nothing. Find another address: this one is not a mailbox and was never intended to be.</td></tr><tr><td><code>5.2.1</code> — mailbox disabled</td><td>The name exists but the account is suspended, closed, or configured not to accept mail from outside.</td><td>Reach the person another way. This one occasionally reverses itself weeks later, and occasionally never does.</td></tr><tr><td><code>4.2.2</code> or <code>5.2.2</code> — mailbox full</td><td>Over quota. As a <code>4</code> it is retried for a few days; as a <code>5</code> the receiving server has decided not to wait for anybody to tidy up.</td><td>Wait, if it is a <code>4</code>. If it is a <code>5</code>, tell the recipient by some other means that their mailbox is full — nobody else will.</td></tr><tr><td><code>5.3.4</code> — message too big for system</td><td>Over the receiving server's ceiling for one message, which counts the whole encoded message rather than the file you attached.</td><td>Put the file somewhere and send the link. <a href="/guides/attachments-on-a-disposable-address">Attachments and the size ceiling</a> explains why the real limit is always well under the published number.</td></tr><tr><td><code>5.2.3</code> — message length exceeds administrative limit</td><td>The same failure decided one level down: a rule on that mailbox rather than a limit of the system behind it.</td><td>As above, and there is rarely a setting on either side that raises it. Assume the number is deliberate.</td></tr><tr><td><code>4.4.1</code> — no answer from host</td><td>The receiving server did not answer at all: a machine down, a firewall in the way, or a record pointing at something that is not there any more.</td><td>Nothing, at first — this is exactly what the retry queue exists for. If it turns into a bounce days later, the other end has a real outage.</td></tr><tr><td><code>5.4.4</code> — unable to route</td><td>No <code>MX</code> record, and no address record to fall back on. The sending server does not know where the domain's mail is meant to go.</td><td>Check the domain's <code>MX</code> with <code>dig</code>. If the domain is yours, this is your record to fix and nobody else's.</td></tr><tr><td><code>4.4.7</code> — message expired</td><td>The queue gave up. It is the ending of a long run of temporary failures rather than a failure in its own right.</td><td>Look at what the earlier <code>delayed</code> warnings said. The real reason is in those, never in this.</td></tr><tr><td><code>5.7.1</code> — delivery not authorized, message refused</td><td>A rule said no: a blocklisted sending address, something about the content, or an attempt to relay through a server that does not relay for you.</td><td>Read the free text. This code is a whole category, and only the sentence beside it says which rule actually fired.</td></tr><tr><td><code>5.7.26</code> — multiple authentication checks failed</td><td>The domain in <code>From:</code> publishes a policy the message did not satisfy, so the receiver treated it as a forgery. Increasingly common as more domains publish one.</td><td>If the domain is yours, your records do not cover whatever sent this. <a href="/guides/spf-dmarc-for-a-receive-only-domain">Locking a receive-only domain</a> covers the records themselves; <a href="/guides/email-headers-explained">the header guide</a> covers reading the verdict back out.</td></tr><tr><td><code>4.7.1</code> — a temporary policy refusal</td><td>Greylisting or reputation throttling: the receiver wants the sender to come back later and prove it has a real queue behind it, which spam software usually has not.</td><td>Nothing at all. It is designed to be retried, and the retry very nearly always gets through.</td></tr></tbody></table></div><p class="doc-n">Codes outside this list exist and all of them mean something, but a code you have never seen before is almost always a <code>.7.</code> — somebody's policy, described in their own words on the line beside it.</p>      </section>
+            <section class="ga-s" id="a-temporary-address" aria-labelledby="a-temporary-address-h">
+        <h2 class="ga-s-h" id="a-temporary-address-h">What can and cannot bounce at a temporary address</h2>
+        <p>Almost nothing — and that is worth spelling out, because three of the things people describe as a bounce here are not one:</p><dl class="defs"><div class="def"><dt>“User unknown” cannot happen</dt><dd>The server accepts <em>every</em> name on its public domains. <code>anything@neverla.web.id</code> is a valid address before anybody has typed it, because there is no list of mailboxes to check it against — so a <code>5.1.1</code> from Neverla Mail is not a thing that exists. <a href="/guides/what-is-temp-mail">How temp mail works underneath</a> has the mechanism in full.</dd></div><div class="def"><dt>Expiry is not a bounce</dt><dd>A message is deleted 5 days after it arrives, and by then the sending server was told <code>250</code> long ago and has forgotten the whole exchange. Nobody is notified, because nothing failed: it was delivered, and then later it was deleted. <a href="/guides/how-long-a-disposable-inbox-lasts">How long an inbox lasts</a> is the guide for that half.</dd></div><div class="def"><dt>A form that refuses the address is not a bounce</dt><dd>No mail was sent at all. The site compared the domain against a list and rejected the <em>form</em>; nothing ever reached a mail server, and there is nothing to read. <a href="/guides/why-signup-forms-block-disposable-email">Why sign-up forms block disposable email</a> is a different problem with a different set of answers.</dd></div><div class="def"><dt>Silence is not a bounce either</dt><dd>If something you were expecting never arrived and nobody sent you a report, the failure — if there was one — happened on the sending side, where you cannot see it. <a href="/guides/verification-email-not-arriving">Mail that does not turn up</a> works through the causes in the order worth checking.</dd></div></dl><p>That leaves exactly one genuine refusal, and it is the size ceiling. A sending server that announces the size up front is turned away immediately, before a byte is stored:</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>what the sending server sees</span><button class="code-copy" type="button" data-copy-code data-code="&gt;&gt;&gt; MAIL FROM:&lt;news@example.com&gt; SIZE=7602176
+&lt;&lt;&lt; 552 5.3.4 Message size exceeds fixed limit" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code>&gt;&gt;&gt; MAIL FROM:&lt;news@example.com&gt; SIZE=7602176
+&lt;&lt;&lt; 552 5.3.4 Message size exceeds fixed limit</code></pre></div><p>A sender that does not announce the size gets the same answer at the end of the message instead, once the bytes have been counted for it. Either way the code is <code>5.3.4</code>, nothing is stored, and a real person is told by their own mail system — which is the entire reason for refusing at the door rather than accepting and discarding.</p><p class="doc-n">There is no plan and no header that raises the ceiling, and no bounce for anything else here: no inbound quota, no rate limit, no refusal because somebody is already using the name. On a shared domain two people who type the same name simply share the mailbox, which is a privacy property rather than a delivery one.</p>      </section>
+            <section class="ga-s" id="on-your-own-domain" aria-labelledby="on-your-own-domain-h">
+        <h2 class="ga-s-h" id="on-your-own-domain-h">Bounces on a domain you have just pointed here</h2>
+        <p>Pointing a domain at a catch-all inbox is one DNS record, and nearly every bounce it produces belongs to the hour around the change rather than to the setup itself. There are five cases and they look different from each other:</p><ol class="steps-n"><li><strong>Before the record exists.</strong> A domain with no <code>MX</code> and no address record to fall back on gives senders <code>5.4.4</code> or <code>5.1.2</code>: there is nowhere to deliver and nothing worth retrying.</li><li><strong>While the change is spreading.</strong> Senders that already looked the record up keep the old answer until its TTL runs out. A bounce in this window names the <em>old</em> host on the <code>Remote-MTA:</code> line, which is precisely how you tell it apart from a record you have got wrong.</li><li><strong>Once it has spread.</strong> Every name on the domain is accepted, so “user unknown” stops being possible there too. One record, priority 10, pointing at <code>smtp.neverla.web.id</code>, and nothing else to publish for mail to arrive.</li><li><strong>If the domain used to publish a null MX.</strong> Parked domains often carry the record that means “this domain never receives mail”. Senders that cached it answer <code>5.1.10</code> until it expires, whatever you have published since.</li><li><strong>If the domain sends mail as well.</strong> A <code>5.7.26</code> on <em>outgoing</em> mail is not about any of this — it is your own SPF or DMARC failing to cover whatever sent the message. <a href="/guides/spf-dmarc-for-a-receive-only-domain">The receive-only guide</a> is the strict case; a domain that also sends needs the ordinary staged rollout instead.</li></ol><p>Reading the record answers most of that before anybody has to read a bounce:</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>shell</span><button class="code-copy" type="button" data-copy-code data-code="dig +short MX yourdomain.com" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code><span class="code-p">$</span> dig +short MX yourdomain.com</code></pre></div><p>The answer should be one line: the priority, then the host, then a trailing dot. Anything else — two lines, an unfamiliar host, nothing at all — is the bounce you are about to receive, three minutes early. <a href="/guides/own-domain-catch-all-inbox">Pointing your own domain here</a> is the whole setup, and <a href="/guides/spf-dmarc-for-a-receive-only-domain">the three records that stop spoofing</a> is what to publish once mail is arriving.</p><aside class="ga-call ga-call-tip"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.6a5.2 5.2 0 0 0-3 9.5v1.6h6v-1.6a5.2 5.2 0 0 0-3-9.5zM8 16.4h4"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Tip</span>Lower the TTL before the change, not after.</p><p>A record with a day-long TTL means a day of senders using the old answer, and there is no way to hurry them along. Dropping it to a few minutes the day before turns that window into a few minutes; put it back once the new record has settled.</p></div></aside>      </section>
+            <section class="ga-s" id="a-bounce-you-did-not-send" aria-labelledby="a-bounce-you-did-not-send-h">
+        <h2 class="ga-s-h" id="a-bounce-you-did-not-send-h">A bounce for a message you never sent</h2>
+        <p>It arrives looking exactly like an ordinary failure report, quoting a message you have never seen, to a recipient you have never heard of. Nothing has been broken into. Somebody sent mail with <em>your</em> address written into the envelope as the sender, a receiving server took it in before discovering it could not deliver it, and then did the correct thing with a failed message: wrote a report and posted it to the sender it had been given. Which is you.</p><p>The name for it is backscatter, and what it proves is worth saying plainly: nothing about your mailbox. Forging an envelope sender needs no access to anything — it is one line typed into a conversation. Whoever did it needed your address and nothing else, and they may well have guessed it.</p><p>Three things separate it from a real bounce in about ten seconds:</p><ul class="doc-l"><li><strong>The returned message is not yours.</strong> The third part of the report carries the original, or at least its headers. If you have never written it, you did not send it, and everything else in the report is about somebody else's problem.</li><li><strong>The <code>Received:</code> chain starts somewhere you have never used.</strong> Read it from the bottom upwards: the lowest line is the machine that actually injected the message, and it will not be your provider. <a href="/guides/email-headers-explained">Reading an email header</a> covers the direction and why the bottom is the honest end.</li><li><strong>The dates do not line up.</strong> Backscatter usually reports a message sent hours or days before the report reaches you, out of a queue that has been retrying somebody else's campaign since.</li></ul><p>There is nothing to fix and nothing to answer. If the address belongs to a domain you own, publishing SPF and DMARC reduces it in the only way that works: a receiving server which checks the sender's policy <em>before</em> accepting refuses the forgery inside the conversation and never generates a report for anybody. <a href="/guides/spf-dmarc-for-a-receive-only-domain">Three records on a receive-only domain</a> is the strictest version of that, and by some distance the easiest to publish.</p><p class="doc-n">A short name on a shared public domain collects more of this than a private address does, for the same reason it collects more spam: it is guessable, and a forger picking envelope senders is not aiming at you in particular. It is noise about somebody else, and unlike spam there is no button that trains anything — <a href="/guides/how-to-stop-spam-email">what the spam controls really do</a> is the guide for the buttons that do work.</p><aside class="ga-call ga-call-warn"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.8 18 16.6H2z"/><path d="M10 8v3.4M10 13.8h.01"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Watch out</span>Never follow a link inside one.</p><p>A forged report is a convenient place to hide a link, precisely because a bounce is the one machine-generated message people open without thinking about it. The genuine article has no reason to contain a link at all: a real delivery report is a status block and a copy of your own message.</p></div></aside>      </section>
+            <section class="ga-s" id="checklist" aria-labelledby="checklist-h">
+        <h2 class="ga-s-h" id="checklist-h">The order to read one in</h2>
+        <ol class="steps-n"><li><strong>Decide which kind you are holding.</strong> An error in your own mail app the moment you pressed send is a refusal. A message from <code>MAILER-DAEMON</code> that arrived afterwards is a report, and only the report has anything in it to read.</li><li><strong>Check it is about a message you actually sent.</strong> The returned copy is in the third part. If it is not yours, it is backscatter, and you are done.</li><li><strong>Open the raw source.</strong> The apology at the top is your own server's stock wording, not the reason, and the machine-readable block is not shown by default anywhere.</li><li><strong>Find <code>Status:</code> and read the first digit.</strong> A <code>4</code> is still being retried and may yet succeed on its own; a <code>5</code> is final and nothing more will happen.</li><li><strong>Read <code>Diagnostic-Code:</code>.</strong> This is the far end's own sentence, and the only place the rule that refused you is actually named.</li><li><strong>Place the second digit.</strong> <code>.1.</code> is the address, <code>.2.</code> the mailbox, <code>.4.</code> the route, <code>.7.</code> somebody's policy. That is normally enough to know whose problem it is.</li><li><strong>Act on whose problem it is.</strong> An addressing failure is fixed by having the right address; a routing failure by fixing DNS; a policy failure by satisfying the policy, or by asking the person on the other side to look at their own logs — where the same refusal is written down at far greater length than they sent you.</li></ol><p>Two things are never the answer. Sending the message again unchanged after a <code>5</code> repeats the same refusal and, done often enough, damages the sending domain's reputation everywhere at once. And replying to the report reaches nobody: it came from an empty envelope sender, which is the very reason it could be delivered to you in the first place.</p>      </section>
+      
+            <section class="ga-s" id="faq" aria-labelledby="faq-h">
+        <h2 class="ga-s-h" id="faq-h">Questions</h2>
+        <div class="faq ga-faq">
+                    <details class="faq-i" open>
+            <summary class="faq-q">
+              <span>What does a 550 5.1.1 bounce mean?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>That the domain accepts mail but has no such mailbox at it: the name in front of the <code>@</code> does not exist there. It is permanent — the <code>5</code> means nothing will be retried — so sending the same message again produces exactly the same answer. Check the spelling first, then check that it is the address you were actually given; there is nothing on the sending side that fixes a name which does not exist on the receiving one.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Hard bounce or soft bounce — which is which?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>A hard bounce is a code beginning with <code>5</code>: permanent, never retried, and the reason bulk senders remove an address from a list on the very first one. A soft bounce begins with <code>4</code>: temporary, retried automatically for a few days, and usually delivered in the end. Neither term appears in any specification — they are the sending industry's shorthand for that first digit, which does.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Can I reply to a bounce message?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>No. A delivery report is sent with an empty envelope sender, so there is no address behind <code>MAILER-DAEMON</code> to reply to. RFC 5321 requires it, so that a report which cannot itself be delivered does not bounce in turn for ever. If you need a human, the report names the server that wrote it, and that domain's postmaster address is the one worth trying.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Why did I get a bounce for a message I never sent?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Because somebody wrote your address into the envelope of their own mail, a receiving server accepted it before discovering it was undeliverable, and then sent the failure report to the sender it had been handed. It is called backscatter, it needs no access at all to your mailbox, and it says nothing whatever about your account being compromised. Look at the returned copy in the third part of the report: if you did not write it, there is nothing to do.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Does mail to a temporary address ever bounce?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Hardly ever. The server accepts every name on its public domains, so the commonest bounce of all — “user unknown” — cannot happen: <code>anything@neverla.web.id</code> is valid before anybody types it. The one real refusal is a message over 5 MB, turned away during the SMTP conversation with a <code>552 5.3.4</code> and reported to the sender by their own system. Expiry after 5 days is not a bounce, because the message was delivered first and deleted afterwards.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>How long does a server keep trying before it gives up?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>A few days, typically: four or five is the common default and some providers give up sooner. A temporary failure usually produces a <code>delayed</code> warning after a few hours, which is not a bounce and needs nothing done about it; the real bounce only arrives when the queue lifetime runs out, generally as a <code>4.4.7</code>. The useful reason is in those earlier warnings rather than in the final report.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>My message vanished and there was no bounce at all. What happened?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Delivery succeeded, in the only sense the protocol cares about: some server took responsibility and answered <code>250</code>. What happened afterwards — filed as spam, sorted into a folder nobody opens, or accepted and quietly discarded — produces no report of any kind. Silence is not a failure, and it is the one case a bounce cannot help with; <a href="/guides/verification-email-not-arriving">mail that never arrives</a> is the guide that can.</p></div>
+          </details>
+                  </div>
+      </section>
+      
+      
+                  <nav class="ga-pn" aria-label="More in this topic">
+                <a class="ga-pn-i ga-pn-p" href="/guides/spf-dmarc-for-a-receive-only-domain" rel="prev">
+          <span class="ga-pn-k">Previous</span>
+          <span class="ga-pn-t">Locking a receive-only domain</span>
+        </a>
+                        <a class="ga-pn-i ga-pn-n" href="/guides/mx-records-explained" rel="next">
+          <span class="ga-pn-k">Next</span>
+          <span class="ga-pn-t">Reading an MX record</span>
+        </a>
+              </nav>
+      
+    </article>
+  </div>
+
+    <div class="ga-rel">
+    <div class="wrap">
+      <h2 class="ga-rel-h">Keep reading</h2>
+      <ul class="gd-cards ga-rel-l">
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/email-headers-explained">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/headers-800.webp?v=3af85b61f5" srcset="/assets/img/guides/headers-480.webp?v=3af85b61f5 480w, /assets/img/guides/headers-800.webp?v=3af85b61f5 800w, /assets/img/guides/headers-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="A blue envelope with a long grey paper tape unrolling from behind it, marked with dashes instead of words, under a grey magnifying glass" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">Email &amp; deliverability</span>
+              <span class="gd-card-t">Email headers: how to read one, and what it proves</span>
+              <span class="gd-card-x">What the header block is and how it differs from the SMTP envelope, where to open the raw source in the mail app you already use, how to read the Received chain from the bottom up, the four fields that all claim to be the sender, what a pass or a fail in Authentication-Results really means, the five things a header can never tell you, and what is left to check when the message landed at a disposable address.</span>
+              <span class="gd-card-m">21 min read</span>
+            </span>
+          </a>
+        </li>
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/verification-email-not-arriving">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/troubleshoot-800.webp?v=3af85b61f5" srcset="/assets/img/guides/troubleshoot-480.webp?v=3af85b61f5 480w, /assets/img/guides/troubleshoot-800.webp?v=3af85b61f5 800w, /assets/img/guides/troubleshoot-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="A blue envelope stopped by a lowered barrier under the middle of three arches, with an open, empty mailbox waiting at the end of the track" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">Troubleshooting</span>
+              <span class="gd-card-t">Verification email not arriving? How to find out why</span>
+              <span class="gd-card-x">The sixty-second check, how long delivery should really take, the six ways you end up watching the wrong mailbox, and what to do when a site drops disposable addresses without saying so.</span>
+              <span class="gd-card-m">12 min read</span>
+            </span>
+          </a>
+        </li>
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/spf-dmarc-for-a-receive-only-domain">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/spoofing-800.webp?v=3af85b61f5" srcset="/assets/img/guides/spoofing-480.webp?v=3af85b61f5 480w, /assets/img/guides/spoofing-800.webp?v=3af85b61f5 800w, /assets/img/guides/spoofing-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="A blue envelope sliding into a grey mailbox while a second envelope is turned away by a blue shield" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">Email &amp; deliverability</span>
+              <span class="gd-card-t">SPF and DMARC for a receive-only domain: stop spoofing</span>
+              <span class="gd-card-x">Why a domain that never sends can go straight to the strictest SPF and DMARC on day one, the three records in full, the DKIM one you publish empty, checking your work with dig, and the parked-domain advice that would silently break your inbox.</span>
+              <span class="gd-card-m">19 min read</span>
+            </span>
+          </a>
+        </li>
+              </ul>
+    </div>
+  </div>
+  
+  <section class="cta ga-cta" aria-labelledby="ga-cta-h">
+    <div class="wrap cta-in">
+      <h2 class="cta-h" id="ga-cta-h">Try it while it is fresh</h2>
+      <p class="cta-p">An address takes one click, no account and no card. Everything in this guide works on it straight away.</p>
+      <div class="cta-act">
+        <a class="btn btn-primary btn-lg" href="/#grab">Open an inbox</a>
+        <a class="btn btn-ghost btn-lg" href="/docs/api">Read the API reference</a>
+      </div>
+    </div>
+  </section>
+</div>
+</main>
+
+<footer class="ft" id="ft-map">
+  <div class="wrap">
+    <div class="ft-top">
+      <div class="ft-brand">
+        <a class="ft-logo" href="/" aria-label="Neverla Mail — home">
+          <picture>
+            <source srcset="/assets/img/logo-nav.webp?v=3af85b61f5" type="image/webp">
+            <img class="ft-logo-img" src="/assets/img/logo-nav.png?v=3af85b61f5"
+                 alt="Neverla Mail" width="122" height="29" decoding="async" loading="lazy">
+          </picture>
+        </a>
+        <p class="ft-blurb">
+                    Disposable email addresses with a free REST API. Grab one in a click, or point your own domain at us for an inbox nobody can guess into.        </p>
+                <p class="ft-status">
+          <span class="dot" aria-hidden="true"></span>
+          <a href="/status">System status</a>
+        </p>
+      </div>
+
+                  <nav class="ft-nav" aria-label="Product">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Product</h2></summary>
+          <ul>
+                                                <li><a href="/#grab">Grab an address</a></li>
+                                    <li><a href="/#how">How it works</a></li>
+                                    <li><a href="/domains">Connect a domain</a></li>
+                                    <li><a href="/extensions">Browser extension</a></li>
+                                    <li><a href="/pricing">Pricing</a></li>
+                                    <li><a href="/guides">Guides</a></li>
+                                    <li><a href="/compare">Comparing the APIs</a></li>
+                                    <li><a href="/vs">Neverla Mail vs the alternatives</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Developers">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Developers</h2></summary>
+          <ul>
+                                                <li><a href="/docs/quickstart#mcp">MCP for AI agents</a></li>
+                                    <li><a href="/openapi.json">OpenAPI 3.1</a></li>
+                                    <li><a href="/llms.txt">llms.txt</a></li>
+                                    <li><a href="/docs">Documentation</a></li>
+                                    <li><a href="/docs/api">API reference</a></li>
+                                    <li><a href="/docs/quickstart">Quickstart</a></li>
+                                    <li><a href="/docs/limits">Limits</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Company">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Company</h2></summary>
+          <ul>
+                                                <li><a href="/about">About</a></li>
+                                    <li><a href="/status">Status</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Legal">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Legal</h2></summary>
+          <ul>
+                                                <li><a href="/legal/terms">Terms of service</a></li>
+                                    <li><a href="/legal/privacy">Privacy</a></li>
+                      </ul>
+        </details>
+      </nav>
+          </div>
+
+    <div class="ft-bar">
+      <p>&copy; 2026 Neverla Mail. All rights reserved.</p>
+      <ul class="ft-facts">
+        <li>Receive-only</li>
+        <li>No tracking, no ads</li>
+        <li>Messages deleted after 5 days</li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<div class="lang" data-lang>
+    <button class="lang-fab" type="button" data-lang-open
+          aria-haspopup="dialog" aria-expanded="false"
+          title="Language: English">
+    <span class="lang-fab-fl" aria-hidden="true"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+    <span class="lang-code" aria-hidden="true">EN</span>
+        <span class="lang-fab-n" aria-hidden="true"><span>English</span></span>
+    <svg class="lang-globe" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+         aria-hidden="true" focusable="false">
+      <circle cx="10" cy="10" r="7.25"/>
+      <path d="M2.75 10h14.5M10 2.75c3.85 4.4 3.85 10.1 0 14.5-3.85-4.4-3.85-10.1 0-14.5z"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="sr-only">Change language: English</span>
+  </button>
+
+  <dialog class="lm" data-lang-modal aria-labelledby="lm-title">
+    <div class="lm-panel">
+            <div class="lm-grab" aria-hidden="true"></div>
+
+            <header class="lm-hd">
+        <h2 class="lm-t" id="lm-title">Language</h2>
+                <form method="dialog">
+          <button class="lm-x" type="submit" aria-label="Change language">
+            <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+              <path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor"
+                    stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </form>
+      </header>
+
+      <ul class="lm-grid">
+                <li>
+          <a class="lm-i is-on"
+             href="/guides/email-bounce-codes-explained"
+             hreflang="en" lang="en"
+             aria-current="true" data-lang-current>
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">English</span>
+                            <span class="lm-n-l" lang="en">English</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">EN</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/es/guides/email-bounce-codes-explained"
+             hreflang="es" lang="es"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-es"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Español</span>
+                            <span class="lm-n-l" lang="en">Spanish</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">ES</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/pt/guides/email-bounce-codes-explained"
+             hreflang="pt" lang="pt"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-pt"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Português</span>
+                            <span class="lm-n-l" lang="en">Portuguese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">PT</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/fr/guides/email-bounce-codes-explained"
+             hreflang="fr" lang="fr"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-fr"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Français</span>
+                            <span class="lm-n-l" lang="en">French</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">FR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/de/guides/email-bounce-codes-explained"
+             hreflang="de" lang="de"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-de"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Deutsch</span>
+                            <span class="lm-n-l" lang="en">German</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">DE</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ru/guides/email-bounce-codes-explained"
+             hreflang="ru" lang="ru"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ru"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Русский</span>
+                            <span class="lm-n-l" lang="en">Russian</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">RU</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/tr/guides/email-bounce-codes-explained"
+             hreflang="tr" lang="tr"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-tr"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Türkçe</span>
+                            <span class="lm-n-l" lang="en">Turkish</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">TR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/id/guides/email-bounce-codes-explained"
+             hreflang="id" lang="id"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-id"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Bahasa Indonesia</span>
+                            <span class="lm-n-l" lang="en">Indonesian</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">ID</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/vi/guides/email-bounce-codes-explained"
+             hreflang="vi" lang="vi"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-vi"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Tiếng Việt</span>
+                            <span class="lm-n-l" lang="en">Vietnamese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">VI</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ar/guides/email-bounce-codes-explained"
+             hreflang="ar" lang="ar"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ar"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">العربية</span>
+                            <span class="lm-n-l" lang="en">Arabic</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">AR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ja/guides/email-bounce-codes-explained"
+             hreflang="ja" lang="ja"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ja"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">日本語</span>
+                            <span class="lm-n-l" lang="en">Japanese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">JA</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+              </ul>
+    </div>
+  </dialog>
+
+  <noscript>
+    <ul class="lang-ns" aria-label="Language">
+            <li><a href="/guides/email-bounce-codes-explained" hreflang="en" lang="en">English</a></li>
+            <li><a href="/es/guides/email-bounce-codes-explained" hreflang="es" lang="es">Español</a></li>
+            <li><a href="/pt/guides/email-bounce-codes-explained" hreflang="pt" lang="pt">Português</a></li>
+            <li><a href="/fr/guides/email-bounce-codes-explained" hreflang="fr" lang="fr">Français</a></li>
+            <li><a href="/de/guides/email-bounce-codes-explained" hreflang="de" lang="de">Deutsch</a></li>
+            <li><a href="/ru/guides/email-bounce-codes-explained" hreflang="ru" lang="ru">Русский</a></li>
+            <li><a href="/tr/guides/email-bounce-codes-explained" hreflang="tr" lang="tr">Türkçe</a></li>
+            <li><a href="/id/guides/email-bounce-codes-explained" hreflang="id" lang="id">Bahasa Indonesia</a></li>
+            <li><a href="/vi/guides/email-bounce-codes-explained" hreflang="vi" lang="vi">Tiếng Việt</a></li>
+            <li><a href="/ar/guides/email-bounce-codes-explained" hreflang="ar" lang="ar">العربية</a></li>
+            <li><a href="/ja/guides/email-bounce-codes-explained" hreflang="ja" lang="ja">日本語</a></li>
+          </ul>
+  </noscript>
+</div>
+<svg class="lm-sprite" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+    <symbol id="fl-en" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#012169"/>
+      <path d="M0 0 24 16M24 0 0 16" stroke="#fff" stroke-width="3.2"/>
+      <path d="M0 0 24 16M24 0 0 16" stroke="#C8102E" stroke-width="1.9"/>
+      <path d="M12 0v16M0 8h24" stroke="#fff" stroke-width="5.3"/>
+      <path d="M12 0v16M0 8h24" stroke="#C8102E" stroke-width="3.2"/>
+    </symbol>
+    <symbol id="fl-es" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#AA151B"/>
+      <rect y="4" width="24" height="8" fill="#F1BF00"/>
+    </symbol>
+    <symbol id="fl-pt" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#DA291C"/>
+      <rect width="9.6" height="16" fill="#046A38"/>
+      <circle cx="9.6" cy="8" r="3.4" fill="#FFE800" stroke="#046A38" stroke-width="1"/>
+    </symbol>
+    <symbol id="fl-fr" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <rect width="8" height="16" fill="#002395"/>
+      <rect x="16" width="8" height="16" fill="#ED2939"/>
+    </symbol>
+    <symbol id="fl-de" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#FFCE00"/>
+      <rect width="24" height="10.7" fill="#DD0000"/>
+      <rect width="24" height="5.3"/>
+    </symbol>
+    <symbol id="fl-ru" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#D52B1E"/>
+      <rect width="24" height="10.7" fill="#0039A6"/>
+      <rect width="24" height="5.3" fill="#fff"/>
+    </symbol>
+    <symbol id="fl-tr" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#E30A17"/>
+      <circle cx="9.4" cy="8" r="3.9" fill="#fff"/>
+      <circle cx="10.9" cy="8" r="3.1" fill="#E30A17"/>
+      <path d="m15.1 8 1.35.44-.83 1.15V8.2l.83 1.15z" fill="#fff"/>
+      <path d="m14.6 6.2.72 1.98 2.1.06-1.67 1.28.6 2.02-1.75-1.18-1.75 1.18.6-2.02-1.67-1.28 2.1-.06z" fill="#fff"/>
+    </symbol>
+    <symbol id="fl-id" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <rect width="24" height="8" fill="#CE1126"/>
+    </symbol>
+    <symbol id="fl-vi" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#DA251D"/>
+      <path d="m12 3.6 1.32 4.06h4.27l-3.46 2.51 1.33 4.06L12 11.72l-3.46 2.51 1.33-4.06-3.46-2.51h4.27z" fill="#FFFF00"/>
+    </symbol>
+    <symbol id="fl-ar" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#165D31"/>
+      <path d="M5.6 6.4h12.8" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M5.6 10.4h11.2" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M16.8 10.4c.9 0 1.6.5 1.6 1.2" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="fl-ja" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <circle cx="12" cy="8" r="4.8" fill="#BC002D"/>
+    </symbol>
+  </defs>
+</svg><dialog class="am" data-auth-modal aria-labelledby="am-h-signin">
+  <div class="am-panel" data-am-panel data-view="signin">
+
+        <div class="am-grab" aria-hidden="true"></div>
+
+        <div class="am-body" data-am-body>
+
+            <div class="am-hd">
+                <div class="am-seg" role="tablist" aria-label="Account">
+          <span class="am-seg-pill" aria-hidden="true"></span>
+          <button class="am-seg-b" type="button" role="tab" id="am-tab-signin"
+                  aria-selected="true" aria-controls="am-view-signin"
+                  data-am-go="signin">Sign in</button>
+          <button class="am-seg-b" type="button" role="tab" id="am-tab-signup"
+                  aria-selected="false" aria-controls="am-view-signup" tabindex="-1"
+                  data-am-go="signup">Create account</button>
+        </div>
+
+        <button class="am-x" type="button" data-am-close aria-label="Close">
+          <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor"
+                  stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+            <div class="am-alert" role="alert" data-am-alert hidden>
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" aria-hidden="true" focusable="false">
+          <circle cx="10" cy="10" r="7.6"/><path d="M10 6.2v4.4M10 13.4v.1"/>
+        </svg>
+        <span data-am-alert-t></span>
+      </div>
+
+      <div class="am-views" data-am-views>
+
+        <!-- ── sign in ──────────────────────────────────────────────────── -->
+        <form class="am-view" id="am-view-signin" data-am-view="signin"
+              role="tabpanel" aria-labelledby="am-tab-signin"
+              method="post" action="/api/v1/auth" novalidate>
+          <input type="hidden" name="action" value="signin">
+
+          <h2 class="am-h" id="am-h-signin">Welcome back</h2>
+          <p class="am-sub">Your inboxes and your domains, in one place.</p>
+
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-si-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-si-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-si-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-si-email-e" data-am-err hidden></p>
+    </div>
+                  <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-si-pass">Password</label>
+                <button class="am-link" type="button" data-am-go="reset">Forgot?</button>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-si-pass" name="password"
+               type="password"
+                              autocomplete="current-password"
+               placeholder="••••••••"
+               aria-describedby="am-si-pass-e"
+                                             data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+      
+      <p class="am-err" id="am-si-pass-e" data-am-err hidden></p>
+    </div>
+    
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Sign in</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+        <!-- ── create an account ───────────────────────────────────────── -->
+        <form class="am-view" id="am-view-signup" data-am-view="signup"
+              role="tabpanel" aria-labelledby="am-tab-signup"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <input type="hidden" name="action" value="signup">
+
+          <h2 class="am-h" id="am-h-signup">Create your account</h2>
+                              <p class="am-sub" data-am-sub>It stays free. The address is only so you can find your inboxes again.</p>
+          <p class="am-sub" data-am-sub="save" hidden>Create a free account to keep this inbox — and every inbox you open from now on.</p>
+                    <ul class="am-perks">
+            <li>Every inbox you open, saved</li>
+            <li>A free API key</li>
+            <li>No card, no trial</li>
+          </ul>
+          
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-su-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-su-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-su-email-e" data-am-err hidden></p>
+    </div>
+                  <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-pass">Password</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-su-pass" name="password"
+               type="password"
+                              autocomplete="new-password"
+               placeholder="••••••••"
+               aria-describedby="am-su-pass-e"
+                                             data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+                  <div class="am-str" data-am-str data-strength="0" hidden>
+        <div class="am-str-bars" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <span class="am-str-t" data-am-str-t></span>
+      </div>
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+            <p class="am-hint">At least 10 characters. Length beats punctuation.</p>
+      
+      <p class="am-err" id="am-su-pass-e" data-am-err hidden></p>
+    </div>
+    
+                        <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-pass2">Confirm password</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-su-pass2" name="password2"
+               type="password"
+                              autocomplete="new-password"
+               placeholder="••••••••"
+               aria-describedby="am-su-pass2-e"
+                              data-am-match="am-su-pass" data-am-skip               data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+      
+      <p class="am-err" id="am-su-pass2-e" data-am-err hidden></p>
+    </div>
+    
+                              <div class="am-cf" data-am-cf data-sitekey="0x4AAAAAAEfWgqSU6xDxtH5m"></div>
+          
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Create my account</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    
+          <p class="am-note">
+            By creating an account you agree to the <a href="/legal/terms">Terms</a> and the <a href="/legal/privacy">Privacy Policy</a>.          </p>
+        </form>
+
+        <!-- ── reset a password ────────────────────────────────────────── -->
+        <form class="am-view" id="am-view-reset" data-am-view="reset"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <input type="hidden" name="action" value="reset">
+
+          <button class="am-back" type="button" data-am-go="signin">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor"
+                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to sign in          </button>
+
+          <h2 class="am-h" id="am-h-reset">Reset your password</h2>
+          <p class="am-sub">Give us the address you signed up with and we will send a link to choose a new password.</p>
+
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-rs-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-rs-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-rs-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-rs-email-e" data-am-err hidden></p>
+    </div>
+    
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Send the link</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+        <!-- ── the link is on its way ──────────────────────────────────── -->
+                <div class="am-view am-view-done" id="am-view-sent" data-am-view="sent" hidden>
+          <span class="am-done-ic" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.4"
+                 stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="m9 16.6 4.6 4.6L23 11"/>
+            </svg>
+          </span>
+          <h2 class="am-h" id="am-h-sent">Check your inbox</h2>
+          <p class="am-sub">If an account exists for that address, a link to choose a new password is on its way. It is valid for one hour.</p>
+          <button class="btn btn-ghost am-go" type="button" data-am-go="signin">Back to sign in</button>
+        </div>
+
+        <!-- ── le second facteur (01/10/2026) ──────────────────────────── -->
+                <form class="am-view" id="am-view-mfa" data-am-view="mfa"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <button class="am-back" type="button" data-am-go="signin">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor"
+                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to sign in          </button>
+
+          <h2 class="am-h" id="am-h-mfa">Two-factor authentication</h2>
+          <p class="am-sub">Type the six digits your authenticator app shows — or one of your recovery codes.</p>
+
+          <div class="am-f">
+            <div class="am-f-top">
+              <label class="am-l" for="am-mfa-code">Code</label>
+            </div>
+            <div class="am-in">
+              <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>              <input class="am-i am-i-code" id="am-mfa-code" name="code" type="text"
+                     inputmode="numeric" autocomplete="one-time-code" spellcheck="false"
+                     autocapitalize="off" maxlength="24" placeholder="123 456"
+                     aria-describedby="am-mfa-code-e" data-am-in data-am-code required>
+            </div>
+            <p class="am-err" id="am-mfa-code-e" data-am-err hidden></p>
+          </div>
+
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Verify</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+      </div>
+    </div>
+
+  </div>
+</dialog>
+<nav class="tb" data-tb aria-label="Main">
+  <a class="tb-i" href="/" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.8 10.4 12 3.8l8.2 6.6v8.7a1.4 1.4 0 0 1-1.4 1.4h-4.3v-5.8h-5v5.8H5.2a1.4 1.4 0 0 1-1.4-1.4z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+    <span class="tb-n">Home</span>
+  </a>
+  <a class="tb-i is-on" aria-current="true" href="/guides" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 6.6C10.3 5.2 7.9 4.6 4.3 4.6v13.2c3.6 0 6 .6 7.7 2 1.7-1.4 4.1-2 7.7-2V4.6c-3.6 0-6 .6-7.7 2zM12 6.6v13.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+    <span class="tb-n">Guides</span>
+  </a>
+    <a class="tb-i tb-go" href="/inbox" data-sheet-open="inbox"
+     aria-haspopup="dialog">
+    <span class="tb-go-b" aria-hidden="true">
+      <svg viewBox="0 0 24 24" focusable="false"><rect x="3.2" y="5.6" width="17.6" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m4.2 7 7 5.3a1.3 1.3 0 0 0 1.6 0l7-5.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <span class="tb-n">Inbox</span>
+  </a>
+    <a class="tb-i" href="/pricing" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.8 12.4V5.2a1.4 1.4 0 0 1 1.4-1.4h7.2l7.9 7.9a1.4 1.4 0 0 1 0 2l-6.7 6.7a1.4 1.4 0 0 1-2 0z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="8.4" cy="8.4" r="1.5" fill="currentColor"/></svg>
+    <span class="tb-n">Pricing</span>
+  </a>
+    <a class="tb-i" href="#ft-map" data-sheet-open="menu" aria-haspopup="dialog">
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 7h15M4.5 12h15M4.5 17h15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <span class="tb-n">Menu</span>
+  </a>
+</nav>
+
+<dialog class="sh" data-sheet="menu" aria-labelledby="sh-menu-t">
+  <div class="sh-panel">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <header class="sh-hd">
+      <h2 class="sh-t" id="sh-menu-t">Menu</h2>
+      <form method="dialog">
+        <button class="sh-x" type="submit" aria-label="Close"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+      </form>
+    </header>
+
+    <div class="sh-body">
+            <div class="sh-auth">
+        <button class="btn btn-primary" type="button" data-auth-open="signin">Log in</button>
+        <button class="btn btn-ghost" type="button" data-auth-open="signup">Create account</button>
+      </div>
+      
+            <p class="sh-sec">Product</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/#how"><span>How it works</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/domains"><span>Connect a domain</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/extensions"><span>Browser extension</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/pricing"><span>Pricing</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/guides"><span>Guides</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/compare"><span>Comparing the APIs</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/vs"><span>Neverla Mail vs the alternatives</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Developers</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/docs/quickstart#mcp"><span>MCP for AI agents</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs"><span>Documentation</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/api"><span>API reference</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/quickstart"><span>Quickstart</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/limits"><span>Limits</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Company</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/about"><span>About</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/status"><span>Status</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Legal</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/legal/terms"><span>Terms of service</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/legal/privacy"><span>Privacy</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+      
+      <p class="sh-sec">Language</p>
+      <div class="sh-card sh-list">
+                <button class="sh-row sh-lang" type="button" data-sheet-lang>
+          <span class="sh-lang-fl" aria-hidden="true"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+          <span class="sh-lang-n">English</span>
+          <span class="sh-lang-c" aria-hidden="true">EN</span>
+          <svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>        </button>
+      </div>
+
+            <p class="sh-note">Free · No signup · Deleted after 5 days</p>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="sh sh-ibx" data-sheet="inbox" aria-labelledby="sh-ibx-t">
+  <div class="sh-panel">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <header class="sh-hd">
+      <h2 class="sh-t" id="sh-ibx-t">New address</h2>
+      <form method="dialog">
+        <button class="sh-x" type="submit" aria-label="Close"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+      </form>
+    </header>
+
+    <div class="sh-body">
+            <form class="sh-cmp" action="/inbox" method="get" data-composer data-sheet-composer novalidate>
+        <div class="sh-cmp-f">
+          <label class="sr-only" for="sh-u">Address name</label>
+          <input class="sh-cmp-u" type="text" name="u" id="sh-u" data-user
+                 placeholder="pick-any-name" maxlength="64"
+                 autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false"
+                 enterkeyhint="go" aria-describedby="sh-hint">
+          <button class="sh-cmp-dice" type="button" data-random
+                  aria-label="Random name" title="Random name">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="2" y="2" width="12" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="5.5" cy="5.5" r="1.1" fill="currentColor"/><circle cx="10.5" cy="5.5" r="1.1" fill="currentColor"/><circle cx="8" cy="8" r="1.1" fill="currentColor"/><circle cx="5.5" cy="10.5" r="1.1" fill="currentColor"/><circle cx="10.5" cy="10.5" r="1.1" fill="currentColor"/></svg>
+          </button>
+        </div>
+        <label class="sr-only" for="sh-d">Domain</label>
+        <select class="sh-cmp-d" name="d" id="sh-d" data-domain>
+                    <option value="neverla.web.id">@neverla.web.id</option>
+                    <option value="mixozia.com">@mixozia.com</option>
+                    <option value="linqmail.com">@linqmail.com</option>
+                  </select>
+        <p class="sh-hint composer-hint" id="sh-hint" data-hint hidden></p>
+        <button class="btn btn-primary btn-lg btn-block sh-cmp-go" type="submit">
+          <span>Open inbox</span>
+          <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <p class="sh-cmp-note">Public inbox — anyone with the address can read it.</p>
+      </form>
+
+                  <div class="sh-recent" data-sh-recent hidden>
+        <p class="sh-sec">Opened in this tab</p>
+        <ul class="sh-card sh-list" data-sh-recent-list></ul>
+              </div>
+    </div>
+  </div>
+</dialog>
+
+<p class="sr-only" role="status" aria-live="polite" data-live></p>
+
+</body>
+</html>

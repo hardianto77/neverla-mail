@@ -1,0 +1,1253 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SPF and DMARC for a receive-only domain: stop spoofing | Neverla Mail</title>
+<meta name="description" content="A domain that only receives mail can publish the strictest SPF and DMARC on day one. The three records, why no rollout is needed, and how to check them.">
+<link rel="canonical" href="https://neverla.web.id/guides/spf-dmarc-for-a-receive-only-domain">
+<meta name="robots" content="max-image-preview:large">
+<link rel="alternate" type="application/rss+xml" title="Neverla Mail — Guides" href="https://neverla.web.id/guides/feed.xml">
+<link rel="alternate" hreflang="en" href="https://neverla.web.id/guides/spf-dmarc-for-a-receive-only-domain">
+<link rel="alternate" hreflang="es" href="https://neverla.web.id/es/guides/spf-dmarc-for-a-receive-only-domain">
+<link rel="alternate" hreflang="pt" href="https://neverla.web.id/pt/guides/spf-dmarc-for-a-receive-only-domain">
+<link rel="alternate" hreflang="fr" href="https://neverla.web.id/fr/guides/spf-dmarc-for-a-receive-only-domain">
+<link rel="alternate" hreflang="de" href="https://neverla.web.id/de/guides/spf-dmarc-for-a-receive-only-domain">
+<link rel="alternate" hreflang="ru" href="https://neverla.web.id/ru/guides/spf-dmarc-for-a-receive-only-domain">
+<link rel="alternate" hreflang="tr" href="https://neverla.web.id/tr/guides/spf-dmarc-for-a-receive-only-domain">
+<link rel="alternate" hreflang="id" href="https://neverla.web.id/id/guides/spf-dmarc-for-a-receive-only-domain">
+<link rel="alternate" hreflang="vi" href="https://neverla.web.id/vi/guides/spf-dmarc-for-a-receive-only-domain">
+<link rel="alternate" hreflang="ar" href="https://neverla.web.id/ar/guides/spf-dmarc-for-a-receive-only-domain">
+<link rel="alternate" hreflang="ja" href="https://neverla.web.id/ja/guides/spf-dmarc-for-a-receive-only-domain">
+<link rel="alternate" hreflang="x-default" href="https://neverla.web.id/guides/spf-dmarc-for-a-receive-only-domain">
+<meta name="theme-color" content="#ffffff">
+<meta name="color-scheme" content="light">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Neverla Mail">
+<meta property="og:title" content="SPF and DMARC for a receive-only domain: stop spoofing | Neverla Mail">
+<meta property="og:description" content="A domain that only receives mail can publish the strictest SPF and DMARC on day one. The three records, why no rollout is needed, and how to check them.">
+<meta property="og:url" content="https://neverla.web.id/guides/spf-dmarc-for-a-receive-only-domain">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:locale:alternate" content="pt_BR">
+<meta property="og:locale:alternate" content="fr_FR">
+<meta property="og:locale:alternate" content="de_DE">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta property="og:locale:alternate" content="tr_TR">
+<meta property="og:locale:alternate" content="id_ID">
+<meta property="og:locale:alternate" content="vi_VN">
+<meta property="og:locale:alternate" content="ar_AR">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://neverla.web.id/assets/img/guides/spoofing-1376.webp">
+<meta property="og:image:width" content="1376">
+<meta property="og:image:height" content="768">
+<meta property="og:image:alt" content="Neverla Mail — Temporary email addresses, and an API to read them.">
+<meta name="twitter:image" content="https://neverla.web.id/assets/img/guides/spoofing-1376.webp">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" sizes="96x96" href="/assets/img/icon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/img/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Neverla Mail">
+
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/main.css?v=3af85b61f5">
+<link rel="stylesheet" href="/assets/css/mobile.css?v=3af85b61f5" media="(max-width: 959.98px)">
+<script src="/assets/js/app.js?v=3af85b61f5" defer></script>
+<script src="/assets/js/mobile.js?v=3af85b61f5" defer></script>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://neverla.web.id/#org","name":"Neverla Mail","url":"https://neverla.web.id/","description":"Free disposable email addresses with a REST API and an MCP server for AI agents.","logo":{"@type":"ImageObject","url":"https://neverla.web.id/assets/img/logo.png","width":671,"height":160},"image":"https://neverla.web.id/assets/img/og-card.png","sameAs":["https://dev.to/neverla"]},{"@type":"WebSite","@id":"https://neverla.web.id/#site","name":"Neverla Mail","url":"https://neverla.web.id/","publisher":{"@id":"https://neverla.web.id/#org"},"inLanguage":["en","es","pt","fr","de","ru","tr","id","vi","ar","ja"]},{"@type":["WebAPI","SoftwareApplication"],"@id":"https://neverla.web.id/#api","name":"Neverla Mail disposable email API","url":"https://neverla.web.id/docs/api","documentation":"https://neverla.web.id/docs/api","provider":{"@id":"https://neverla.web.id/#org"},"applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"Create a disposable email address and read what arrives at it over HTTP. No account, no API key and no payment for the public domains. Messages are deleted 5 days after they arrive.","offers":[{"@type":"Offer","name":"Free","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"Public domains, your own domains, the REST API and the MCP server. No account, no key; the free API allows 60 requests a minute and 1,000 a day per IP address."},{"@type":"Offer","name":"Premium","price":"12.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"12.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Pro","price":"49.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"49.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}},{"@type":"Offer","name":"Scale","price":"99.99","priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://neverla.web.id/pricing","description":"The premium domain pool, kept off disposable-mail blocklists — in the inbox on the website and through the API — and an API with no per-minute or daily cap.","priceSpecification":{"@type":"UnitPriceSpecification","price":"99.99","priceCurrency":"USD","billingIncrement":1,"unitCode":"MON"}}],"featureList":["Connect your own domain — every address on it becomes a catch-all inbox","Disposable email addresses with no signup","REST API over HTTPS, no API key required","MCP server for AI agents (create_inbox, wait_for_message)","Every mailbox has an alias you can hand out instead of the address","Attachments up to 5 MB","Automatic deletion after 5 days"],"additionalProperty":[{"@type":"PropertyValue","name":"Sending mail","value":"No. There is no endpoint that sends, and no outbound mail of any kind."},{"@type":"PropertyValue","name":"IMAP or POP3","value":"No. HTTPS only — a REST API and an MCP server."},{"@type":"PropertyValue","name":"Webhooks or push notifications","value":"No. You poll, or you let the MCP server hold the call open until the message lands."},{"@type":"PropertyValue","name":"Keeping mail longer than 5 days","value":"No. Not a tier, not a setting, not a parameter."},{"@type":"PropertyValue","name":"Attachments over 5 MB","value":"No. The message is refused at SMTP time."},{"@type":"PropertyValue","name":"Privacy on a shared domain","value":"No. Anyone who knows the address can read the mailbox."},{"@type":"PropertyValue","name":"Paying by card","value":"No. Crypto only, credited to a balance the subscription draws on."},{"@type":"PropertyValue","name":"An uptime guarantee","value":"No. There is no SLA, on any plan."},{"@type":"PropertyValue","name":"Tracking, analytics or advertising","value":"No. No third-party script, and no cookie banner because there are no cookies to consent to."}],"potentialAction":{"@type":"ConsumeAction","target":{"@type":"EntryPoint","urlTemplate":"https://neverla.web.id/api/v1/mailbox?address={address}","httpMethod":"GET","contentType":"application/json"}}},{"@type":"WebPage","@id":"https://neverla.web.id/guides/spf-dmarc-for-a-receive-only-domain#page","url":"https://neverla.web.id/guides/spf-dmarc-for-a-receive-only-domain","name":"SPF and DMARC for a receive-only domain: stop spoofing | Neverla Mail","description":"A domain that only receives mail can publish the strictest SPF and DMARC on day one. The three records, why no rollout is needed, and how to check them.","isPartOf":{"@id":"https://neverla.web.id/#site"},"inLanguage":"en"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Neverla Mail","item":"https://neverla.web.id/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://neverla.web.id/guides"},{"@type":"ListItem","position":3,"name":"Email & deliverability","item":"https://neverla.web.id/guides"},{"@type":"ListItem","position":4,"name":"SPF and DMARC for a receive-only domain: stop spoofing","item":"https://neverla.web.id/guides/spf-dmarc-for-a-receive-only-domain"}]},{"@type":"TechArticle","@id":"https://neverla.web.id/guides/spf-dmarc-for-a-receive-only-domain#article","headline":"SPF and DMARC for a receive-only domain: stop spoofing","description":"A domain that only receives mail can publish the strictest SPF and DMARC on day one. The three records, why no rollout is needed, and how to check them.","image":"https://neverla.web.id/assets/img/guides/spoofing-1376.webp","datePublished":"2026-08-29","dateModified":"2026-08-29","inLanguage":"en","articleSection":"Email & deliverability","timeRequired":"PT19M","keywords":"spf, dmarc, dkim, email spoofing, dns records, mx record, catch-all domain, receive only","author":{"@id":"https://neverla.web.id/#org"},"publisher":{"@id":"https://neverla.web.id/#org"},"isPartOf":{"@id":"https://neverla.web.id/#site"},"mainEntityOfPage":{"@id":"https://neverla.web.id/guides/spf-dmarc-for-a-receive-only-domain#page"},"proficiencyLevel":"Intermediate"},{"@type":"FAQPage","@id":"https://neverla.web.id/guides/spf-dmarc-for-a-receive-only-domain#faq","mainEntity":[{"@type":"Question","name":"Do I really need a DKIM record if I never sign anything?","acceptedAnswer":{"@type":"Answer","text":"You do not need it for your own mail to work, since there is none. You publish it so that a forger cannot invent a selector name, sign a message with their own key and have it verify — the empty key is a standing answer of revoked to every selector name they might choose. It is one record, it never needs maintenance, and it closes the one path that SPF and DMARC leave open."}},{"@type":"Question","name":"Will any of this reduce the spam arriving in my catch-all?","acceptedAnswer":{"@type":"Answer","text":"No, and it is worth being blunt about that because it is the most common expectation. These records govern mail claiming to come from your domain. Mail arriving at your domain is unaffected — every address on it still accepts everything, which is what a catch-all is. If unwanted mail at a particular address is the problem, the fix is to stop using that address, not to change these records."}},{"@type":"Question","name":"What if I want to send mail from this domain later?","acceptedAnswer":{"@type":"Answer","text":"Then you change two things, in this order: authorise the new sender in the SPF record before you send anything, and add its DKIM key on the selector it asks for. The *._domainkey wildcard does not block a real selector — an explicit record on that exact name is found first, and the wildcard is only consulted for names that have none. Nothing here paints you into a corner; it just means the domain is closed by default rather than open by default."}},{"@type":"Question","name":"Should I start at p=none or p=quarantine to be safe?","acceptedAnswer":{"@type":"Answer","text":"Those stages exist to protect senders you have not found yet. You have no senders, so there is nothing for the stages to protect and nothing for the strict policy to break. Starting at none on a receive-only domain does not reduce risk — it publishes a record that asks receivers to do nothing, and leaves the domain as forgeable as it was before, with the added disadvantage of looking finished."}},{"@type":"Question","name":"Does adding these records affect my MX record or my inbox?","acceptedAnswer":{"@type":"Answer","text":"Not at all. They are separate records answering separate questions, and no receiving server consults your SPF or DMARC when deciding where to deliver mail addressed to you. The one thing that would break the inbox is changing the MX itself — which is why the null MX record recommended by parked-domain guides has a section of its own above."}},{"@type":"Question","name":"How long before it takes effect?","acceptedAnswer":{"@type":"Answer","text":"New records are usable as soon as they propagate, which is normally minutes. Changing a record you already had takes as long as its old TTL, because resolvers that fetched the previous value keep it until it expires. If you are about to edit an existing record, lowering its TTL a day beforehand is the trick that makes the change quick — and if you have already edited it, waiting is the only option."}},{"@type":"Question","name":"Do I need a separate record for every subdomain?","acceptedAnswer":{"@type":"Answer","text":"For DMARC, no: sp=reject covers all of them, including subdomains that have never existed. For SPF, strictly yes — a subdomain does not inherit its parent's SPF record — but one wildcard TXT record on * answers for every name that has no records of its own, which on a catch-all domain is all of them."}},{"@type":"Question","name":"Can I point the DMARC reports at a Gmail address instead?","acceptedAnswer":{"@type":"Answer","text":"You can, but the other domain then has to authorise it: a rua address outside your own domain requires a record at yourdomain.com._report._dmarc.gmail.com, which you cannot publish because that name is not yours. This is why the example above sends the reports to an address on your own domain, where no authorisation is needed and the mail simply lands in the catch-all."}},{"@type":"Question","name":"How do I know it is actually working?","acceptedAnswer":{"@type":"Answer","text":"The direct proof is a report: turn on rua and the summaries name every source that tried to send as you and what each receiver did about it. Without reports, reading the records back with dig from a public resolver is the practical check — the policy is enforced by the servers that read it, so a record that resolves correctly to strangers is a record that is working."}}]}]}</script>
+<script>
+(function() {
+  var _t = document.title;
+  Object.defineProperty(document, 'title', {
+    get: function() { return _t; },
+    set: function(v) {
+      _t = (v || '').replace(/grabmail/gi, 'Neverla Mail').replace(/🐴/g, '').trim();
+    }
+  });
+})();
+</script>
+</head>
+<body class="page-guide" id="top" data-loc="en" data-i18n="{}">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="hd" data-header>
+  <div class="wrap hd-in">
+    <a class="hd-brand" href="/" aria-label="neverla.web.id — home">
+      <picture>
+        <source srcset="/assets/img/logo-nav.webp?v=3af85b61f5" type="image/webp">
+        <img class="hd-logo" src="/assets/img/logo-nav.png?v=3af85b61f5"
+             alt="Neverla Mail" width="126" height="30" decoding="async" fetchpriority="high">
+      </picture>
+    </a>
+
+    <span class="hd-sep" aria-hidden="true"></span>
+
+        <nav class="hd-nav" aria-label="Main">
+      <ul class="hd-list">
+                <li>
+          <a class="hd-link" href="/#how" data-spy="how">How it works</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/extensions" data-spy="ext">Extension</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/#api" data-spy="api">API</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/domains" data-spy="domains">Your domain</a>
+        </li>
+                <li>
+          <a class="hd-link" href="/docs/api" data-spy="docs">Docs</a>
+        </li>
+              </ul>
+    </nav>
+
+    <div class="hd-act">
+                  <button class="btn btn-quiet hd-login" type="button" data-auth-open="signin">
+        Log in      </button>
+            <a class="btn btn-primary" href="/#grab" data-cta>
+        Open an inbox        <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+        <button class="hd-burger" type="button" data-burger
+            aria-expanded="false" aria-controls="gm-drawer" aria-label="Open menu">
+      <span class="hd-burger-box" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+  </div>
+</header>
+
+<div class="drawer" id="gm-drawer" data-drawer hidden>
+  <nav class="drawer-in" aria-label="Mobile">
+    <ul class="drawer-list">
+            <li><a class="drawer-link" href="/#how">How it works</a></li>
+            <li><a class="drawer-link" href="/extensions">Extension</a></li>
+            <li><a class="drawer-link" href="/#api">API</a></li>
+            <li><a class="drawer-link" href="/domains">Your domain</a></li>
+            <li><a class="drawer-link" href="/docs/api">Docs</a></li>
+          </ul>
+    <a class="btn btn-primary btn-block" href="/#grab">Open an inbox</a>
+            <button class="btn btn-ghost btn-block" type="button" data-auth-open="signin">Log in</button>
+        <p class="drawer-note">Free · No signup · Deleted after 5 days</p>
+
+  </nav>
+</div>
+
+<main id="main">
+<div class="ga">
+
+    <div class="ga-prog" data-guide-progress aria-hidden="true"><span></span></div>
+
+  <div class="wrap ga-top">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+                <li><a href="/guides">Guides</a></li>
+        <li><a href="/guides/topic/deliverability">Email &amp; deliverability</a></li>
+                <li aria-current="page">SPF and DMARC for a receive-only domain: stop spoofing</li>
+      </ol>
+    </nav>
+
+    <div class="ga-head">
+      <div class="ga-head-t">
+        <p class="ga-eyebrow">
+          <span class="ga-eyebrow-ic"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3.2 12.4a9.6 9.6 0 0 1 13.6 0M6 15.1a5.8 5.8 0 0 1 8 0"/><path d="M10 17.8h.01M2 8.2a12.5 12.5 0 0 1 16 0"/></svg></span>
+          <a class="ga-eyebrow-a" href="/guides/topic/deliverability">Email &amp; deliverability</a>
+        </p>
+        <h1 class="ga-h">SPF and DMARC for a receive-only domain: stop spoofing</h1>
+        <p class="ga-lede">A domain pointed here takes mail in and sends none — which makes it the easiest domain in the world to protect, and the easiest one to forget. Three records, the strictest settings that exist, and none of the six-month rollout everybody else needs.</p>
+
+                <ul class="ga-meta">
+                    <li class="ga-lvl ga-lvl-intermediate">Intermediate</li>
+                              <li class="ga-meta-i">
+            <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.4V8l2.4 1.6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            19 min read          </li>
+          <li class="ga-meta-i">
+            <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="2.3" y="3.4" width="11.4" height="10.3" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M2.3 6.6h11.4M5.6 2.3v2.2M10.4 2.3v2.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            <time datetime="2026-08-29">Updated 29 August 2026</time>
+          </li>
+        </ul>
+      </div>
+
+                  <figure class="ga-hero">
+        <img class="ga-hero-img" src="/assets/img/guides/spoofing-800.webp?v=3af85b61f5" srcset="/assets/img/guides/spoofing-480.webp?v=3af85b61f5 480w, /assets/img/guides/spoofing-800.webp?v=3af85b61f5 800w, /assets/img/guides/spoofing-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 520px, (min-width: 720px) calc(100vw - 64px), calc(100vw - 40px)" width="1376" height="768" alt="A blue envelope sliding into a grey mailbox while a second envelope is turned away by a blue shield" fetchpriority="high" decoding="async">      </figure>
+    </div>
+  </div>
+
+  <div class="wrap ga-body">
+    <nav class="ga-rail doc-toc" aria-label="On this page">
+      <p class="doc-toc-h">On this page</p>
+      <ul>
+                <li><a href="#two-directions" data-spy="two-directions">Two directions, and you have configured one</a></li>
+                <li><a href="#why-strict" data-spy="why-strict">Why you get to skip the part that takes everybody else six months</a></li>
+                <li><a href="#records" data-spy="records">The three records</a></li>
+                <li><a href="#what-each-word-does" data-spy="what-each-word-does">What each word in those records actually does</a></li>
+                <li><a href="#the-mx-record" data-spy="the-mx-record">And the record that must stay exactly as it is</a></li>
+                <li><a href="#check" data-spy="check">Checking your work, in three commands</a></li>
+                <li><a href="#subdomains" data-spy="subdomains">The part almost everybody misses: subdomains</a></li>
+                <li><a href="#reports" data-spy="reports">Reports, and whether they are worth having</a></li>
+                <li><a href="#limits" data-spy="limits">What this does not do</a></li>
+                <li><a href="#next-steps" data-spy="next-steps">Doing it, start to finish</a></li>
+                <li><a href="#faq" data-spy="faq">Questions</a></li>
+              </ul>
+      <p class="ga-rail-back">
+                <a class="ga-rail-back-a" href="/guides">
+          <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          All guides        </a>
+      </p>
+    </nav>
+
+    <article class="ga-art">
+      <div class="toc-chip" data-toc-bar><button class="toc-chip-b" type="button" aria-haspopup="dialog"><svg class="toc-chip-ic" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 5.5h12M4 10h12M4 14.5h7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span class="toc-chip-k">On this page</span><span class="toc-chip-v"></span><svg class="toc-chip-dn" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 6.5 8 10.5l4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+                  <aside class="ga-key" aria-labelledby="ga-key-h">
+        <h2 class="ga-key-h" id="ga-key-h">In short</h2>
+        <ul>
+                    <li>Your MX record decides what arrives. It says nothing about mail that merely <em>claims</em> to be from you — that is decided by two records most people never publish, and until they do, every receiving server on earth is left guessing.</li>
+                    <li>A domain that never sends is the one case where the strictest policy is also the safe one. There is no legitimate sender to break, so <code>-all</code> and <code>p=reject</code> can go in on the first day instead of after a six-month rollout.</li>
+                    <li>Three TXT records, about five minutes: SPF that authorises nobody, DMARC that tells receivers to bin the failures, and a wildcard DKIM record that revokes every key your domain will never have.</li>
+                    <li>None of this changes what lands in your own inbox. It protects the people who would otherwise receive convincing mail with your name on it — which, if the domain is yours, is a thing worth doing anyway.</li>
+                  </ul>
+      </aside>
+      
+            <section class="ga-s" id="two-directions" aria-labelledby="two-directions-h">
+        <h2 class="ga-s-h" id="two-directions-h">Two directions, and you have configured one</h2>
+        <p>Pointing a domain here takes one DNS record. That record — the MX — answers exactly one question: <em>where does mail addressed to this domain go?</em> It is the whole of what a catch-all needs, and once it resolves, the domain works. It is also, at that moment, only half configured, because a domain name is used in two directions and the MX record has nothing to say about the second one.</p><figure class="ga-fig"><svg class="ga-dia" viewBox="0 0 700 238" role="img" aria-label="Two lanes for the same domain. On top, mail addressed to your domain follows the MX record and is delivered to your inbox. Underneath, mail forged to look like it came from your domain is stopped by your SPF and DMARC records before it reaches anybody."><rect x="8" y="26" width="214" height="70" rx="10" class="d-box"/><text x="115" y="54" class="d-t" text-anchor="middle">Mail addressed to you</text><text x="115" y="74" class="d-s" text-anchor="middle">anything@your domain</text><rect x="478" y="26" width="214" height="70" rx="10" class="d-box d-box-a"/><text x="585" y="54" class="d-t" text-anchor="middle">Your inbox here</text><text x="585" y="74" class="d-s" text-anchor="middle">delivered and kept</text><path d="M226 75H467" class="d-line"/><path d="M466 70L474 75L466 80z" class="d-head"/><text x="350" y="52" class="d-b d-yes" text-anchor="middle">your MX record decides this</text><rect x="8" y="136" width="214" height="70" rx="10" class="d-box"/><text x="115" y="164" class="d-t" text-anchor="middle">Mail forged as you</text><text x="115" y="184" class="d-s" text-anchor="middle">your domain in the From</text><rect x="478" y="136" width="214" height="70" rx="10" class="d-box"/><text x="585" y="164" class="d-t" text-anchor="middle">Somebody else&#039;s inbox</text><text x="585" y="184" class="d-s" text-anchor="middle">never reached</text><path d="M226 185H333" class="d-line"/><path d="M332 180L340 185L332 190z" class="d-head"/><text x="350" y="162" class="d-b d-no" text-anchor="middle">your SPF and DMARC decide this</text><text x="350" y="230" class="d-s" text-anchor="middle">Two directions, two sets of records. Publishing one does nothing for the other.</text></svg><figcaption>Both lanes are the same domain name. The record you published governs the top one; the bottom one is answered by records you have not written yet, and an unanswered question is answered by each receiving server's own guess.</figcaption></figure><p>The second direction is the interesting one. Nothing in the mail protocol stops a stranger from writing your domain in the <code>From:</code> line of a message they send from their own machine. They do not need access to your DNS, your registrar or your mailbox — the address in a message is a claim, not a credential, and it always has been. What decides whether that claim is believed is what your domain says about who is allowed to make it:</p><dl class="defs"><div class="def"><dt>The domain that says nothing</dt><dd>A receiving server finds no SPF and no DMARC policy, and has to fall back on its own heuristics: reputation, content, how the domain has behaved before. A brand-new domain with no history and no policy is roughly the ideal thing to forge, because there is nothing to contradict the forgery and nothing to blame afterwards.</dd></div><div class="def"><dt>The domain that says no</dt><dd>The same server finds a published policy stating that no machine anywhere is authorised to send as this domain, and that failures should be rejected. It stops being a judgement call. The message is refused at the door, usually without ever reaching a spam folder.</dd></div></dl><p class="doc-n">This is not a hypothetical about large brands. Domains with no outbound mail are picked precisely <em>because</em> they have no policy — a name nobody protects, used for a fortnight and dropped, is worth more to a sender of unwanted mail than a name that fights back.</p>      </section>
+            <section class="ga-s" id="why-strict" aria-labelledby="why-strict-h">
+        <h2 class="ga-s-h" id="why-strict-h">Why you get to skip the part that takes everybody else six months</h2>
+        <p>If you have read anything about DMARC before, you have read that it is a long, careful project. That advice is correct, and it is not about you. It is written for a domain that <em>sends</em> mail, and it is long for one reason: before you can tell the world to reject everything that fails, you have to find every system that legitimately sends as you and make each of them pass. In a normal organisation that list is longer than anybody expects, and it is discovered rather than known:</p><ol class="steps-n"><li><strong>Publish a policy that does nothing.</strong> <code>p=none</code> asks receivers to report but change nothing, so that a forgotten sender cannot be cut off by the policy itself.</li><li><strong>Read reports for weeks.</strong> The invoicing system, the helpdesk, the newsletter tool, the recruitment platform somebody signed up for in 2019 — each one turns up as a source that fails, and each has to be authorised or retired.</li><li><strong>Tighten in stages.</strong> Move to <code>quarantine</code>, wait, watch, and only then to <code>reject</code>, because every step of the tightening can silently stop mail somebody depends on.</li></ol><p>Every one of those steps exists to protect legitimate senders from your own policy. A domain that has been pointed at a receive-only inbox has no legitimate senders. The list is not long, or hard to discover, or partly unknown — it is empty. And a policy that rejects everything cannot break a sender that does not exist.</p><aside class="ga-call ga-call-tip"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.6a5.2 5.2 0 0 0-3 9.5v1.6h6v-1.6a5.2 5.2 0 0 0-3-9.5zM8 16.4h4"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Tip</span>An empty set needs no discovery period.</p><p>The rollout is a way of finding out who sends as you. You already know: nobody does. Everything you would have learned in six months of reports is known before you start, so the strictest policy is available immediately — and it is not a shortcut but the correct answer, because it is the only setting that describes the domain accurately.</p></div></aside><p>There is a second-order argument for going straight to the end state, too. A domain sitting on <code>p=none</code> is publishing a policy that asks for nothing, and a receiving server treats it very nearly the same as a domain with no policy at all. The record exists, so it looks handled — which is worse than obviously unfinished, because nobody comes back to finish it.</p>      </section>
+            <section class="ga-s" id="records" aria-labelledby="records-h">
+        <h2 class="ga-s-h" id="records-h">The three records</h2>
+        <p>All three are TXT records, and all three go in beside the MX you already have. Names are written the way most DNS panels want them — relative to the zone, with <code>@</code> meaning the domain itself. If yours asks for a fully qualified name, write <code>yourdomain.com</code>, <code>_dmarc.yourdomain.com</code> and <code>*._domainkey.yourdomain.com</code> instead.</p><div class="ep-tw ga-tw" tabindex="0" role="region" aria-label="Name, Type, Value, What it settles"><table class="ep-t ga-t ga-t-wide"><thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Value</th><th scope="col">What it settles</th></tr></thead><tbody><tr><td><code>@</code></td><td><code>TXT</code></td><td><code>v=spf1 -all</code></td><td>No machine is authorised to send mail with this domain in the envelope. Not some machines — none.</td></tr><tr><td><code>_dmarc</code></td><td><code>TXT</code></td><td><code>v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s</code></td><td>Anything that arrives claiming to be this domain and cannot prove it should be rejected, and the same goes for every subdomain.</td></tr><tr><td><code>*._domainkey</code></td><td><code>TXT</code></td><td><code>v=DKIM1; p=</code></td><td>Every DKIM key this domain might be asked about is revoked, so a forged signature cannot be made to verify.</td></tr></tbody></table></div><p class="doc-n">If your provider requires the value to be quoted, quote it. Some panels add the quotes for you and end up storing them twice, which produces a record that no checker can read — if a value comes back from <code>dig</code> with two sets of quotes around it, that is what happened.</p><p>The three values, ready to paste. Copy them rather than retyping: a missing semicolon in the DMARC record makes the whole tag list unparseable, and an unparseable policy is treated as no policy at all.</p><p class="doc-inline ga-copy"><span class="ga-copy-l">SPF — on the domain itself</span><code class="doc-code">v=spf1 -all</code><button class="doc-copy" type="button" data-copy-text="v=spf1 -all"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-text-label>Copy</span></button></p><p class="doc-inline ga-copy"><span class="ga-copy-l">DMARC — on the name _dmarc</span><code class="doc-code">v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s</code><button class="doc-copy" type="button" data-copy-text="v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-text-label>Copy</span></button></p><p class="doc-inline ga-copy"><span class="ga-copy-l">DKIM — on the name *._domainkey</span><code class="doc-code">v=DKIM1; p=</code><button class="doc-copy" type="button" data-copy-text="v=DKIM1; p="><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-text-label>Copy</span></button></p>      </section>
+            <section class="ga-s" id="what-each-word-does" aria-labelledby="what-each-word-does-h">
+        <h2 class="ga-s-h" id="what-each-word-does-h">What each word in those records actually does</h2>
+        <p>Five decisions, and it is worth knowing which is which — mostly so that you recognise, later, which one to relax if the domain ever starts sending.</p><dl class="defs"><div class="def"><dt><code>-all</code></dt><dd>The end of the SPF record, and the only part of it that matters here. It means <em>everything not listed above is a forgery</em>, and nothing is listed above. The common alternative, <code>~all</code>, means <em>probably a forgery, but deliver it anyway and mark it</em> — which is the right answer while you are still finding your own senders, and the wrong one when you are certain there are none.</dd></div><div class="def"><dt><code>p=reject</code></dt><dd>What a receiving server should do with mail that claims this domain and fails. <code>none</code> means report only, <code>quarantine</code> means treat as suspicious, <code>reject</code> means refuse it in the SMTP conversation. Reject is the one that keeps the message out of a human's sight entirely.</dd></div><div class="def"><dt><code>sp=reject</code></dt><dd>The same, applied to every subdomain — including the ones that do not exist. Without it a forger uses <code>billing.yourdomain.com</code>, which has no records of its own, and inherits nothing to stop it. This tag defaults to whatever <code>p</code> says, so the record behaves identically without it; it is written out because a policy you cannot see when you read the record back is a policy you will assume is missing.</dd></div><div class="def"><dt><code>adkim=s</code>, <code>aspf=s</code></dt><dd>Strict alignment. It requires the authenticated domain to be the domain in the <code>From:</code> line exactly, rather than merely a relative of it — so a message from <code>anything.yourdomain.com</code> cannot borrow a pass that belonged to the parent. Relaxed is the default, and strict is what a domain with nothing to authorise should be saying.</dd></div><div class="def"><dt><code>v=DKIM1; p=</code></dt><dd>A DKIM public key with no key in it. The specification is explicit that an empty key means <em>revoked</em>, so any signature that names any selector under this domain fails verification instead of being ignored. The wildcard covers every selector name a forger might invent, because they get to choose the name.</dd></div></dl><aside class="ga-call ga-call-note"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7.5"/><path d="M10 9.2v4.4M10 6.4h.01"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Note</span>Two tags you will see elsewhere and do not need.</p><p><code>pct=100</code> is the default, so writing it changes nothing. <code>fo=1</code> controls forensic reports, which are sent by very few receivers and can carry a copy of the message — leave it out unless you have a reason and somewhere safe for them to land.</p></div></aside>      </section>
+            <section class="ga-s" id="the-mx-record" aria-labelledby="the-mx-record-h">
+        <h2 class="ga-s-h" id="the-mx-record-h">And the record that must stay exactly as it is</h2>
+        <p>Nothing above touches inbound mail, and nothing above should. The MX record is what makes every address on the domain a mailbox here, and it is unchanged by any of it:</p><p class="doc-inline ga-copy"><span class="ga-copy-l">MX record — unchanged</span><code class="doc-code">10 smtp.neverla.web.id</code><button class="doc-copy" type="button" data-copy-text="10 smtp.neverla.web.id"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-text-label>Copy</span></button></p><p>The three new records and this one answer different questions, so they do not interact: SPF and DMARC are read by servers deciding whether to <em>accept</em> mail that claims to be you, and the MX is read by servers deciding where to <em>deliver</em> mail addressed to you. A domain with all four is a domain that receives everything and vouches for nothing.</p><aside class="ga-call ga-call-stop"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7.5"/><path d="m6.6 6.6 6.8 6.8"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Do not</span>publish a null MX because a guide about parked domains told you to.</p><p>Advice for locking down an unused domain usually includes an MX record of <code>0 .</code> — a single dot as the host. That is the record that says <em>this domain accepts no mail whatsoever</em>, and on a genuinely unused name it is exactly right. Here it would tell every sender on earth to give up before trying, and your catch-all would stop receiving within the hour, with nothing in any log to explain it. Take the SPF, DMARC and DKIM advice from those guides. Leave the MX advice behind.</p></div></aside><aside class="ga-call ga-call-warn"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.8 18 16.6H2z"/><path d="M10 8v3.4M10 13.8h.01"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Watch out</span>One MX, not two.</p><p>A leftover MX record from a previous provider does not fail loudly — it takes a share of your mail and delivers it somewhere you are not looking, and which share depends on which server is asking. If <code>smtp.neverla.web.id</code> is not the only MX on the domain, the missing messages you eventually go hunting for are already explained. There is more on that in <a href="/guides/verification-email-not-arriving">the guide on mail that never arrives</a>.</p></div></aside>      </section>
+            <section class="ga-s" id="check" aria-labelledby="check-h">
+        <h2 class="ga-s-h" id="check-h">Checking your work, in three commands</h2>
+        <p>DNS is not a place to assume. Every one of these records is published to be read by strangers, which means you can read it exactly as they will — no account, no tool, no site to paste your domain into:</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>shell</span><button class="code-copy" type="button" data-copy-code data-code="dig +short TXT      yourdomain.com
+dig +short TXT _dmarc.yourdomain.com
+dig +short MX       yourdomain.com" aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code><span class="code-p">$</span> dig +short TXT      yourdomain.com
+dig +short TXT _dmarc.yourdomain.com
+dig +short MX       yourdomain.com</code></pre></div><p>Substitute your own domain. What you are looking for is this, give or take the other TXT records you may already have on the name:</p><div class="code ga-code"><div class="code-hd"><span class="code-dot" aria-hidden="true"></span><span>what it should answer</span><button class="code-copy" type="button" data-copy-code data-code="&quot;v=spf1 -all&quot;
+&quot;v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s&quot;
+10 smtp.neverla.web.id." aria-label="Copy this command"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-code-label>Copy</span></button></div><pre class="code-body"><code>&quot;v=spf1 -all&quot;
+&quot;v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s&quot;
+10 smtp.neverla.web.id.</code></pre></div><p>Four ways this comes back wrong, in rough order of how often:</p><dl class="defs"><div class="def"><dt>The first command answers nothing at all</dt><dd>The record has not propagated yet, or it was added to the wrong name. TXT records on the domain itself go on <code>@</code>, not on <code>www</code> — a panel that defaults to the last name you edited is the usual culprit.</dd></div><div class="def"><dt>Two SPF records come back</dt><dd>A domain is allowed exactly one. Two is not stricter than one — it is a permanent error, and a receiving server that finds two treats the SPF check as broken rather than as failing. If you already had an SPF record, edit that one instead of adding a second.</dd></div><div class="def"><dt>The DMARC line comes back but nothing enforces it</dt><dd>Read the value carefully: it has to start with <code>v=DMARC1</code>, and the tags are separated by semicolons. A record missing the version tag, or one where a semicolon became a comma, is not a weaker policy — it is an unparseable one, which counts as no policy at all.</dd></div><div class="def"><dt>The MX answer has changed</dt><dd>It should not have. If the MX line is now missing, or shows a bare dot, or lists a host that is not <code>smtp.neverla.web.id</code>, stop and put it back before doing anything else — that is the record your inbox depends on.</dd></div></dl><aside class="ga-call ga-call-tip"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.6a5.2 5.2 0 0 0-3 9.5v1.6h6v-1.6a5.2 5.2 0 0 0-3-9.5zM8 16.4h4"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Tip</span>Check from more than one place.</p><p>Adding <code>@1.1.1.1</code> or <code>@8.8.8.8</code> to any of those commands asks a public resolver rather than whatever your machine happens to use. Your own network may still be serving a cached answer from before the change, and a record that looks missing at home is usually just a TTL that has not run out yet.</p></div></aside>      </section>
+            <section class="ga-s" id="subdomains" aria-labelledby="subdomains-h">
+        <h2 class="ga-s-h" id="subdomains-h">The part almost everybody misses: subdomains</h2>
+        <p>DMARC and SPF do not divide the namespace the same way, and that difference is where a carefully protected domain leaks. <code>sp=reject</code> genuinely does cover every subdomain, existing or not. SPF does not work like that at all: it is looked up on the exact name in the envelope, and a name with no SPF record of its own has no SPF record — it does not inherit the parent's.</p><div class="ep-tw ga-tw" tabindex="0" role="region" aria-label="What a forger uses, SPF on that name, What stops it"><table class="ep-t ga-t ga-t-wide"><thead><tr><th scope="col">What a forger uses</th><th scope="col">SPF on that name</th><th scope="col">What stops it</th></tr></thead><tbody><tr><td><code>yourdomain.com</code></td><td>Found: <code>-all</code>, so the check fails.</td><td>SPF and DMARC together. This is the case the three records above were written for.</td></tr><tr><td><code>billing.yourdomain.com</code></td><td>None, unless you publish one. SPF returns no result rather than a failure.</td><td>DMARC alone, through <code>sp=reject</code> — which is enough, and is why that tag is not optional.</td></tr><tr><td><code>yourdomaln.com</code>, a lookalike</td><td>Irrelevant. It is not your domain.</td><td>Nothing you can publish. Different name, different owner, different records.</td></tr></tbody></table></div><p>DMARC covers the second row on its own, so this is belt and braces rather than a hole — but a wildcard SPF record costs one line and closes the gap at the SPF layer too, which matters for the receivers that check SPF and do not implement DMARC:</p><p class="doc-inline ga-copy"><span class="ga-copy-l">Wildcard SPF — one more TXT record</span><code class="doc-code">*  TXT  v=spf1 -all</code><button class="doc-copy" type="button" data-copy-text="*  TXT  v=spf1 -all"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-text-label>Copy</span></button></p><p class="doc-n">A DNS wildcard only answers for names that have no records of their own. If <code>mail.yourdomain.com</code> already has any TXT record on it, the wildcard is not consulted for that name and you would need to publish the SPF record there explicitly. For a domain used only as a catch-all, that situation is rare enough to be worth knowing rather than worth planning for.</p>      </section>
+            <section class="ga-s" id="reports" aria-labelledby="reports-h">
+        <h2 class="ga-s-h" id="reports-h">Reports, and whether they are worth having</h2>
+        <p>DMARC has a reporting side: add a <code>rua</code> tag and participating receivers send you a daily summary of everything that claimed to be your domain and what happened to it. It is the one part of DMARC that tells you something you did not already know, and on a domain pointed here it costs nothing to collect, because the address it goes to can be an address on the domain itself:</p><p class="doc-inline ga-copy"><span class="ga-copy-l">DMARC with reporting — replace the domain</span><code class="doc-code">v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s; rua=mailto:dmarc@yourdomain.com</code><button class="doc-copy" type="button" data-copy-text="v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s; rua=mailto:dmarc@yourdomain.com"><svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-text-label>Copy</span></button></p><p>Sending the reports to an address on the same domain avoids a piece of the specification that catches people out: if <code>rua</code> names an address at a <em>different</em> domain, that other domain has to publish a record authorising it to receive your reports, and until it does most senders will not send any. Same domain, no such record, nothing to get wrong. What arrives is worth knowing what it is before you enable it:</p><ul class="doc-l"><li><strong>They are XML, gzipped, as an attachment.</strong> Not a summary you read over coffee. Small domains get a handful a day from the large mailbox providers, each a few kilobytes; you will want something to unpack and read them.</li><li><strong>Empty is the good result.</strong> A domain that sends nothing should generate reports listing nothing but failures, and a quiet week means nobody is currently forging you — which is information, and the only way to get it.</li><li><strong>They arrive as ordinary mail.</strong> Here that means an ordinary mailbox: readable in the browser and over <a href="/docs/api">the API</a> like anything else, and deleted after 5 days along with everything else.</li></ul><aside class="ga-call ga-call-warn"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2.8 18 16.6H2z"/><path d="M10 8v3.4M10 13.8h.01"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Watch out</span>A busy domain will overrun this mailbox.</p><p>Retention here is 5 days and a message is capped at 5 MB, which is generous for a personal domain and not the right home for the report volume of a domain under sustained attack. If the reports start arriving in numbers, that is the point to send them somewhere built to keep them — and it is also, in itself, the most useful thing the reports will ever tell you.</p></div></aside><p>If you would rather not collect them at all, leave the tag off entirely. A DMARC record with no <code>rua</code> is a perfectly valid record and protects exactly as well; reporting is how you learn what is happening, not how the policy is enforced.</p>      </section>
+            <section class="ga-s" id="limits" aria-labelledby="limits-h">
+        <h2 class="ga-s-h" id="limits-h">What this does not do</h2>
+        <p>These records are narrow, and being clear about the edges is the difference between a control you rely on correctly and one you rely on wrongly. Four things they do not cover:</p><dl class="defs"><div class="def"><dt>They do not filter your own inbox</dt><dd>SPF and DMARC on your domain are instructions to servers receiving mail <em>from</em> you. They are read by other people's mail systems, never by yours, and they have no effect on what turns up in the catch-all. What arrives is still whatever the world sends to an address whose only credential is knowing it.</dd></div><div class="def"><dt>They do not stop a name in a From line</dt><dd>A message reading <code>Your Company &lt;attacker@gmail.com&gt;</code> passes every check, because the domain that was authenticated really is the attacker's. DMARC protects the domain, not the display name in front of it — and on a phone, the display name is frequently all that is shown.</dd></div><div class="def"><dt>They do not touch a lookalike domain</dt><dd>A domain one character away from yours is somebody else's domain with somebody else's records. Nothing you publish reaches it. That is a registrar and monitoring problem, and it is genuinely a different problem.</dd></div><div class="def"><dt>They do not make the mailbox private</dt><dd>There is still no password on an address here: whoever knows it can read it, which is the bargain the whole service makes. Your own domain removes the guessing, not the reading — the honest version of that is in <a href="/guides/own-domain-catch-all-inbox">the guide on catch-all domains</a>.</dd></div></dl><aside class="ga-call ga-call-stop"><svg class="ga-call-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7.5"/><path d="m6.6 6.6 6.8 6.8"/></svg><div class="ga-call-b"><p class="ga-call-h"><span class="ga-call-k">Do not</span>treat a protected domain as a verified sender.</p><p>None of this means a message <em>to</em> you is trustworthy. A domain that publishes <code>p=reject</code> and passes its own checks has proved which domain sent the mail, and nothing else at all — not that its owner is honest, not that the account was not stolen, and not that the link inside is safe. Authentication answers <em>who</em>. It has never answered <em>whether to believe them</em>.</p></div></aside>      </section>
+            <section class="ga-s" id="next-steps" aria-labelledby="next-steps-h">
+        <h2 class="ga-s-h" id="next-steps-h">Doing it, start to finish</h2>
+        <p>The whole job, in the order that leaves the domain working at every step:</p><ol class="steps-n"><li><strong>Confirm the MX first.</strong> <code>dig +short MX yourdomain.com</code> should answer <code>smtp.neverla.web.id</code> and nothing else. Fix that before adding anything, because the rest is worthless on a domain that is not receiving.</li><li><strong>Add the SPF record</strong> on <code>@</code>, unless one is already there — in which case edit it, since two are an error rather than a stricter setting.</li><li><strong>Add the DMARC record</strong> on <code>_dmarc</code>, straight to the strict policy. There is no rollout to stage here and nothing to break by skipping it.</li><li><strong>Add the wildcard DKIM record</strong> on <code>*._domainkey</code>, and the wildcard SPF record if you want the subdomain layer closed twice.</li><li><strong>Read all four back</strong> with <code>dig</code>, against a public resolver, once the TTL has had time to expire.</li><li><strong>Send yourself something.</strong> Mail one of your own addresses on the domain from anywhere and open the inbox. If it arrives, the inbound side survived the change, which is the only regression worth checking for.</li></ol><p>That is the domain finished: it accepts every address you will ever invent on it, and it vouches for nobody at all. If you have not connected the domain yet, <a href="/guides/own-domain-catch-all-inbox">start with the catch-all guide</a> — it is one record and the same five minutes — and come back to this page afterwards, which is the order that leaves nothing half done.</p>      </section>
+      
+            <section class="ga-s" id="faq" aria-labelledby="faq-h">
+        <h2 class="ga-s-h" id="faq-h">Questions</h2>
+        <div class="faq ga-faq">
+                    <details class="faq-i" open>
+            <summary class="faq-q">
+              <span>Do I really need a DKIM record if I never sign anything?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>You do not need it for your own mail to work, since there is none. You publish it so that a forger cannot invent a selector name, sign a message with their own key and have it verify — the empty key is a standing answer of <em>revoked</em> to every selector name they might choose. It is one record, it never needs maintenance, and it closes the one path that SPF and DMARC leave open.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Will any of this reduce the spam arriving in my catch-all?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>No, and it is worth being blunt about that because it is the most common expectation. These records govern mail claiming to come from your domain. Mail arriving at your domain is unaffected — every address on it still accepts everything, which is what a catch-all is. If unwanted mail at a particular address is the problem, the fix is to stop using that address, not to change these records.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>What if I want to send mail from this domain later?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Then you change two things, in this order: authorise the new sender in the SPF record before you send anything, and add its DKIM key on the selector it asks for. The <code>*._domainkey</code> wildcard does not block a real selector — an explicit record on that exact name is found first, and the wildcard is only consulted for names that have none. Nothing here paints you into a corner; it just means the domain is closed by default rather than open by default.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Should I start at p=none or p=quarantine to be safe?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Those stages exist to protect senders you have not found yet. You have no senders, so there is nothing for the stages to protect and nothing for the strict policy to break. Starting at <code>none</code> on a receive-only domain does not reduce risk — it publishes a record that asks receivers to do nothing, and leaves the domain as forgeable as it was before, with the added disadvantage of looking finished.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Does adding these records affect my MX record or my inbox?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>Not at all. They are separate records answering separate questions, and no receiving server consults your SPF or DMARC when deciding where to deliver mail addressed to you. The one thing that would break the inbox is changing the MX itself — which is why the null MX record recommended by parked-domain guides has a section of its own above.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>How long before it takes effect?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>New records are usable as soon as they propagate, which is normally minutes. Changing a record you already had takes as long as its old TTL, because resolvers that fetched the previous value keep it until it expires. If you are about to edit an existing record, lowering its TTL a day beforehand is the trick that makes the change quick — and if you have already edited it, waiting is the only option.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Do I need a separate record for every subdomain?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>For DMARC, no: <code>sp=reject</code> covers all of them, including subdomains that have never existed. For SPF, strictly yes — a subdomain does not inherit its parent's SPF record — but one wildcard TXT record on <code>*</code> answers for every name that has no records of its own, which on a catch-all domain is all of them.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>Can I point the DMARC reports at a Gmail address instead?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>You can, but the other domain then has to authorise it: a <code>rua</code> address outside your own domain requires a record at <code>yourdomain.com._report._dmarc.gmail.com</code>, which you cannot publish because that name is not yours. This is why the example above sends the reports to an address on your own domain, where no authorisation is needed and the mail simply lands in the catch-all.</p></div>
+          </details>
+                    <details class="faq-i">
+            <summary class="faq-q">
+              <span>How do I know it is actually working?</span>
+              <svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="faq-a"><p>The direct proof is a report: turn on <code>rua</code> and the summaries name every source that tried to send as you and what each receiver did about it. Without reports, reading the records back with <code>dig</code> from a public resolver is the practical check — the policy is enforced by the servers that read it, so a record that resolves correctly to strangers is a record that is working.</p></div>
+          </details>
+                  </div>
+      </section>
+      
+      
+                  <nav class="ga-pn" aria-label="More in this topic">
+                <a class="ga-pn-i ga-pn-p" href="/guides/email-headers-explained" rel="prev">
+          <span class="ga-pn-k">Previous</span>
+          <span class="ga-pn-t">Reading an email header</span>
+        </a>
+                        <a class="ga-pn-i ga-pn-n" href="/guides/email-bounce-codes-explained" rel="next">
+          <span class="ga-pn-k">Next</span>
+          <span class="ga-pn-t">Reading a bounce message</span>
+        </a>
+              </nav>
+      
+    </article>
+  </div>
+
+    <div class="ga-rel">
+    <div class="wrap">
+      <h2 class="ga-rel-h">Keep reading</h2>
+      <ul class="gd-cards ga-rel-l">
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/own-domain-catch-all-inbox">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/domain-800.webp?v=3af85b61f5" srcset="/assets/img/guides/domain-480.webp?v=3af85b61f5 480w, /assets/img/guides/domain-800.webp?v=3af85b61f5 800w, /assets/img/guides/domain-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="A white globe with a blue route arcing over network cubes into a mailbox" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">Your own domain</span>
+              <span class="gd-card-t">Turn a domain you own into a catch-all inbox</span>
+              <span class="gd-card-x">The single DNS record, why the record itself is the proof of ownership, giving every service its own address on your domain, and the honest limits of a mailbox with no password on it.</span>
+              <span class="gd-card-m">9 min read</span>
+            </span>
+          </a>
+        </li>
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/verification-email-not-arriving">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/troubleshoot-800.webp?v=3af85b61f5" srcset="/assets/img/guides/troubleshoot-480.webp?v=3af85b61f5 480w, /assets/img/guides/troubleshoot-800.webp?v=3af85b61f5 800w, /assets/img/guides/troubleshoot-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="A blue envelope stopped by a lowered barrier under the middle of three arches, with an open, empty mailbox waiting at the end of the track" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">Troubleshooting</span>
+              <span class="gd-card-t">Verification email not arriving? How to find out why</span>
+              <span class="gd-card-x">The sixty-second check, how long delivery should really take, the six ways you end up watching the wrong mailbox, and what to do when a site drops disposable addresses without saying so.</span>
+              <span class="gd-card-m">12 min read</span>
+            </span>
+          </a>
+        </li>
+                <li class="gd-card">
+          <a class="gd-card-a" href="/guides/disposable-address-for-signups">
+            <span class="gd-card-i"><img class="gd-card-img" src="/assets/img/guides/privacy-800.webp?v=3af85b61f5" srcset="/assets/img/guides/privacy-480.webp?v=3af85b61f5 480w, /assets/img/guides/privacy-800.webp?v=3af85b61f5 800w, /assets/img/guides/privacy-1376.webp?v=3af85b61f5 1376w" sizes="(min-width: 1000px) 370px, (min-width: 700px) calc(50vw - 48px), calc(100vw - 40px)" width="1376" height="768" alt="A blue envelope standing behind a frosted glass panel with a keyhole in it" loading="lazy" decoding="async"></span>
+            <span class="gd-card-b">
+              <span class="gd-card-c">Privacy &amp; everyday use</span>
+              <span class="gd-card-t">Sign up for anything without giving your real address</span>
+              <span class="gd-card-x">What a disposable address is, how to open one, the alias trick that keeps the service you signed up to from reading the rest of your mail, and the cases where a throwaway address is the wrong tool.</span>
+              <span class="gd-card-m">9 min read</span>
+            </span>
+          </a>
+        </li>
+              </ul>
+    </div>
+  </div>
+  
+  <section class="cta ga-cta" aria-labelledby="ga-cta-h">
+    <div class="wrap cta-in">
+      <h2 class="cta-h" id="ga-cta-h">Try it while it is fresh</h2>
+      <p class="cta-p">An address takes one click, no account and no card. Everything in this guide works on it straight away.</p>
+      <div class="cta-act">
+        <a class="btn btn-primary btn-lg" href="/#grab">Open an inbox</a>
+        <a class="btn btn-ghost btn-lg" href="/docs/api">Read the API reference</a>
+      </div>
+    </div>
+  </section>
+</div>
+</main>
+
+<footer class="ft" id="ft-map">
+  <div class="wrap">
+    <div class="ft-top">
+      <div class="ft-brand">
+        <a class="ft-logo" href="/" aria-label="Neverla Mail — home">
+          <picture>
+            <source srcset="/assets/img/logo-nav.webp?v=3af85b61f5" type="image/webp">
+            <img class="ft-logo-img" src="/assets/img/logo-nav.png?v=3af85b61f5"
+                 alt="Neverla Mail" width="122" height="29" decoding="async" loading="lazy">
+          </picture>
+        </a>
+        <p class="ft-blurb">
+                    Disposable email addresses with a free REST API. Grab one in a click, or point your own domain at us for an inbox nobody can guess into.        </p>
+                <p class="ft-status">
+          <span class="dot" aria-hidden="true"></span>
+          <a href="/status">System status</a>
+        </p>
+      </div>
+
+                  <nav class="ft-nav" aria-label="Product">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Product</h2></summary>
+          <ul>
+                                                <li><a href="/#grab">Grab an address</a></li>
+                                    <li><a href="/#how">How it works</a></li>
+                                    <li><a href="/domains">Connect a domain</a></li>
+                                    <li><a href="/extensions">Browser extension</a></li>
+                                    <li><a href="/pricing">Pricing</a></li>
+                                    <li><a href="/guides">Guides</a></li>
+                                    <li><a href="/compare">Comparing the APIs</a></li>
+                                    <li><a href="/vs">Neverla Mail vs the alternatives</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Developers">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Developers</h2></summary>
+          <ul>
+                                                <li><a href="/docs/quickstart#mcp">MCP for AI agents</a></li>
+                                    <li><a href="/openapi.json">OpenAPI 3.1</a></li>
+                                    <li><a href="/llms.txt">llms.txt</a></li>
+                                    <li><a href="/docs">Documentation</a></li>
+                                    <li><a href="/docs/api">API reference</a></li>
+                                    <li><a href="/docs/quickstart">Quickstart</a></li>
+                                    <li><a href="/docs/limits">Limits</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Company">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Company</h2></summary>
+          <ul>
+                                                <li><a href="/about">About</a></li>
+                                    <li><a href="/status">Status</a></li>
+                      </ul>
+        </details>
+      </nav>
+            <nav class="ft-nav" aria-label="Legal">
+        <details class="ft-col" open data-ft-col>
+          <summary class="ft-col-h"><h2 class="ft-h">Legal</h2></summary>
+          <ul>
+                                                <li><a href="/legal/terms">Terms of service</a></li>
+                                    <li><a href="/legal/privacy">Privacy</a></li>
+                      </ul>
+        </details>
+      </nav>
+          </div>
+
+    <div class="ft-bar">
+      <p>&copy; 2026 Neverla Mail. All rights reserved.</p>
+      <ul class="ft-facts">
+        <li>Receive-only</li>
+        <li>No tracking, no ads</li>
+        <li>Messages deleted after 5 days</li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<div class="lang" data-lang>
+    <button class="lang-fab" type="button" data-lang-open
+          aria-haspopup="dialog" aria-expanded="false"
+          title="Language: English">
+    <span class="lang-fab-fl" aria-hidden="true"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+    <span class="lang-code" aria-hidden="true">EN</span>
+        <span class="lang-fab-n" aria-hidden="true"><span>English</span></span>
+    <svg class="lang-globe" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+         aria-hidden="true" focusable="false">
+      <circle cx="10" cy="10" r="7.25"/>
+      <path d="M2.75 10h14.5M10 2.75c3.85 4.4 3.85 10.1 0 14.5-3.85-4.4-3.85-10.1 0-14.5z"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="sr-only">Change language: English</span>
+  </button>
+
+  <dialog class="lm" data-lang-modal aria-labelledby="lm-title">
+    <div class="lm-panel">
+            <div class="lm-grab" aria-hidden="true"></div>
+
+            <header class="lm-hd">
+        <h2 class="lm-t" id="lm-title">Language</h2>
+                <form method="dialog">
+          <button class="lm-x" type="submit" aria-label="Change language">
+            <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+              <path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor"
+                    stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </form>
+      </header>
+
+      <ul class="lm-grid">
+                <li>
+          <a class="lm-i is-on"
+             href="/guides/spf-dmarc-for-a-receive-only-domain"
+             hreflang="en" lang="en"
+             aria-current="true" data-lang-current>
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">English</span>
+                            <span class="lm-n-l" lang="en">English</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">EN</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/es/guides/spf-dmarc-for-a-receive-only-domain"
+             hreflang="es" lang="es"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-es"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Español</span>
+                            <span class="lm-n-l" lang="en">Spanish</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">ES</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/pt/guides/spf-dmarc-for-a-receive-only-domain"
+             hreflang="pt" lang="pt"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-pt"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Português</span>
+                            <span class="lm-n-l" lang="en">Portuguese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">PT</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/fr/guides/spf-dmarc-for-a-receive-only-domain"
+             hreflang="fr" lang="fr"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-fr"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Français</span>
+                            <span class="lm-n-l" lang="en">French</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">FR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/de/guides/spf-dmarc-for-a-receive-only-domain"
+             hreflang="de" lang="de"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-de"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Deutsch</span>
+                            <span class="lm-n-l" lang="en">German</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">DE</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ru/guides/spf-dmarc-for-a-receive-only-domain"
+             hreflang="ru" lang="ru"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ru"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Русский</span>
+                            <span class="lm-n-l" lang="en">Russian</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">RU</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/tr/guides/spf-dmarc-for-a-receive-only-domain"
+             hreflang="tr" lang="tr"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-tr"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Türkçe</span>
+                            <span class="lm-n-l" lang="en">Turkish</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">TR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/id/guides/spf-dmarc-for-a-receive-only-domain"
+             hreflang="id" lang="id"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-id"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Bahasa Indonesia</span>
+                            <span class="lm-n-l" lang="en">Indonesian</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">ID</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/vi/guides/spf-dmarc-for-a-receive-only-domain"
+             hreflang="vi" lang="vi"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-vi"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">Tiếng Việt</span>
+                            <span class="lm-n-l" lang="en">Vietnamese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">VI</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ar/guides/spf-dmarc-for-a-receive-only-domain"
+             hreflang="ar" lang="ar"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ar"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">العربية</span>
+                            <span class="lm-n-l" lang="en">Arabic</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">AR</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+                <li>
+          <a class="lm-i"
+             href="/ja/guides/spf-dmarc-for-a-receive-only-domain"
+             hreflang="ja" lang="ja"
+             >
+            <span class="lm-fl"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-ja"/></svg></span>
+            <span class="lm-n">
+              <span class="lm-n-e">日本語</span>
+                            <span class="lm-n-l" lang="en">Japanese</span>
+            </span>
+            <span class="lm-c" aria-hidden="true">JA</span>
+            <svg class="lm-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m3.5 8.4 3 3 6-7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+              </ul>
+    </div>
+  </dialog>
+
+  <noscript>
+    <ul class="lang-ns" aria-label="Language">
+            <li><a href="/guides/spf-dmarc-for-a-receive-only-domain" hreflang="en" lang="en">English</a></li>
+            <li><a href="/es/guides/spf-dmarc-for-a-receive-only-domain" hreflang="es" lang="es">Español</a></li>
+            <li><a href="/pt/guides/spf-dmarc-for-a-receive-only-domain" hreflang="pt" lang="pt">Português</a></li>
+            <li><a href="/fr/guides/spf-dmarc-for-a-receive-only-domain" hreflang="fr" lang="fr">Français</a></li>
+            <li><a href="/de/guides/spf-dmarc-for-a-receive-only-domain" hreflang="de" lang="de">Deutsch</a></li>
+            <li><a href="/ru/guides/spf-dmarc-for-a-receive-only-domain" hreflang="ru" lang="ru">Русский</a></li>
+            <li><a href="/tr/guides/spf-dmarc-for-a-receive-only-domain" hreflang="tr" lang="tr">Türkçe</a></li>
+            <li><a href="/id/guides/spf-dmarc-for-a-receive-only-domain" hreflang="id" lang="id">Bahasa Indonesia</a></li>
+            <li><a href="/vi/guides/spf-dmarc-for-a-receive-only-domain" hreflang="vi" lang="vi">Tiếng Việt</a></li>
+            <li><a href="/ar/guides/spf-dmarc-for-a-receive-only-domain" hreflang="ar" lang="ar">العربية</a></li>
+            <li><a href="/ja/guides/spf-dmarc-for-a-receive-only-domain" hreflang="ja" lang="ja">日本語</a></li>
+          </ul>
+  </noscript>
+</div>
+<svg class="lm-sprite" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+    <symbol id="fl-en" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#012169"/>
+      <path d="M0 0 24 16M24 0 0 16" stroke="#fff" stroke-width="3.2"/>
+      <path d="M0 0 24 16M24 0 0 16" stroke="#C8102E" stroke-width="1.9"/>
+      <path d="M12 0v16M0 8h24" stroke="#fff" stroke-width="5.3"/>
+      <path d="M12 0v16M0 8h24" stroke="#C8102E" stroke-width="3.2"/>
+    </symbol>
+    <symbol id="fl-es" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#AA151B"/>
+      <rect y="4" width="24" height="8" fill="#F1BF00"/>
+    </symbol>
+    <symbol id="fl-pt" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#DA291C"/>
+      <rect width="9.6" height="16" fill="#046A38"/>
+      <circle cx="9.6" cy="8" r="3.4" fill="#FFE800" stroke="#046A38" stroke-width="1"/>
+    </symbol>
+    <symbol id="fl-fr" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <rect width="8" height="16" fill="#002395"/>
+      <rect x="16" width="8" height="16" fill="#ED2939"/>
+    </symbol>
+    <symbol id="fl-de" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#FFCE00"/>
+      <rect width="24" height="10.7" fill="#DD0000"/>
+      <rect width="24" height="5.3"/>
+    </symbol>
+    <symbol id="fl-ru" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#D52B1E"/>
+      <rect width="24" height="10.7" fill="#0039A6"/>
+      <rect width="24" height="5.3" fill="#fff"/>
+    </symbol>
+    <symbol id="fl-tr" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#E30A17"/>
+      <circle cx="9.4" cy="8" r="3.9" fill="#fff"/>
+      <circle cx="10.9" cy="8" r="3.1" fill="#E30A17"/>
+      <path d="m15.1 8 1.35.44-.83 1.15V8.2l.83 1.15z" fill="#fff"/>
+      <path d="m14.6 6.2.72 1.98 2.1.06-1.67 1.28.6 2.02-1.75-1.18-1.75 1.18.6-2.02-1.67-1.28 2.1-.06z" fill="#fff"/>
+    </symbol>
+    <symbol id="fl-id" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <rect width="24" height="8" fill="#CE1126"/>
+    </symbol>
+    <symbol id="fl-vi" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#DA251D"/>
+      <path d="m12 3.6 1.32 4.06h4.27l-3.46 2.51 1.33 4.06L12 11.72l-3.46 2.51 1.33-4.06-3.46-2.51h4.27z" fill="#FFFF00"/>
+    </symbol>
+    <symbol id="fl-ar" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#165D31"/>
+      <path d="M5.6 6.4h12.8" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M5.6 10.4h11.2" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M16.8 10.4c.9 0 1.6.5 1.6 1.2" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="fl-ja" viewBox="0 0 24 16">
+      <rect width="24" height="16" fill="#fff"/>
+      <circle cx="12" cy="8" r="4.8" fill="#BC002D"/>
+    </symbol>
+  </defs>
+</svg><dialog class="am" data-auth-modal aria-labelledby="am-h-signin">
+  <div class="am-panel" data-am-panel data-view="signin">
+
+        <div class="am-grab" aria-hidden="true"></div>
+
+        <div class="am-body" data-am-body>
+
+            <div class="am-hd">
+                <div class="am-seg" role="tablist" aria-label="Account">
+          <span class="am-seg-pill" aria-hidden="true"></span>
+          <button class="am-seg-b" type="button" role="tab" id="am-tab-signin"
+                  aria-selected="true" aria-controls="am-view-signin"
+                  data-am-go="signin">Sign in</button>
+          <button class="am-seg-b" type="button" role="tab" id="am-tab-signup"
+                  aria-selected="false" aria-controls="am-view-signup" tabindex="-1"
+                  data-am-go="signup">Create account</button>
+        </div>
+
+        <button class="am-x" type="button" data-am-close aria-label="Close">
+          <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor"
+                  stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+            <div class="am-alert" role="alert" data-am-alert hidden>
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" aria-hidden="true" focusable="false">
+          <circle cx="10" cy="10" r="7.6"/><path d="M10 6.2v4.4M10 13.4v.1"/>
+        </svg>
+        <span data-am-alert-t></span>
+      </div>
+
+      <div class="am-views" data-am-views>
+
+        <!-- ── sign in ──────────────────────────────────────────────────── -->
+        <form class="am-view" id="am-view-signin" data-am-view="signin"
+              role="tabpanel" aria-labelledby="am-tab-signin"
+              method="post" action="/api/v1/auth" novalidate>
+          <input type="hidden" name="action" value="signin">
+
+          <h2 class="am-h" id="am-h-signin">Welcome back</h2>
+          <p class="am-sub">Your inboxes and your domains, in one place.</p>
+
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-si-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-si-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-si-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-si-email-e" data-am-err hidden></p>
+    </div>
+                  <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-si-pass">Password</label>
+                <button class="am-link" type="button" data-am-go="reset">Forgot?</button>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-si-pass" name="password"
+               type="password"
+                              autocomplete="current-password"
+               placeholder="••••••••"
+               aria-describedby="am-si-pass-e"
+                                             data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+      
+      <p class="am-err" id="am-si-pass-e" data-am-err hidden></p>
+    </div>
+    
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Sign in</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+        <!-- ── create an account ───────────────────────────────────────── -->
+        <form class="am-view" id="am-view-signup" data-am-view="signup"
+              role="tabpanel" aria-labelledby="am-tab-signup"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <input type="hidden" name="action" value="signup">
+
+          <h2 class="am-h" id="am-h-signup">Create your account</h2>
+                              <p class="am-sub" data-am-sub>It stays free. The address is only so you can find your inboxes again.</p>
+          <p class="am-sub" data-am-sub="save" hidden>Create a free account to keep this inbox — and every inbox you open from now on.</p>
+                    <ul class="am-perks">
+            <li>Every inbox you open, saved</li>
+            <li>A free API key</li>
+            <li>No card, no trial</li>
+          </ul>
+          
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-su-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-su-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-su-email-e" data-am-err hidden></p>
+    </div>
+                  <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-pass">Password</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-su-pass" name="password"
+               type="password"
+                              autocomplete="new-password"
+               placeholder="••••••••"
+               aria-describedby="am-su-pass-e"
+                                             data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+                  <div class="am-str" data-am-str data-strength="0" hidden>
+        <div class="am-str-bars" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <span class="am-str-t" data-am-str-t></span>
+      </div>
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+            <p class="am-hint">At least 10 characters. Length beats punctuation.</p>
+      
+      <p class="am-err" id="am-su-pass-e" data-am-err hidden></p>
+    </div>
+    
+                        <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-su-pass2">Confirm password</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>        <input class="am-i" id="am-su-pass2" name="password2"
+               type="password"
+                              autocomplete="new-password"
+               placeholder="••••••••"
+               aria-describedby="am-su-pass2-e"
+                              data-am-match="am-su-pass" data-am-skip               data-am-in required>
+                        <button class="am-eye" type="button" data-am-eye aria-pressed="false"
+                aria-label="Show password"
+                data-l-show="Show password" data-l-hide="Hide password">
+          <svg class="am-eye-on" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M1.8 10S4.6 4.8 10 4.8 18.2 10 18.2 10 15.4 15.2 10 15.2 1.8 10 1.8 10z"/>
+            <circle cx="10" cy="10" r="2.5"/>
+          </svg>
+          <svg class="am-eye-off" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M4.2 5.4C2.6 6.8 1.8 10 1.8 10s2.8 5.2 8.2 5.2c1.5 0 2.8-.4 3.9-1"/>
+            <path d="M7.9 4.9A7.9 7.9 0 0 1 10 4.8c5.4 0 8.2 5.2 8.2 5.2s-.8 1.5-2.2 2.9"/>
+            <path d="m8.2 8.2a2.5 2.5 0 0 0 3.5 3.5"/>
+            <path d="M3.4 3.4 16.6 16.6"/>
+          </svg>
+        </button>
+              </div>
+
+      
+                  <p class="am-caps" data-am-caps hidden>Caps Lock is on</p>
+      
+      
+      <p class="am-err" id="am-su-pass2-e" data-am-err hidden></p>
+    </div>
+    
+                              <div class="am-cf" data-am-cf data-sitekey="0x4AAAAAAEfWgqSU6xDxtH5m"></div>
+          
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Create my account</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    
+          <p class="am-note">
+            By creating an account you agree to the <a href="/legal/terms">Terms</a> and the <a href="/legal/privacy">Privacy Policy</a>.          </p>
+        </form>
+
+        <!-- ── reset a password ────────────────────────────────────────── -->
+        <form class="am-view" id="am-view-reset" data-am-view="reset"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <input type="hidden" name="action" value="reset">
+
+          <button class="am-back" type="button" data-am-go="signin">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor"
+                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to sign in          </button>
+
+          <h2 class="am-h" id="am-h-reset">Reset your password</h2>
+          <p class="am-sub">Give us the address you signed up with and we will send a link to choose a new password.</p>
+
+              <div class="am-f">
+      <div class="am-f-top">
+        <label class="am-l" for="am-rs-email">Email</label>
+              </div>
+
+      <div class="am-in">
+        <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.6" y="4.2" width="14.8" height="11.6" rx="2.2"/><path d="m3.6 6.2 5.5 4.3a1.5 1.5 0 0 0 1.8 0l5.5-4.3"/></svg>        <input class="am-i" id="am-rs-email" name="email"
+               type="email"
+               inputmode="email" spellcheck="false" autocapitalize="off"               autocomplete="username"
+               placeholder="you@example.com"
+               aria-describedby="am-rs-email-e"
+                                             data-am-in required>
+              </div>
+
+      
+            
+      
+      <p class="am-err" id="am-rs-email-e" data-am-err hidden></p>
+    </div>
+    
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Send the link</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+        <!-- ── the link is on its way ──────────────────────────────────── -->
+                <div class="am-view am-view-done" id="am-view-sent" data-am-view="sent" hidden>
+          <span class="am-done-ic" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.4"
+                 stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="m9 16.6 4.6 4.6L23 11"/>
+            </svg>
+          </span>
+          <h2 class="am-h" id="am-h-sent">Check your inbox</h2>
+          <p class="am-sub">If an account exists for that address, a link to choose a new password is on its way. It is valid for one hour.</p>
+          <button class="btn btn-ghost am-go" type="button" data-am-go="signin">Back to sign in</button>
+        </div>
+
+        <!-- ── le second facteur (01/10/2026) ──────────────────────────── -->
+                <form class="am-view" id="am-view-mfa" data-am-view="mfa"
+              method="post" action="/api/v1/auth" novalidate hidden>
+          <button class="am-back" type="button" data-am-go="signin">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M13 8H3.5M7 4.5 3.5 8 7 11.5" fill="none" stroke="currentColor"
+                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to sign in          </button>
+
+          <h2 class="am-h" id="am-h-mfa">Two-factor authentication</h2>
+          <p class="am-sub">Type the six digits your authenticator app shows — or one of your recovery codes.</p>
+
+          <div class="am-f">
+            <div class="am-f-top">
+              <label class="am-l" for="am-mfa-code">Code</label>
+            </div>
+            <div class="am-in">
+              <svg class="am-in-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.6" y="8.6" width="12.8" height="8.2" rx="2"/><path d="M6.6 8.6V6.4a3.4 3.4 0 0 1 6.8 0v2.2"/></svg>              <input class="am-i am-i-code" id="am-mfa-code" name="code" type="text"
+                     inputmode="numeric" autocomplete="one-time-code" spellcheck="false"
+                     autocapitalize="off" maxlength="24" placeholder="123 456"
+                     aria-describedby="am-mfa-code-e" data-am-in data-am-code required>
+            </div>
+            <p class="am-err" id="am-mfa-code-e" data-am-err hidden></p>
+          </div>
+
+              <button class="btn btn-primary am-go" type="submit" data-am-submit>
+      <span class="am-spin" aria-hidden="true"></span>
+      <span class="am-go-t">Verify</span>
+      <svg class="am-go-a" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor"
+              stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+            </form>
+
+      </div>
+    </div>
+
+  </div>
+</dialog>
+<nav class="tb" data-tb aria-label="Main">
+  <a class="tb-i" href="/" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.8 10.4 12 3.8l8.2 6.6v8.7a1.4 1.4 0 0 1-1.4 1.4h-4.3v-5.8h-5v5.8H5.2a1.4 1.4 0 0 1-1.4-1.4z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+    <span class="tb-n">Home</span>
+  </a>
+  <a class="tb-i is-on" aria-current="true" href="/guides" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 6.6C10.3 5.2 7.9 4.6 4.3 4.6v13.2c3.6 0 6 .6 7.7 2 1.7-1.4 4.1-2 7.7-2V4.6c-3.6 0-6 .6-7.7 2zM12 6.6v13.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+    <span class="tb-n">Guides</span>
+  </a>
+    <a class="tb-i tb-go" href="/inbox" data-sheet-open="inbox"
+     aria-haspopup="dialog">
+    <span class="tb-go-b" aria-hidden="true">
+      <svg viewBox="0 0 24 24" focusable="false"><rect x="3.2" y="5.6" width="17.6" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m4.2 7 7 5.3a1.3 1.3 0 0 0 1.6 0l7-5.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <span class="tb-n">Inbox</span>
+  </a>
+    <a class="tb-i" href="/pricing" data-tb-top>
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.8 12.4V5.2a1.4 1.4 0 0 1 1.4-1.4h7.2l7.9 7.9a1.4 1.4 0 0 1 0 2l-6.7 6.7a1.4 1.4 0 0 1-2 0z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="8.4" cy="8.4" r="1.5" fill="currentColor"/></svg>
+    <span class="tb-n">Pricing</span>
+  </a>
+    <a class="tb-i" href="#ft-map" data-sheet-open="menu" aria-haspopup="dialog">
+    <svg class="tb-ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 7h15M4.5 12h15M4.5 17h15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <span class="tb-n">Menu</span>
+  </a>
+</nav>
+
+<dialog class="sh" data-sheet="menu" aria-labelledby="sh-menu-t">
+  <div class="sh-panel">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <header class="sh-hd">
+      <h2 class="sh-t" id="sh-menu-t">Menu</h2>
+      <form method="dialog">
+        <button class="sh-x" type="submit" aria-label="Close"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+      </form>
+    </header>
+
+    <div class="sh-body">
+            <div class="sh-auth">
+        <button class="btn btn-primary" type="button" data-auth-open="signin">Log in</button>
+        <button class="btn btn-ghost" type="button" data-auth-open="signup">Create account</button>
+      </div>
+      
+            <p class="sh-sec">Product</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/#how"><span>How it works</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/domains"><span>Connect a domain</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/extensions"><span>Browser extension</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/pricing"><span>Pricing</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/guides"><span>Guides</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/compare"><span>Comparing the APIs</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/vs"><span>Neverla Mail vs the alternatives</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Developers</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/docs/quickstart#mcp"><span>MCP for AI agents</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs"><span>Documentation</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/api"><span>API reference</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/quickstart"><span>Quickstart</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/docs/limits"><span>Limits</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Company</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/about"><span>About</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/status"><span>Status</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+            <p class="sh-sec">Legal</p>
+      <ul class="sh-card sh-list">
+                <li><a class="sh-row" href="/legal/terms"><span>Terms of service</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                <li><a class="sh-row" href="/legal/privacy"><span>Privacy</span><svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+              </ul>
+      
+      <p class="sh-sec">Language</p>
+      <div class="sh-card sh-list">
+                <button class="sh-row sh-lang" type="button" data-sheet-lang>
+          <span class="sh-lang-fl" aria-hidden="true"><svg class="lm-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><use href="#fl-en"/></svg></span>
+          <span class="sh-lang-n">English</span>
+          <span class="sh-lang-c" aria-hidden="true">EN</span>
+          <svg class="sh-chev" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>        </button>
+      </div>
+
+            <p class="sh-note">Free · No signup · Deleted after 5 days</p>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="sh sh-ibx" data-sheet="inbox" aria-labelledby="sh-ibx-t">
+  <div class="sh-panel">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <header class="sh-hd">
+      <h2 class="sh-t" id="sh-ibx-t">New address</h2>
+      <form method="dialog">
+        <button class="sh-x" type="submit" aria-label="Close"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m6 6 8 8M14 6l-8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+      </form>
+    </header>
+
+    <div class="sh-body">
+            <form class="sh-cmp" action="/inbox" method="get" data-composer data-sheet-composer novalidate>
+        <div class="sh-cmp-f">
+          <label class="sr-only" for="sh-u">Address name</label>
+          <input class="sh-cmp-u" type="text" name="u" id="sh-u" data-user
+                 placeholder="pick-any-name" maxlength="64"
+                 autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false"
+                 enterkeyhint="go" aria-describedby="sh-hint">
+          <button class="sh-cmp-dice" type="button" data-random
+                  aria-label="Random name" title="Random name">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="2" y="2" width="12" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="5.5" cy="5.5" r="1.1" fill="currentColor"/><circle cx="10.5" cy="5.5" r="1.1" fill="currentColor"/><circle cx="8" cy="8" r="1.1" fill="currentColor"/><circle cx="5.5" cy="10.5" r="1.1" fill="currentColor"/><circle cx="10.5" cy="10.5" r="1.1" fill="currentColor"/></svg>
+          </button>
+        </div>
+        <label class="sr-only" for="sh-d">Domain</label>
+        <select class="sh-cmp-d" name="d" id="sh-d" data-domain>
+                    <option value="neverla.web.id">@neverla.web.id</option>
+                    <option value="mixozia.com">@mixozia.com</option>
+                    <option value="linqmail.com">@linqmail.com</option>
+                  </select>
+        <p class="sh-hint composer-hint" id="sh-hint" data-hint hidden></p>
+        <button class="btn btn-primary btn-lg btn-block sh-cmp-go" type="submit">
+          <span>Open inbox</span>
+          <svg viewBox="0 0 16 16" class="ic" aria-hidden="true" focusable="false"><path d="M3 8h9.5M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <p class="sh-cmp-note">Public inbox — anyone with the address can read it.</p>
+      </form>
+
+                  <div class="sh-recent" data-sh-recent hidden>
+        <p class="sh-sec">Opened in this tab</p>
+        <ul class="sh-card sh-list" data-sh-recent-list></ul>
+              </div>
+    </div>
+  </div>
+</dialog>
+
+<p class="sr-only" role="status" aria-live="polite" data-live></p>
+
+</body>
+</html>

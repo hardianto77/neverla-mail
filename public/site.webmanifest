@@ -1,20 +1,25 @@
 {
-  "name": "Neverla Mail",
-  "short_name": "Neverla",
+  "id": "/",
+  "name": "GrabMail",
+  "short_name": "GrabMail",
+  "description": "Disposable email addresses, and an API to read them.",
+  "lang": "en",
+  "dir": "ltr",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#0c2340",
-  "theme_color": "#0c2340",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "categories": ["utilities", "productivity"],
   "icons": [
-    {
-      "src": "/assets/img/icon-96.png",
-      "sizes": "96x96",
-      "type": "image/png"
-    },
-    {
-      "src": "/assets/img/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    }
+    { "src": "/assets/img/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/assets/img/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/assets/img/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Open an inbox", "short_name": "Inbox", "url": "/inbox",
+      "icons": [{ "src": "/assets/img/icon-96.png", "sizes": "96x96", "type": "image/png" }] },
+    { "name": "Guides", "short_name": "Guides", "url": "/guides",
+      "icons": [{ "src": "/assets/img/icon-96.png", "sizes": "96x96", "type": "image/png" }] }
   ]
 }
