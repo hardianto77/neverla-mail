@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -78,6 +79,16 @@ func extractOTP(text string) string {
 	return re.FindString(text)
 }
 
+func randomUsername() string {
+	chars := "abcdefghijklmnopqrstuvwxyz0123456789"
+	b := make([]byte, 8)
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	for i := range b {
+		b[i] = chars[r.Intn(len(chars))]
+	}
+	return string(b)
+}
+
 func corsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -115,14 +126,16 @@ func handlePicker(w http.ResponseWriter, r *http.Request) {
 }
 
 type MessageItem struct {
-	ID        string      `json:"id"`
-	From      interface{} `json:"from"`
-	Subject   string      `json:"subject"`
-	Date      string      `json:"date"`
-	Seen      bool        `json:"seen"`
-	Intro     string      `json:"intro"`
-	CreatedAt int64       `json:"created_at"`
-	OTPCode   string      `json:"otp_code,omitempty"`
+	ID          string `json:"id"`
+	From        string `json:"from"`
+	FromName    string `json:"from_name"`
+	Subject     string `json:"subject"`
+	Date        string `json:"date"`
+	Seen        bool   `json:"seen"`
+	Intro       string `json:"intro"`
+	CreatedAt   int64  `json:"created_at"`
+	OTPCode     string `json:"otp_code,omitempty"`
+	Attachments int    `json:"attachments"`
 }
 
 func handleMailbox(w http.ResponseWriter, r *http.Request) {
@@ -160,19 +173,17 @@ func handleMailbox(w http.ResponseWriter, r *http.Request) {
 			if len(intro) > 100 {
 				intro = intro[:100]
 			}
-			fromObj := map[string]string{
-				"address": fromEmail.String,
-				"name":    fromName.String,
-			}
 			list = append(list, MessageItem{
-				ID:        id.String,
-				From:      fromObj,
-				Subject:   subject.String,
-				Date:      date.String,
-				Seen:      seen == 1,
-				Intro:     intro,
-				CreatedAt: createdAt,
-				OTPCode:   otp,
+				ID:          id.String,
+				From:        fromEmail.String,
+				FromName:    fromName.String,
+				Subject:     subject.String,
+				Date:        date.String,
+				Seen:        seen == 1,
+				Intro:       intro,
+				CreatedAt:   createdAt,
+				OTPCode:     otp,
+				Attachments: 0,
 			})
 		}
 	}
@@ -244,10 +255,8 @@ func handleMessageDetail(w http.ResponseWriter, r *http.Request) {
 		"id":      id,
 		"address": address.String,
 		"alias":   alias.String,
-		"from": map[string]string{
-			"address": fromEmail.String,
-			"name":    fromName.String,
-		},
+		"from":        fromEmail.String,
+		"from_name":   fromName.String,
 		"to":          toEmail.String,
 		"subject":     subject.String,
 		"date":        date.String,
@@ -316,6 +325,48 @@ func handleSimulate(w http.ResponseWriter, r *http.Request) {
 		"alias":    alias,
 		"otp_code": req.OTPCode,
 	})
+}
+
+// ── DYNAMIC INBOX HANDLER ──────────────────────────────────────
+
+func handleInbox(w http.ResponseWriter, r *http.Request) {
+	u := strings.TrimSpace(r.URL.Query().Get("u"))
+	d := strings.TrimSpace(r.URL.Query().Get("d"))
+	addr := strings.TrimSpace(r.URL.Query().Get("address"))
+
+	if addr != "" {
+		parts := strings.Split(addr, "@")
+		if len(parts) == 2 {
+			u = parts[0]
+			d = parts[1]
+		}
+	}
+
+	if d == "" {
+		d = "neverla.web.id"
+	}
+	if u == "" {
+		u = randomUsername()
+	}
+
+	fullAddress := u + "@" + d
+	alias := computeAlias(fullAddress)
+
+	tmplPath := filepath.Join(pubDir, "inbox_template.html")
+	tmplBytes, err := os.ReadFile(tmplPath)
+	if err != nil {
+		http.ServeFile(w, r, filepath.Join(pubDir, "index.html"))
+		return
+	}
+
+	html := string(tmplBytes)
+	html = strings.ReplaceAll(html, "{{ADDRESS}}", fullAddress)
+	html = strings.ReplaceAll(html, "{{DOMAIN}}", d)
+	html = strings.ReplaceAll(html, "{{USER}}", u)
+	html = strings.ReplaceAll(html, "{{ALIAS}}", alias)
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Write([]byte(html))
 }
 
 // ── MCP JSON-RPC 2.0 PROTOCOL HANDLER ────────────────────────
@@ -441,13 +492,15 @@ func handleMCP(w http.ResponseWriter, r *http.Request) {
 					rows.Scan(&id, &fromEmail, &fromName, &subject, &date, &seen, &text, &createdAt)
 					otp := extractOTP(subject.String + " " + text.String)
 					msgs = append(msgs, MessageItem{
-						ID:        id.String,
-						From:      map[string]string{"address": fromEmail.String, "name": fromName.String},
-						Subject:   subject.String,
-						Date:      date.String,
-						Seen:      seen == 1,
-						CreatedAt: createdAt,
-						OTPCode:   otp,
+						ID:          id.String,
+						From:        fromEmail.String,
+						FromName:    fromName.String,
+						Subject:     subject.String,
+						Date:        date.String,
+						Seen:        seen == 1,
+						CreatedAt:   createdAt,
+						OTPCode:     otp,
+						Attachments: 0,
 					})
 				}
 				rows.Close()
@@ -577,6 +630,10 @@ func main() {
 
 	// MCP JSON-RPC 2.0 Server
 	mux.HandleFunc("/mcp", handleMCP)
+
+	// Dynamic Inbox Webmail Interface
+	mux.HandleFunc("/inbox", handleInbox)
+	mux.HandleFunc("/inbox/", handleInbox)
 
 	// Comprehensive Full-Sitemap Dynamic Routing (100% 70 GrabMail URLs)
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
