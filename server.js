@@ -114,7 +114,7 @@ const stmtDeleteAtts = db.prepare(`DELETE FROM attachments WHERE message_id = ?`
 const stmtMarkSeen = db.prepare(`UPDATE messages SET seen = 1 WHERE id = ?`);
 
 // Public & premium domain definitions (Cloned directly from Gmail, GrabMail & Neverla)
-const PUBLIC_DOMAINS = ["neverla.web.id", "fldubai.com", "mynes.com", "hunnur.com", "binich.com", "vitahicks.com", "zeropolly.com", "rodhazlitt.com", "dripzgaming.com", "tshirtsavvy.com", "yopmail.com", "gmail.com", "googlemail.com", "grabmail.io", "linqmail.com", "mixozia.com", "devrungkad.biz.id", "zennext.biz.id"];
+const PUBLIC_DOMAINS = ["neverla.web.id", "fldubai.com", "mynes.com", "hunnur.com", "binich.com", "vitahicks.com", "zeropolly.com", "rodhazlitt.com", "dripzgaming.com", "tshirtsavvy.com", "yopmail.com", "gmail.com", "googlemail.com", "grabmail.io", "linqmail.com", "mixozia.com", "devrungkad.biz.id", "zennext.biz.id", "bedrive.biz.id" ];
 const ALIAS_DOMAIN = 'uvorion.com';
 
 // Generate Neverla Mail-style random message ID (26 uppercase Crockford-like characters)
@@ -339,6 +339,26 @@ app.get('/vs/yopmail', (req, res) => res.sendFile(path.join(__dirname, 'public',
 
 // ── REST API v1 Endpoints (OpenAPI 3.1 Compliant) ───────────────────────────
 const apiRouter = express.Router();
+
+// Ingest endpoint for Cloudflare Email Worker relay (shared secret)
+const INGEST_SECRET = process.env.INGEST_SECRET || 'nvlg-relay-9f3x';
+apiRouter.post('/ingest', (req, res) => {
+  if (req.get('x-ingest-secret') !== INGEST_SECRET) return res.status(401).json({ error: 'bad secret' });
+  try {
+    const b = req.body || {};
+    if (!b.to || b.subject === undefined) return res.status(400).json({ error: 'missing fields' });
+    saveEmail({
+      to: b.to,
+      from: b.from || 'unknown@relay',
+      fromName: b.fromName || null,
+      subject: b.subject || '(no subject)',
+      text: b.text || '',
+      html: b.html || '',
+      attachments: []
+    });
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: String(e) }); }
+});
 
 // GET domains
 apiRouter.get('/domains', (req, res) => {

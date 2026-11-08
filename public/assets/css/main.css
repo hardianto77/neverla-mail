@@ -79,22 +79,22 @@ html, body {
 
 @media (max-width: 639.98px) {
   html, body {
-    overflow: hidden !important;
-    overflow-y: hidden !important;
     overflow-x: hidden !important;
-    height: 100dvh !important;
-    max-height: 100dvh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    min-height: 100dvh;
   }
 
   body.page-home {
-    height: 100dvh !important;
-    max-height: 100dvh !important;
-    overflow: hidden !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important;
+    min-height: 100dvh !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    display: block !important;
     box-sizing: border-box !important;
-    padding: 0 !important;
+    padding: 0 0 84px 0 !important;
   }
 
   body.page-home .hd {
@@ -111,14 +111,14 @@ html, body {
 
   body.page-home .hero {
     flex: 1 1 auto !important;
-    height: calc(100dvh - 102px) !important;
-    max-height: calc(100dvh - 102px) !important;
+    height: auto !important;
+    max-height: none !important;
     margin: 0 !important;
-    padding: 8px 14px 4px !important;
-    overflow: hidden !important;
+    padding: 16px 14px 8px !important;
+    overflow: visible !important;
     display: flex !important;
     flex-direction: column !important;
-    justify-content: center !important;
+    justify-content: flex-start !important;
     box-sizing: border-box !important;
   }
 
@@ -126,13 +126,14 @@ html, body {
     width: 100% !important;
     max-width: 360px !important;
     margin: 0 auto !important;
-    height: 100% !important;
-    max-height: 100% !important;
+    height: auto !important;
+    max-height: none !important;
     overflow: visible !important;
     overflow-y: visible !important;
     display: flex !important;
     flex-direction: column !important;
-    justify-content: space-evenly !important;
+    justify-content: flex-start !important;
+    gap: 12px !important;
     padding: 0 !important;
   }
 
@@ -230,15 +231,23 @@ html, body {
   }
 
   body.page-home .tb {
+    position: fixed !important;
+    inset-inline: 0 !important;
+    inset-block-end: 0 !important;
     height: 56px !important;
     min-height: 56px !important;
-    flex: 0 0 56px !important;
-    position: relative !important;
-    bottom: 0 !important;
+    z-index: 45 !important;
   }
 
-  body.page-home main > *:not(.hero),
+  body.page-home main > *:not(.hero):not(dialog) {
+    display: block !important;
+  }
+
   body.page-home footer.ft {
+    display: block !important;
+  }
+
+  body.page-home dialog.dlg.dpk:not([open]) {
     display: none !important;
   }
 }
